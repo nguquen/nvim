@@ -1,6 +1,8 @@
 " plugins
 call plug#begin('~/.config/nvim/plugged')
 Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'edkolev/tmuxline.vim'
 Plug 'rakr/vim-one'
 Plug 'pangloss/vim-javascript'
 Plug 'crusoexia/vim-javascript-lib'
@@ -18,13 +20,17 @@ call plug#end()
 " clipboard
 set clipboard=unnamed
 set pastetoggle=<F2>
-" airline
-let g:airline_powerline_fonts=1
-let g:airline_theme='one'
 " color
 set termguicolors
 set background=dark
 colorscheme one
+" airline
+let g:airline_powerline_fonts=1
+let g:airline_theme='one'
+"let g:airline_theme='solarized'
+"let g:airline_solarized_bg='dark'
+"let g:solarized_termcolors=256
+let g:airline#extensions#tmuxline#enabled = 0
 " disable arrow keys
 noremap <Up> <NOP>
 noremap <Down> <NOP>
