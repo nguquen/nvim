@@ -36,6 +36,7 @@ hi MatchParen guifg=#f43753 ctermfg=203 guibg=NONE ctermbg=NONE gui=bold cterm=b
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 set list
 set tabstop=2 shiftwidth=2 expandtab
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " jsx
 let g:jsx_ext_required = 0
 " NERDTree
@@ -53,4 +54,8 @@ endif
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 " Use deoplete
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#disable_auto_complete = 1
+inoremap <silent><expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
+inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
