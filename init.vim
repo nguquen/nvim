@@ -15,7 +15,7 @@ Plug 'tpope/vim-bundler'
 Plug 'wakatime/vim-wakatime'
 Plug 'airblade/vim-gitgutter'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'carlitux/deoplete-ternjs'
+"Plug 'carlitux/deoplete-ternjs'
 call plug#end()
 " clipboard
 set clipboard=unnamed
@@ -31,6 +31,8 @@ let g:airline_theme='one'
 "let g:airline_solarized_bg='dark'
 "let g:solarized_termcolors=256
 let g:airline#extensions#tmuxline#enabled = 0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_exclude_preview = 1
 " disable arrow keys
 noremap <Up> <NOP>
 noremap <Down> <NOP>
@@ -63,6 +65,10 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#disable_auto_complete = 1
 let g:deoplete#file#enable_buffer_path = 1
 inoremap <silent><expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
+inoremap <silent><expr> j pumvisible() ? "\<C-n>" : "j"
+inoremap <silent><expr> k pumvisible() ? "\<C-p>" : "k"
+inoremap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+inoremap <silent><expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
