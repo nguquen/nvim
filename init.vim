@@ -61,6 +61,7 @@ nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 " Use deoplete
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#disable_auto_complete = 1
+let g:deoplete#file#enable_buffer_path = 1
 inoremap <silent><expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
 inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
