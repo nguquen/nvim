@@ -16,6 +16,8 @@ Plug 'wakatime/vim-wakatime'
 Plug 'airblade/vim-gitgutter'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "Plug 'carlitux/deoplete-ternjs'
+"Plug 'moll/vim-node'
+Plug 'neomake/neomake'
 call plug#end()
 " clipboard
 set clipboard=unnamed
@@ -52,6 +54,8 @@ for s:char in s:printable_ascii
     execute "inoremap <A-" . s:char . "> <Esc>" . s:char
 endfor
 unlet s:printable_ascii s:char
+" highlight cursor line
+set cursorline
 " jsx
 let g:jsx_ext_required = 0
 " NERDTree
@@ -78,4 +82,11 @@ inoremap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
 inoremap <silent><expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-
+" Neomake
+autocmd! BufWritePost * Neomake
+let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_jsx_enabled_makers = ['eslint']
+let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
+let g:neomake_warning_sign = {'text': '⚠','texthl': 'WarningMsg'}
+let g:neomake_message_sign = {'text': '➤','texthl': 'MessageMsg'}
+let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'InfoMsg'}
