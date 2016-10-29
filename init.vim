@@ -49,10 +49,9 @@ set list
 set tabstop=2 shiftwidth=2 expandtab
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 " let alt 'send' ESC key
-let s:printable_ascii = map(range(32, 126), 'nr2char(v:val)')
-call remove(s:printable_ascii, 92)
+let s:printable_ascii = map(range(65, 122), 'nr2char(v:val)')
 for s:char in s:printable_ascii
-    execute "inoremap <A-" . s:char . "> <Esc>" . s:char
+  execute "inoremap <A-" . s:char . "> <Esc>" . s:char
 endfor
 unlet s:printable_ascii s:char
 " highlight cursor line
