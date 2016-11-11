@@ -82,6 +82,7 @@ inoremap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
 inoremap <silent><expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
 " Neomake
 autocmd! BufWritePost * Neomake
 let g:neomake_javascript_enabled_makers = ['eslint', 'flow']
