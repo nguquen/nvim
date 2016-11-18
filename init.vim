@@ -55,7 +55,7 @@ for s:char in s:printable_ascii
 endfor
 unlet s:printable_ascii s:char
 " highlight cursor line
-set cursorline
+"set cursorline
 " jsx
 let g:jsx_ext_required = 0
 " NERDTree
@@ -71,6 +71,8 @@ if executable('ag')
 endif
 " bind K to grep word under cursor
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+" bind // for search visual selection
+vnoremap // y/<C-R>"<CR>
 " Use deoplete
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#disable_auto_complete = 1
