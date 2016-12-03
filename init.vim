@@ -19,6 +19,8 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "Plug 'carlitux/deoplete-ternjs'
 "Plug 'moll/vim-node'
 Plug 'neomake/neomake'
+Plug 'easymotion/vim-easymotion'
+Plug 'tpope/vim-repeat'
 call plug#end()
 " clipboard
 set clipboard=unnamed
@@ -77,11 +79,12 @@ vnoremap // y/<C-R>"<CR>
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#disable_auto_complete = 1
 let g:deoplete#file#enable_buffer_path = 1
+let g:deoplete#enable_smart_case = 1
 inoremap <silent><expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
 inoremap <silent><expr> j pumvisible() ? "\<C-n>" : "j"
 inoremap <silent><expr> k pumvisible() ? "\<C-p>" : "k"
 inoremap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
-inoremap <silent><expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
+"inoremap <silent><expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
@@ -96,3 +99,17 @@ let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
 let g:neomake_warning_sign = {'text': '⚠','texthl': 'WarningMsg'}
 let g:neomake_message_sign = {'text': '➤','texthl': 'MessageMsg'}
 let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'InfoMsg'}
+" easymotion
+let mapleader=" "
+map <Leader>f <Plug>(easymotion-s)
+map <Leader>t <Plug>(easymotion-bd-t)
+nmap <Leader>s <Plug>(easymotion-overwin-f2)
+map <Leader>/ <Plug>(easymotion-sn)
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>h <Plug>(easymotion-linebackward)
+map n <Plug>(easymotion-next)
+map N <Plug>(easymotion-prev)
+let g:EasyMotion_startofline = 0 "keep cursor column when JK motion
+let g:EasyMotion_smartcase = 1
