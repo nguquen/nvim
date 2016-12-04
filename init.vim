@@ -29,6 +29,7 @@ set pastetoggle=<F2>
 set termguicolors
 set background=dark
 colorscheme one
+hi VertSplit guifg=#1b1b24 guibg=#707070 guisp=#707070 gui=bold
 " airline
 let g:airline_powerline_fonts=1
 let g:airline_theme='one'
@@ -58,6 +59,8 @@ endfor
 unlet s:printable_ascii s:char
 " highlight cursor line
 "set cursorline
+set splitbelow
+set splitright
 " jsx
 let g:jsx_ext_required = 0
 " NERDTree
@@ -109,7 +112,7 @@ map <Leader>l <Plug>(easymotion-lineforward)
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 map <Leader>h <Plug>(easymotion-linebackward)
-map n <Plug>(easymotion-next)
-map N <Plug>(easymotion-prev)
+map <Leader>n <Plug>(easymotion-next)
+map <Leader>N <Plug>(easymotion-prev)
 let g:EasyMotion_startofline = 0 "keep cursor column when JK motion
 let g:EasyMotion_smartcase = 1
