@@ -21,6 +21,7 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'neomake/neomake'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-repeat'
+Plug 'deris/vim-shot-f'
 call plug#end()
 " clipboard
 set clipboard=unnamed
@@ -29,6 +30,7 @@ set pastetoggle=<F2>
 set termguicolors
 set background=dark
 colorscheme one
+"change VertSpit color of colorscheme `one`
 hi VertSplit guifg=#1b1b24 guibg=#707070 guisp=#707070 gui=bold
 " airline
 let g:airline_powerline_fonts=1
