@@ -143,15 +143,17 @@ function! ToggleList(bufname, pfx)
   endif
 endfunction
 
-nmap <silent> <Leader>1 :call ToggleList("Location List", 'l')<CR>
-nmap <silent> <Leader>2 :call ToggleList("Quickfix List", 'c')<CR>
-" mapping misc
+nnoremap <silent> <Leader>1 :call ToggleList("Location List", 'l')<CR>
+nnoremap <silent> <Leader>2 :call ToggleList("Quickfix List", 'c')<CR>
+" mapping misc keys
 let g:gitgutter_map_keys = 0
-nnoremap <Leader>w :w<CR>
-nnoremap <Leader>q :qa<CR>
-nnoremap <Leader>x :x<CR>
-map <silent> <Leader>h <C-W><C-H>
-map <silent> <Leader>j <C-W><C-J>
-map <silent> <Leader>k <C-W><C-K>
-map <silent> <Leader>l <C-W><C-L>
-
+nnoremap <silent> <Leader>w :w<CR>
+nnoremap <silent> <Leader>q :qa<CR>
+nnoremap <silent> <Leader>x :x<CR>
+noremap <silent> <Leader>h <C-W><C-H>
+noremap <silent> <Leader>j <C-W><C-J>
+noremap <silent> <Leader>k <C-W><C-K>
+noremap <silent> <Leader>l <C-W><C-L>
+" map esc key
+"inoremap <esc> <nop>
+inoremap jk <esc>
