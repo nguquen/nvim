@@ -106,15 +106,52 @@ let g:neomake_message_sign = {'text': '➤','texthl': 'MessageMsg'}
 let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'InfoMsg'}
 " easymotion
 let mapleader=" "
+let g:EasyMotion_do_mapping = 0 "Disable default mappings
+let g:EasyMotion_startofline = 0 "keep cursor column when JK motion
+let g:EasyMotion_smartcase = 1
 map <Leader>f <Plug>(easymotion-s)
 map <Leader>t <Plug>(easymotion-bd-t)
 nmap <Leader>s <Plug>(easymotion-overwin-f2)
 map <Leader>/ <Plug>(easymotion-sn)
-map <Leader>l <Plug>(easymotion-lineforward)
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-map <Leader>h <Plug>(easymotion-linebackward)
 map <Leader>n <Plug>(easymotion-next)
 map <Leader>N <Plug>(easymotion-prev)
-let g:EasyMotion_startofline = 0 "keep cursor column when JK motion
-let g:EasyMotion_smartcase = 1
+" toggle
+function! GetBufferList()
+  redir =>buflist
+  silent! ls!
+  redir END
+  return buflist
+endfunction
+
+function! ToggleList(bufname, pfx)
+  let buflist = GetBufferList()
+  for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ "'.a:bufname.'"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
+    if bufwinnr(bufnum) != -1
+      exec(a:pfx.'close')
+      return
+    endif
+  endfor
+  if a:pfx == 'l' && len(getloclist(0)) == 0
+    echohl ErrorMsg
+    echo "Location List is Empty."
+    return
+  endif
+  let winnr = winnr()
+  exec(a:pfx.'open')
+  if winnr() != winnr
+    wincmd p
+  endif
+endfunction
+
+nmap <silent> <Leader>1 :call ToggleList("Location List", 'l')<CR>
+nmap <silent> <Leader>2 :call ToggleList("Quickfix List", 'c')<CR>
+" mapping misc
+let g:gitgutter_map_keys = 0
+nnoremap <Leader>w :w<CR>
+nnoremap <Leader>q :qa<CR>
+nnoremap <Leader>x :x<CR>
+map <silent> <Leader>h <C-W><C-H>
+map <silent> <Leader>j <C-W><C-J>
+map <silent> <Leader>k <C-W><C-K>
+map <silent> <Leader>l <C-W><C-L>
+
