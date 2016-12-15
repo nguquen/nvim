@@ -163,6 +163,12 @@ noremap <silent> <Leader>j <C-W><C-J>
 noremap <silent> <Leader>k <C-W><C-K>
 noremap <silent> <Leader>l <C-W><C-L>
 noremap <silent> <leader>u :UndotreeToggle<CR>
+noremap <silent> <Leader>re :reg<CR>
+noremap <silent> <Leader>p "0p
+noremap <silent> <Leader>y :let @0=@*<CR>
+"for i in range(0, 9)
+  "execute 'noremap <silent> <Leader>p' . i . ' "' . i .'p'
+"endfor
 " map esc key
 "inoremap <esc> <nop>
 "inoremap jk <esc>
