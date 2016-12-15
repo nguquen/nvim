@@ -156,4 +156,4 @@ noremap <silent> <Leader>k <C-W><C-K>
 noremap <silent> <Leader>l <C-W><C-L>
 " map esc key
 "inoremap <esc> <nop>
-inoremap jk <esc>
+"inoremap jk <esc>
