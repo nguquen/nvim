@@ -22,6 +22,9 @@ Plug 'neomake/neomake'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-repeat'
 Plug 'deris/vim-shot-f'
+Plug 'scrooloose/nerdcommenter'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-endwise'
 call plug#end()
 " clipboard
 set clipboard=unnamed
@@ -156,4 +159,4 @@ noremap <silent> <Leader>k <C-W><C-K>
 noremap <silent> <Leader>l <C-W><C-L>
 " map esc key
 "inoremap <esc> <nop>
-"inoremap jk <esc>
+inoremap jk <esc>
