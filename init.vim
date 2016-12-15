@@ -91,7 +91,11 @@ let g:deoplete#enable_smart_case = 1
 inoremap <silent><expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
 inoremap <silent><expr> j pumvisible() ? "\<C-n>" : "j"
 inoremap <silent><expr> k pumvisible() ? "\<C-p>" : "k"
-inoremap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+"inoremap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
+inoremap <silent><expr><CR> <C-r>=<SID>deoplete_cr()<CR>
+function! s:deoplete_cr()
+  return pumvisible() ? "\<C-y>" : "\<CR>"
+endfunction
 "inoremap <silent><expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
@@ -159,4 +163,4 @@ noremap <silent> <Leader>k <C-W><C-K>
 noremap <silent> <Leader>l <C-W><C-L>
 " map esc key
 "inoremap <esc> <nop>
-inoremap jk <esc>
+"inoremap jk <esc>
