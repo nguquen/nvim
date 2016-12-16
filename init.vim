@@ -38,10 +38,12 @@ colorscheme one
 hi VertSplit guifg=#1b1b24 guibg=#707070 guisp=#707070 gui=bold
 " airline
 let g:airline_powerline_fonts=1
-let g:airline_theme='one'
+"let g:airline_theme='one'
 "let g:airline_theme='solarized'
 "let g:airline_solarized_bg='dark'
 "let g:solarized_termcolors=256
+"let base16colorspace=256
+let g:airline_theme='base16_ocean'
 let g:airline#extensions#tmuxline#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_exclude_preview = 1
@@ -151,8 +153,8 @@ function! ToggleList(bufname, pfx)
   endif
 endfunction
 
-nnoremap <silent> <Leader>1 :call ToggleList("Location List", 'l')<CR>
-nnoremap <silent> <Leader>2 :call ToggleList("Quickfix List", 'c')<CR>
+nnoremap <silent> <Leader>[ :call ToggleList("Location List", 'l')<CR>
+nnoremap <silent> <Leader>] :call ToggleList("Quickfix List", 'c')<CR>
 " mapping misc keys
 let g:gitgutter_map_keys = 0
 nnoremap <silent> <Leader>w :w<CR>
@@ -166,9 +168,16 @@ noremap <silent> <leader>u :UndotreeToggle<CR>
 noremap <silent> <Leader>re :reg<CR>
 noremap <silent> <Leader>p "0p
 noremap <silent> <Leader>y :let @0=@*<CR>
+noremap <silent> <Leader>xh :noh<CR>
 "for i in range(0, 9)
   "execute 'noremap <silent> <Leader>p' . i . ' "' . i .'p'
 "endfor
 " map esc key
 "inoremap <esc> <nop>
 "inoremap jk <esc>
+" mapping for quick switch windows
+let g:airline_section_c = '%{winnr()}  %<%f%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+for i in range(1, 9)
+  execute 'nnoremap <silent> <Leader>' . i . ' :' . i . 'wincmd w<CR>'
+endfor
+
