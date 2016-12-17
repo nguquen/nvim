@@ -21,7 +21,7 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'neomake/neomake'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-repeat'
-Plug 'deris/vim-shot-f'
+Plug 'nguquen/vim-shot-f'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
