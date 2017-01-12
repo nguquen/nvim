@@ -26,6 +26,7 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
 Plug 'mbbill/undotree'
+Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 " clipboard
 set clipboard=unnamed
@@ -158,7 +159,7 @@ nnoremap <silent> <Leader>] :call ToggleList("Quickfix List", 'c')<CR>
 " mapping misc keys
 let g:gitgutter_map_keys = 0
 nnoremap <silent> <Leader>w :w<CR>
-nnoremap <silent> <Leader>q :qa<CR>
+nnoremap <silent> <Leader>q :q<CR>
 nnoremap <silent> <Leader>x :x<CR>
 noremap <silent> <Leader>h <C-W><C-H>
 noremap <silent> <Leader>j <C-W><C-J>
@@ -168,7 +169,7 @@ noremap <silent> <leader>u :UndotreeToggle<CR>
 noremap <silent> <Leader>re :reg<CR>
 noremap <silent> <Leader>p "0p
 noremap <silent> <Leader>y :let @0=@*<CR>
-noremap <silent> <Leader>xh :noh<CR>
+noremap <silent> <Leader>ch :noh<CR>
 "for i in range(0, 9)
   "execute 'noremap <silent> <Leader>p' . i . ' "' . i .'p'
 "endfor
