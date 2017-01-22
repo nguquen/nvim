@@ -9,15 +9,16 @@ Plug 'crusoexia/vim-javascript-lib'
 Plug 'mxw/vim-jsx'
 Plug 'scrooloose/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim'
-"Plug 'vim-ruby/vim-ruby'
+Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-haml'
 Plug 'tpope/vim-bundler'
 Plug 'wakatime/vim-wakatime'
 Plug 'airblade/vim-gitgutter'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Plug 'ternjs/tern_for_vim'
 "Plug 'carlitux/deoplete-ternjs'
-"Plug 'moll/vim-node'
+Plug 'moll/vim-node'
 Plug 'neomake/neomake'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-repeat'
@@ -27,6 +28,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-endwise'
 Plug 'mbbill/undotree'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'terryma/vim-multiple-cursors'
 call plug#end()
 " clipboard
 set clipboard=unnamed
@@ -55,6 +57,7 @@ noremap <Left> <NOP>
 noremap <Right> <NOP>
 " setting editors
 set number
+set visualbell
 hi MatchParen guifg=#f43753 ctermfg=203 guibg=NONE ctermbg=NONE gui=bold cterm=bold
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 set list
@@ -110,7 +113,7 @@ let g:neomake_javascript_enabled_makers = ['eslint', 'flow']
 let g:neomake_jsx_enabled_makers = ['eslint', 'flow']
 let g:neomake_javascript_flow_exe = $PWD .'/node_modules/.bin/flow'
 let g:neomake_javascript_flow_errorformat = '%E%f:%l:%c\,%n: %m,%Z%m'
-let g:neomake_open_list = 2
+let g:neomake_open_list = 0
 let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
 let g:neomake_warning_sign = {'text': '⚠','texthl': 'WarningMsg'}
 let g:neomake_message_sign = {'text': '➤','texthl': 'MessageMsg'}
@@ -181,4 +184,15 @@ let g:airline_section_c = '%{winnr()}  %<%f%m %#__accent_red#%{airline#util#w
 for i in range(1, 9)
   execute 'nnoremap <silent> <Leader>' . i . ' :' . i . 'wincmd w<CR>'
 endfor
-
+" Use tern_for_vim.
+"let g:tern#command = ["tern"]
+"let g:tern#arguments = ["--persistent"]
+" multi-cursors
+let g:multi_cursor_exit_from_insert_mode = 0
+let g:multi_cursor_use_default_mapping = 0
+let g:multi_cursor_next_key='<C-m>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
+" nerdcommenter
+let NERDSpaceDelims=1
