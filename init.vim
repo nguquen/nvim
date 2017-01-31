@@ -124,7 +124,6 @@ let g:EasyMotion_do_mapping = 0 "Disable default mappings
 let g:EasyMotion_startofline = 0 "keep cursor column when JK motion
 let g:EasyMotion_smartcase = 1
 map <Leader>f <Plug>(easymotion-s)
-map <Leader>t <Plug>(easymotion-bd-t)
 nmap <Leader>s <Plug>(easymotion-overwin-f2)
 map <Leader>/ <Plug>(easymotion-sn)
 map <Leader>n <Plug>(easymotion-next)
@@ -173,6 +172,7 @@ noremap <silent> <Leader>re :reg<CR>
 noremap <silent> <Leader>p "0p
 noremap <silent> <Leader>y :let @0=@*<CR>
 noremap <silent> <Leader>ch :noh<CR>
+noremap <silent> <Leader>t :tabnew<CR>
 "for i in range(0, 9)
   "execute 'noremap <silent> <Leader>p' . i . ' "' . i .'p'
 "endfor
