@@ -29,6 +29,10 @@ Plug 'tpope/vim-endwise'
 Plug 'mbbill/undotree'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'kana/vim-textobj-user'
+Plug 'nelstrom/vim-textobj-rubyblock'
+Plug 'majutsushi/tagbar'
+Plug 'ludovicchabant/vim-gutentags'
 call plug#end()
 " clipboard
 set clipboard=unnamed
@@ -95,6 +99,9 @@ let g:deoplete#enable_at_startup = 1
 let g:deoplete#disable_auto_complete = 1
 let g:deoplete#file#enable_buffer_path = 1
 let g:deoplete#enable_smart_case = 1
+let deoplete#tag#cache_limit_size = 5000000
+let g:deoplete#omni#functions = {}
+let g:deoplete#omni#functions.javascript = []
 inoremap <silent><expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
 inoremap <silent><expr> j pumvisible() ? "\<C-n>" : "j"
 inoremap <silent><expr> k pumvisible() ? "\<C-p>" : "k"
@@ -111,7 +118,7 @@ autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
 autocmd! BufWritePost * Neomake
 let g:neomake_javascript_enabled_makers = ['eslint', 'flow']
 let g:neomake_jsx_enabled_makers = ['eslint', 'flow']
-let g:neomake_javascript_flow_exe = $PWD .'/node_modules/.bin/flow'
+" let g:neomake_javascript_flow_exe = $PWD .'/node_modules/.bin/flow'
 let g:neomake_javascript_flow_errorformat = '%E%f:%l:%c\,%n: %m,%Z%m'
 let g:neomake_open_list = 0
 let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
@@ -172,7 +179,7 @@ noremap <silent> <Leader>re :reg<CR>
 noremap <silent> <Leader>p "0p
 noremap <silent> <Leader>y :let @0=@*<CR>
 noremap <silent> <Leader>ch :noh<CR>
-noremap <silent> <Leader>t :tabnew<CR>
+noremap <silent> <Leader>tt :tabnew<CR>
 "for i in range(0, 9)
   "execute 'noremap <silent> <Leader>p' . i . ' "' . i .'p'
 "endfor
@@ -187,6 +194,9 @@ endfor
 " Use tern_for_vim.
 "let g:tern#command = ["tern"]
 "let g:tern#arguments = ["--persistent"]
+"let g:tern_request_timeout = 1
+"let g:tern_show_signature_in_pum = '0'
+set completeopt-=preview
 " multi-cursors
 let g:multi_cursor_use_default_mapping = 0
 let g:multi_cursor_exit_from_insert_mode = 0
@@ -196,3 +206,16 @@ let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
 " nerdcommenter
 let NERDSpaceDelims=1
+" tagbar
+nnoremap <silent> <Leader>tb :TagbarToggle<CR>
+" gutentags
+set statusline+=%{gutentags#statusline('[Generating...]')}
+let g:gutentags_add_default_project_roots=0
+let g:gutentags_project_root = ['.withtags']
+let g:gutentags_exclude=["node_modules"]
+
+" imap jw <Esc> :w<CR>
+" imap jj <Esc>
+
+autocmd BufWritePre * %s/\s\+$//e
+
