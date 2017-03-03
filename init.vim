@@ -31,7 +31,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'kana/vim-textobj-user'
 Plug 'nelstrom/vim-textobj-rubyblock'
-Plug 'majutsushi/tagbar'
+"Plug 'majutsushi/tagbar'
 Plug 'ludovicchabant/vim-gutentags'
 call plug#end()
 " clipboard
@@ -54,6 +54,7 @@ let g:airline_theme='base16_ocean'
 let g:airline#extensions#tmuxline#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_exclude_preview = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
 " disable arrow keys
 noremap <Up> <NOP>
 noremap <Down> <NOP>
@@ -207,7 +208,7 @@ let g:multi_cursor_quit_key='<Esc>'
 " nerdcommenter
 let NERDSpaceDelims=1
 " tagbar
-nnoremap <silent> <Leader>tb :TagbarToggle<CR>
+"nnoremap <silent> <Leader>tb :TagbarToggle<CR>
 " gutentags
 set statusline+=%{gutentags#statusline('[Generating...]')}
 let g:gutentags_add_default_project_roots=0
