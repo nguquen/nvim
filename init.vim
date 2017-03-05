@@ -16,6 +16,8 @@ Plug 'tpope/vim-bundler'
 Plug 'wakatime/vim-wakatime'
 Plug 'airblade/vim-gitgutter'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'flowtype/vim-flow'
+Plug 'steelsojka/deoplete-flow'
 "Plug 'ternjs/tern_for_vim'
 "Plug 'carlitux/deoplete-ternjs'
 Plug 'moll/vim-node'
@@ -119,8 +121,6 @@ autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
 autocmd! BufWritePost * Neomake
 let g:neomake_javascript_enabled_makers = ['eslint', 'flow']
 let g:neomake_jsx_enabled_makers = ['eslint', 'flow']
-" let g:neomake_javascript_flow_exe = $PWD .'/node_modules/.bin/flow'
-let g:neomake_javascript_flow_errorformat = '%E%f:%l:%c\,%n: %m,%Z%m'
 let g:neomake_open_list = 0
 let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
 let g:neomake_warning_sign = {'text': '⚠','texthl': 'WarningMsg'}
@@ -219,4 +219,27 @@ let g:gutentags_exclude=["node_modules"]
 " imap jj <Esc>
 
 autocmd BufWritePre * %s/\s\+$//e
+
+" flow setup (neomake, deoplete, vim-flow)
+let g:flow#enable = 0
+let g:flow#omnifunc = 0
+let g:flow#autoclose = 1
+let g:flow#timeout = 4
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_ngdoc = 1
+let g:javascript_plugin_flow = 1
+au FileType javascript nnoremap <silent> <c-]> :FlowJumpToDef<cr>
+au FileType javascript nnoremap <silent> <Leader>d :FlowType<cr>
+
+function! StrTrim(txt)
+  return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+endfunction
+
+let g:flow_path = StrTrim(system('PATH=$(npm bin):$PATH && which flow'))
+
+if g:flow_path != 'flow not found'
+  let g:deoplete#sources#flow#flow_bin = g:flow_path
+  let g:neomake_javascript_flow_exe = g:flow_path
+  let g:flow#flowpath = g:flow_path
+endif
 
