@@ -115,6 +115,7 @@ function! s:deoplete_cr()
 endfunction
 "inoremap <silent><expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
+inoremap <silent><expr><c-space> deoplete#mappings#manual_complete()
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
 " Neomake
