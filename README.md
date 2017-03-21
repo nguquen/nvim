@@ -1,4 +1,4 @@
-# Installation
+# 1. Installation
 
 ## Install iTerm2, current version is 3.0.14
 
@@ -73,7 +73,7 @@ Inside vim:
 
 ## Install eslint:
 
-We use `Neomake`, a asynchronous linting and make framework for Neovim/Vim. For javascript files, neomake will call to external linter like `eslint` or `flow`. We will install eslint and all of dependencies first.
+We use `Neomake`, a asynchronous linting and make framework for Neovim/Vim. For javascript files, neomake will call to external linter like `eslint` or `flow`. We will install eslint and all of it's dependencies first.
 
 ```
 $ sudo npm install -g eslint
@@ -99,6 +99,92 @@ $ eslint src
 
 By default Vim will use local flow-bin in `node_modules`, so you don't need to install it globally, just add it as a dependency in your package.json.
 
-# Key mappings
+## Install Silver Search for use with Ctrl-P:
 
-...
+```
+brew install the_silver_searcher
+```
+
+# 2. Key mapping
+Some basic key mapping of the plugins. For more detail, check the document of each plugin.
+
+## NERD Tree
+
+Use `ctrl-n` to toggle file explorer
+
+Inside nerdtree window, type `?` for help
+
+## Ctrl-P
+
+Use `ctrl-p` to open fuzzy finder
+
+## NERD Commenter
+
+Comment: `space-cc`
+
+Uncomment: `space-cu`
+
+## deoplete: auto-completion
+
+Use `ctrl-space` for trigger auto-completion feature. Inside deoplete menu, you can use `j`, `k`, or `tab` to navigate between auto-completion items. `Enter` to select the auto-completion item and exit deoplete menu.
+
+## Neomake
+
+Save current file for trigger the linter. If that file has any errors, it'll show `E: <number>` at the bottom right corner. Then press `space-[` to toggle error detail list.
+
+## Working with flow
+
+There's an official plugin for vim: `vim-flow`. Basically, it provides some features:
+- auto-completion
+- check type errors
+- jump to definition
+- display variable type
+
+But it's not good enough, because it's missing asynchonous feature of Neovim. Then i just config vim-flow combine with deoplete (auto-completion) and neomake (check type errors) to maximum the benifit of neovim.
+
+- auto-completion: through `deoplete-flow`, trigger it normally by `ctrl-space`
+- check type errors: through neomake, just add `flow` to list of javascript makers. Trigger it on saving file.
+- jump to definition: use `ctrl-]`
+- display variable type: use `space-d`
+
+## Working with ctags
+
+> Ctags generates an index (or tag) file of language objects found in source files that allows these items to be quickly and easily located by a text editor or other utility.
+
+It's not work well with javascript, that's why we should use flow :D. But it's still helpful if we're working with Ruby or other languages.
+
+Install ctags
+
+```
+$ brew install ctags
+```
+
+Add ctags rule for Rails
+
+```
+$ vi ~/.ctags
+
+--regex-ruby=/(^|;)[ \t]*(class|module)[ \t]+([A-Z][[:alnum:]_]+(::[A-Z][[:alnum:]_]+)+)/\3/c,class,constant/
+--regex-ruby=/(^|[:;])[ \t]*([A-Z][[:alnum:]_]+) *=/\2/c,class,constant/
+--regex-ruby=/(^|;)[ \t]*(has_many|belongs_to|has_one|has_and_belongs_to_many)\(? *:([[:alnum:]_]+)/\3/f,function,association/
+--regex-ruby=/(^|;)[ \t]*(named_)?scope\(? *:([[:alnum:]_]+)/\3/f,function,named_scope/
+--regex-ruby=/(^|;)[ \t]*expose\(? *:([[:alnum:]_]+)/\2/f,function,exposure/
+--regex-ruby=/(^|;)[ \t]*event\(? *:([[:alnum:]_]+)/\2/f,function,aasm_event/
+--regex-ruby=/(^|;)[ \t]*event\(? *:([[:alnum:]_]+)/\2!/f,function,aasm_event/
+--regex-ruby=/(^|;)[ \t]*event\(? *:([[:alnum:]_]+)/\2?/f,function,aasm_event/
+```
+
+By default, vim don't generate tags by default. You should add a file name `.withtags` at your project root to enable it.
+
+After that, you can jump to definition with `ctrl-]`. It provides auto-completion as well. Just use `ctrl-space` to trigger deoplete, it'll show some auto-completion items with `[T]` at the end.
+
+## Multiple cursors
+
+```
+multi_cursor_next_key: 'ctrl-s'
+multi_cursor_prev_key: 'ctrl-p'
+multi_cursor_skip_key: 'ctrl-x'
+multi_cursor_quit_key: 'esc'
+```
+
+##
