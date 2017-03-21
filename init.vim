@@ -35,6 +35,8 @@ Plug 'kana/vim-textobj-user'
 Plug 'nelstrom/vim-textobj-rubyblock'
 "Plug 'majutsushi/tagbar'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'thoughtbot/vim-rspec'
+Plug 'skywind3000/asyncrun.vim'
 call plug#end()
 " clipboard
 set clipboard=unnamed
@@ -244,3 +246,9 @@ if g:flow_path != 'flow not found'
   let g:flow#flowpath = g:flow_path
 endif
 
+" RSpec.vim mappings
+map <silent> <Leader>sc :call RunCurrentSpecFile()<cr>:copen<cr>
+map <silent> <Leader>sn :call RunNearestSpec()<cr>
+map <silent> <Leader>sl :call RunLastSpec()<cr>
+map <silent> <Leader>sa :call RunAllSpecs()<cr>
+let g:rspec_command = "AsyncRun rspec {spec}"

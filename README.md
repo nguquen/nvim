@@ -178,6 +178,38 @@ By default, vim don't generate tags by default. You should add a file name `.wit
 
 After that, you can jump to definition with `ctrl-]`. It provides auto-completion as well. Just use `ctrl-space` to trigger deoplete, it'll show some auto-completion items with `[T]` at the end.
 
+## Switch windows
+
+If you're working with multi windows, you can quickly jump between them with `space-1` -> `space-9` for window 1->9. Or `space-h`, `space-j`, `space-k`, `space-l` to jump right, down, up, left.
+
+## Working with tmux
+
+If you're using tmux like me. There's one more step to quicky jump between tmux panes & vim windows :D. If you don't use tmux, just skip it.
+
+Edit tmux conf
+
+```
+$ vi ~/.tmux.conf
+
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+bind -n C-h if-shell "$is_vim" "send-keys C-h"  "select-pane -L"
+bind -n C-j if-shell "$is_vim" "send-keys C-j"  "select-pane -D"
+bind -n C-k if-shell "$is_vim" "send-keys C-k"  "select-pane -U"
+bind -n C-l if-shell "$is_vim" "send-keys C-l"  "select-pane -R"
+bind -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
+```
+
+Now we can use these key mapping to jump around tmux panes & vim windows seamlessly:
+
+```
+<ctrl-h> => Left
+<ctrl-j> => Down
+<ctrl-k> => Up
+<ctrl-l> => Right
+<ctrl-\> => Previous split
+```
+
 ## Multiple cursors
 
 ```
@@ -187,4 +219,17 @@ multi_cursor_skip_key: 'ctrl-x'
 multi_cursor_quit_key: 'esc'
 ```
 
-##
+## EasyMotion
+
+```
+easymotion-s: 'space-f'
+easymotion-overwin-f2: 'space-s'
+easymotion-sn: 'space-/'
+easymotion-next: 'space-n'
+easymotion-prev: 'space-N'
+```
+
+## Search word under cursor in hole project
+
+Use `K` (shift + k). It'll show the result in Quickfix window at bottom.
+
