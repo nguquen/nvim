@@ -66,6 +66,7 @@ noremap <Left> <NOP>
 noremap <Right> <NOP>
 " setting editors
 set number
+set relativenumber
 set visualbell
 hi MatchParen guifg=#f43753 ctermfg=203 guibg=NONE ctermbg=NONE gui=bold cterm=bold
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
@@ -252,3 +253,15 @@ map <silent> <Leader>sn :call RunNearestSpec()<cr>
 map <silent> <Leader>sl :call RunLastSpec()<cr>
 map <silent> <Leader>sa :call RunAllSpecs()<cr>
 let g:rspec_command = "AsyncRun rspec {spec}"
+
+" Toggle number display
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set norelativenumber
+  else
+    set relativenumber
+  endif
+endfunc
+
+nnoremap <silent> <Leader>rn :call NumberToggle()<cr>
+
