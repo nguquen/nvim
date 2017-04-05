@@ -86,6 +86,7 @@ set splitright
 " jsx
 let g:jsx_ext_required = 0
 " NERDTree
+let NERDTreeShowLineNumbers=1
 map <C-n> :NERDTreeToggle<CR>
 " The Silver Searcher
 if executable('ag')
@@ -245,6 +246,11 @@ if g:flow_path != 'flow not found'
   let g:deoplete#sources#flow#flow_bin = g:flow_path
   let g:neomake_javascript_flow_exe = g:flow_path
   let g:flow#flowpath = g:flow_path
+endif
+
+let g:eslint_path = StrTrim(system('PATH=$(npm bin):$PATH && which eslint'))
+if g:eslint_path != 'eslint not found'
+  let g:neomake_javascript_eslint_exe = g:eslint_path
 endif
 
 " RSpec.vim mappings
