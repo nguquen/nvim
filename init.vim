@@ -13,7 +13,7 @@ Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-haml'
 Plug 'tpope/vim-bundler'
-Plug 'wakatime/vim-wakatime'
+"Plug 'wakatime/vim-wakatime'
 Plug 'airblade/vim-gitgutter'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'flowtype/vim-flow'
@@ -39,7 +39,7 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'skywind3000/asyncrun.vim'
 call plug#end()
 " clipboard
-set clipboard=unnamed
+set clipboard+=unnamedplus
 set pastetoggle=<F2>
 " color
 set termguicolors
