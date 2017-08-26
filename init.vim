@@ -16,8 +16,8 @@ Plug 'tpope/vim-bundler'
 "Plug 'wakatime/vim-wakatime'
 Plug 'airblade/vim-gitgutter'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'flowtype/vim-flow'
-Plug 'steelsojka/deoplete-flow'
+"Plug 'flowtype/vim-flow'
+"Plug 'steelsojka/deoplete-flow'
 "Plug 'ternjs/tern_for_vim'
 "Plug 'carlitux/deoplete-ternjs'
 Plug 'moll/vim-node'
@@ -37,6 +37,8 @@ Plug 'nelstrom/vim-textobj-rubyblock'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'thoughtbot/vim-rspec'
 Plug 'skywind3000/asyncrun.vim'
+Plug 'nikvdp/ejs-syntax'
+Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
@@ -64,6 +66,10 @@ noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
+inoremap <Up> <NOP>
+inoremap <Down> <NOP>
+inoremap <Left> <NOP>
+inoremap <Right> <NOP>
 " setting editors
 set number
 set relativenumber
@@ -103,15 +109,15 @@ nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 vnoremap // y/<C-R>"<CR>
 " Use deoplete
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#disable_auto_complete = 1
+"let g:deoplete#disable_auto_complete = 1
 let g:deoplete#file#enable_buffer_path = 1
 let g:deoplete#enable_smart_case = 1
 let deoplete#tag#cache_limit_size = 5000000
 let g:deoplete#omni#functions = {}
 let g:deoplete#omni#functions.javascript = []
 inoremap <silent><expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
-inoremap <silent><expr> j pumvisible() ? "\<C-n>" : "j"
-inoremap <silent><expr> k pumvisible() ? "\<C-p>" : "k"
+inoremap <silent><expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+inoremap <silent><expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 "inoremap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
 inoremap <silent><expr><CR> <C-r>=<SID>deoplete_cr()<CR>
 function! s:deoplete_cr()
@@ -124,8 +130,9 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
 " Neomake
 autocmd! BufWritePost * Neomake
-let g:neomake_javascript_enabled_makers = ['eslint', 'flow']
-let g:neomake_jsx_enabled_makers = ['eslint', 'flow']
+let g:neomake_javascript_enabled_makers = ['eslint']
+let g:neomake_jsx_enabled_makers = ['eslint']
+let g:neomake_java_enabled_makers = []
 let g:neomake_open_list = 0
 let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
 let g:neomake_warning_sign = {'text': '⚠','texthl': 'WarningMsg'}
@@ -218,7 +225,7 @@ let NERDSpaceDelims=1
 set statusline+=%{gutentags#statusline('[Generating...]')}
 let g:gutentags_add_default_project_roots=0
 let g:gutentags_project_root = ['.withtags']
-let g:gutentags_exclude=["node_modules"]
+let g:gutentags_ctags_exclude=["node_modules"]
 
 " imap jw <Esc> :w<CR>
 " imap jj <Esc>
@@ -226,27 +233,26 @@ let g:gutentags_exclude=["node_modules"]
 autocmd BufWritePre * %s/\s\+$//e
 
 " flow setup (neomake, deoplete, vim-flow)
-let g:flow#enable = 0
-let g:flow#omnifunc = 0
-let g:flow#autoclose = 1
-let g:flow#timeout = 4
+"let g:flow#enable = 0
+"let g:flow#omnifunc = 0
+"let g:flow#autoclose = 1
+"let g:flow#timeout = 4
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
 let g:javascript_plugin_flow = 1
-au FileType javascript nnoremap <silent> <c-]> :FlowJumpToDef<cr>
-au FileType javascript nnoremap <silent> <Leader>d :FlowType<cr>
+"au FileType javascript nnoremap <silent> <c-]> :FlowJumpToDef<cr>
+"au FileType javascript nnoremap <silent> <Leader>d :FlowType<cr>
 
 function! StrTrim(txt)
   return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 endfunction
 
-let g:flow_path = StrTrim(system('PATH=$(npm bin):$PATH && which flow'))
-
-if g:flow_path != 'flow not found'
-  let g:deoplete#sources#flow#flow_bin = g:flow_path
-  let g:neomake_javascript_flow_exe = g:flow_path
-  let g:flow#flowpath = g:flow_path
-endif
+"let g:flow_path = StrTrim(system('PATH=$(npm bin):$PATH && which flow'))
+"if g:flow_path != 'flow not found'
+"  let g:deoplete#sources#flow#flow_bin = g:flow_path
+"  let g:neomake_javascript_flow_exe = g:flow_path
+"  let g:flow#flowpath = g:flow_path
+"endif
 
 let g:eslint_path = StrTrim(system('PATH=$(npm bin):$PATH && which eslint'))
 if g:eslint_path != 'eslint not found'
@@ -269,5 +275,17 @@ function! NumberToggle()
   endif
 endfunc
 
-nnoremap <silent> <Leader>rn :call NumberToggle()<cr>
+nnoremap <silent> <Leader>nt :call NumberToggle()<cr>
+
+autocmd FileType javascript set formatprg=prettier-eslint\ --stdin
+
+" Language Servers
+let g:LanguageClient_serverCommands = {
+\ 'javascript': ['flow-language-server', '--try-flow-bin', '--stdio'],
+\ 'javascript.jsx': ['flow-language-server', '--try-flow-bin', '--stdio'],
+\ }
+" Automatically start language servers.
+let g:LanguageClient_autoStart = 1
+au FileType javascript nnoremap <silent> <c-]> :call LanguageClient_textDocument_definition()<cr>
+au FileType javascript nnoremap <silent> <leader>rn :call LanguageClient_textDocument_rename()<cr>
 
