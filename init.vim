@@ -130,8 +130,8 @@ autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
 " Neomake
 autocmd! BufWritePost * Neomake
-let g:neomake_javascript_enabled_makers = ['eslint']
-let g:neomake_jsx_enabled_makers = ['eslint']
+let g:neomake_javascript_enabled_makers = ['eslint', 'flow']
+let g:neomake_jsx_enabled_makers = ['eslint', 'flow']
 let g:neomake_java_enabled_makers = []
 let g:neomake_open_list = 0
 let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
@@ -247,12 +247,12 @@ function! StrTrim(txt)
   return substitute(a:txt, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 endfunction
 
-"let g:flow_path = StrTrim(system('PATH=$(npm bin):$PATH && which flow'))
-"if g:flow_path != 'flow not found'
+let g:flow_path = StrTrim(system('PATH=$(npm bin):$PATH && which flow'))
+if g:flow_path != 'flow not found'
 "  let g:deoplete#sources#flow#flow_bin = g:flow_path
-"  let g:neomake_javascript_flow_exe = g:flow_path
+  let g:neomake_javascript_flow_exe = g:flow_path
 "  let g:flow#flowpath = g:flow_path
-"endif
+endif
 
 let g:eslint_path = StrTrim(system('PATH=$(npm bin):$PATH && which eslint'))
 if g:eslint_path != 'eslint not found'
