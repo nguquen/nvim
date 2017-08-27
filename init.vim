@@ -39,6 +39,7 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'nikvdp/ejs-syntax'
 Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+Plug 'jiangmiao/auto-pairs'
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
@@ -276,8 +277,6 @@ function! NumberToggle()
 endfunc
 
 nnoremap <silent> <Leader>nt :call NumberToggle()<cr>
-
-autocmd FileType javascript set formatprg=prettier-eslint\ --stdin
 
 " Language Servers
 let g:LanguageClient_serverCommands = {
