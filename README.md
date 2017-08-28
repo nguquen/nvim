@@ -64,6 +64,7 @@ Inside vim:
 
 ```
 :PlugInstall
+:UpdateRemotePlugins
 ```
 
 ## Install powerline fonts:
@@ -142,10 +143,16 @@ There's an official plugin for vim: `vim-flow`. Basically, it provides some feat
 
 But it's not good enough, because it's missing asynchonous feature of Neovim. Then i just config vim-flow combine with deoplete (auto-completion) and neomake (check type errors) to maximum the benifit of neovim.
 
-- auto-completion: through `deoplete-flow`, trigger it normally by `ctrl-space`
+- auto-completion: through `deoplete-flow`, trigger it normally by `ctrl-space` (deprecated)
 - check type errors: through neomake, just add `flow` to list of javascript makers. Trigger it on saving file.
 - jump to definition: use `ctrl-]`
 - display variable type: use `space-d`
+
+### UPDATE
+I just replaced `vim-flow`, `deoplete-flow` with `flow-language-server` and `LanguageClient-neovim`. It's better than old solution. Just install `flow-language-server`:
+```
+npm install -g flow-language-server
+```
 
 ## Working with ctags
 
