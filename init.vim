@@ -39,7 +39,7 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'nikvdp/ejs-syntax'
 Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
-Plug 'jiangmiao/auto-pairs'
+"Plug 'jiangmiao/auto-pairs'
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
