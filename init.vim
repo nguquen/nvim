@@ -27,6 +27,7 @@ Plug 'tpope/vim-repeat'
 Plug 'nguquen/vim-shot-f'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-surround'
+Plug 'Raimondi/delimitMate'
 Plug 'tpope/vim-endwise'
 Plug 'mbbill/undotree'
 Plug 'christoomey/vim-tmux-navigator'
@@ -39,7 +40,6 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'nikvdp/ejs-syntax'
 Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
-"Plug 'jiangmiao/auto-pairs'
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
@@ -119,8 +119,8 @@ let g:deoplete#omni#functions.javascript = []
 inoremap <silent><expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
 inoremap <silent><expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 inoremap <silent><expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-"inoremap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<CR>"
-inoremap <silent><expr><CR> <C-r>=<SID>deoplete_cr()<CR>
+imap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+"inoremap <silent><expr><CR> <C-r>=<SID>deoplete_cr()<CR>
 function! s:deoplete_cr()
   return pumvisible() ? "\<C-y>" : "\<CR>"
 endfunction
@@ -288,3 +288,7 @@ let g:LanguageClient_autoStart = 1
 au FileType javascript nnoremap <silent> <c-]> :call LanguageClient_textDocument_definition()<cr>
 au FileType javascript nnoremap <silent> <leader>rn :call LanguageClient_textDocument_rename()<cr>
 
+" delimitMate
+let g:endwise_no_mappings = 1
+let delimitMate_expand_cr = 1
+let delimitMate_expand_space = 1
