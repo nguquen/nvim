@@ -80,6 +80,7 @@ set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 set list
 set tabstop=2 shiftwidth=2 expandtab
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " let alt 'send' ESC key
 let s:printable_ascii = map(range(65, 122), 'nr2char(v:val)')
 for s:char in s:printable_ascii
