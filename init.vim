@@ -40,6 +40,7 @@ Plug 'thoughtbot/vim-rspec'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'nikvdp/ejs-syntax'
 Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+Plug 'rhysd/vim-grammarous'
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
@@ -80,6 +81,7 @@ set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 set list
 set tabstop=2 shiftwidth=2 expandtab
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " let alt 'send' ESC key
 let s:printable_ascii = map(range(65, 122), 'nr2char(v:val)')
