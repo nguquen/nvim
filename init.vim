@@ -48,7 +48,7 @@ set pastetoggle=<F2>
 " color
 set termguicolors
 set background=dark
-colorscheme one
+silent! colorscheme one
 "change VertSpit color of colorscheme `one`
 hi VertSplit guifg=#1b1b24 guibg=#707070 guisp=#707070 gui=bold
 " airline
@@ -290,6 +290,7 @@ let g:LanguageClient_serverCommands = {
 let g:LanguageClient_autoStart = 1
 au FileType javascript nnoremap <silent> <c-]> :call LanguageClient_textDocument_definition()<cr>
 au FileType javascript nnoremap <silent> <leader>rn :call LanguageClient_textDocument_rename()<cr>
+let g:LanguageClient_diagnosticsList='location'
 
 " delimitMate
 let g:endwise_no_mappings = 1
