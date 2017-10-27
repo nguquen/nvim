@@ -41,6 +41,8 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'nikvdp/ejs-syntax'
 Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 Plug 'rhysd/vim-grammarous'
+Plug 'fatih/vim-go'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
@@ -296,3 +298,6 @@ let g:LanguageClient_diagnosticsList='location'
 let g:endwise_no_mappings = 1
 let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
+
+"go
+let g:go_fmt_command = "goimports"
