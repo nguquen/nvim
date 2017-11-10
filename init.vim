@@ -301,3 +301,6 @@ let delimitMate_expand_space = 1
 
 "go
 let g:go_fmt_command = "goimports"
+let g:neomake_go_gometalinter_args = []
+let g:go_autodetect_gopath = 1
+au FileType go let $GOPATH = go#path#Detect()
