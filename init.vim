@@ -43,6 +43,7 @@ Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 Plug 'rhysd/vim-grammarous'
 Plug 'fatih/vim-go'
 Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'chaoren/vim-wordmotion'
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
@@ -223,6 +224,13 @@ let g:multi_cursor_next_key='<C-s>'
 let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
+
+function Multiple_cursors_before()
+  let g:deoplete#disable_auto_complete = 1
+endfunction
+function Multiple_cursors_after()
+  let g:deoplete#disable_auto_complete = 0
+endfunction
 " nerdcommenter
 let NERDSpaceDelims=1
 " tagbar
