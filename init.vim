@@ -39,11 +39,14 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'thoughtbot/vim-rspec'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'nikvdp/ejs-syntax'
-Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 Plug 'rhysd/vim-grammarous'
 Plug 'fatih/vim-go'
 Plug 'zchee/deoplete-go', { 'do': 'make'}
-Plug 'chaoren/vim-wordmotion'
+"Plug 'chaoren/vim-wordmotion'
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
@@ -312,3 +315,5 @@ let g:go_fmt_command = "goimports"
 let g:neomake_go_gometalinter_args = []
 let g:go_autodetect_gopath = 1
 au FileType go let $GOPATH = go#path#Detect()
+
+set updatetime=100
