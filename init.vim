@@ -46,7 +46,9 @@ Plug 'autozimu/LanguageClient-neovim', {
 Plug 'rhysd/vim-grammarous'
 Plug 'fatih/vim-go'
 Plug 'zchee/deoplete-go', { 'do': 'make'}
+" Plug 'sbdchd/neoformat'
 "Plug 'chaoren/vim-wordmotion'
+Plug 'bumaociyuan/vim-swift'
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
@@ -103,6 +105,8 @@ set splitright
 let g:jsx_ext_required = 0
 " NERDTree
 let NERDTreeShowLineNumbers=1
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 map <C-n> :NERDTreeToggle<CR>
 " The Silver Searcher
 if executable('ag')
@@ -298,6 +302,7 @@ nnoremap <silent> <Leader>nt :call NumberToggle()<cr>
 let g:LanguageClient_serverCommands = {
 \ 'javascript': ['flow-language-server', '--try-flow-bin', '--stdio'],
 \ 'javascript.jsx': ['flow-language-server', '--try-flow-bin', '--stdio'],
+\ 'sh': ['bash-language-server', 'start'],
 \ }
 " Automatically start language servers.
 let g:LanguageClient_autoStart = 1
@@ -317,3 +322,11 @@ let g:go_autodetect_gopath = 1
 au FileType go let $GOPATH = go#path#Detect()
 
 set updatetime=100
+
+" neoformat
+" let g:neoformat_enabled_javascript = ['prettier-eslint']
+" augroup fmt
+  " autocmd!
+  " autocmd BufWritePre *.js undojoin | Neoformat
+" augroup END
+
