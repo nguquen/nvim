@@ -49,6 +49,7 @@ Plug 'zchee/deoplete-go', { 'do': 'make'}
 " Plug 'sbdchd/neoformat'
 "Plug 'chaoren/vim-wordmotion'
 Plug 'bumaociyuan/vim-swift'
+Plug 'kelwin/vim-smali'
 call plug#end()
 " clipboard
 set clipboard+=unnamedplus
