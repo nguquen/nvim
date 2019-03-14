@@ -153,6 +153,7 @@ let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
 let g:neomake_warning_sign = {'text': '⚠','texthl': 'WarningMsg'}
 let g:neomake_message_sign = {'text': '➤','texthl': 'MessageMsg'}
 let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'InfoMsg'}
+let g:neomake_virtualtext_current_error = 0
 " easymotion
 let mapleader=" "
 let g:EasyMotion_do_mapping = 0 "Disable default mappings
@@ -310,6 +311,7 @@ let g:LanguageClient_autoStart = 1
 au FileType javascript nnoremap <silent> <c-]> :call LanguageClient_textDocument_definition()<cr>
 au FileType javascript nnoremap <silent> <leader>rn :call LanguageClient_textDocument_rename()<cr>
 let g:LanguageClient_diagnosticsList='location'
+let g:LanguageClient_useVirtualText = 0
 
 " delimitMate
 let g:endwise_no_mappings = 1
