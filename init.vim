@@ -256,6 +256,7 @@ let g:ale_fixers = {
 \   'javascript': ['prettier_eslint'],
 \}
 let g:ale_fix_on_save = 1
+set signcolumn=yes
 
 " easymotion settings
 let g:EasyMotion_do_mapping = 0 "Disable default mappings
