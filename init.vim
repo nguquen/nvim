@@ -23,7 +23,8 @@ Plug 'Shougo/neosnippet-snippets'
 "Plug 'ternjs/tern_for_vim'
 "Plug 'carlitux/deoplete-ternjs'
 Plug 'moll/vim-node'
-Plug 'neomake/neomake'
+"Plug 'neomake/neomake'
+Plug 'w0rp/ale'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-repeat'
 Plug 'nguquen/vim-shot-f'
@@ -54,15 +55,18 @@ Plug 'jodosha/vim-godebug'
 Plug 'bumaociyuan/vim-swift'
 Plug 'kelwin/vim-smali'
 call plug#end()
+
 " clipboard
 set clipboard+=unnamedplus
 set pastetoggle=<F2>
+
 " color
 set termguicolors
 set background=dark
 silent! colorscheme one
 "change VertSpit color of colorscheme `one`
 hi VertSplit guifg=#1b1b24 guibg=#707070 guisp=#707070 gui=bold
+
 " airline
 let g:airline_powerline_fonts=1
 "let g:airline_theme='one'
@@ -75,6 +79,7 @@ let g:airline#extensions#tmuxline#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_exclude_preview = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
+
 " disable arrow keys
 noremap <Up> <NOP>
 noremap <Down> <NOP>
@@ -84,6 +89,7 @@ inoremap <Up> <NOP>
 inoremap <Down> <NOP>
 inoremap <Left> <NOP>
 inoremap <Right> <NOP>
+
 " setting editors
 set number
 set relativenumber
@@ -107,11 +113,13 @@ set splitbelow
 set splitright
 " jsx
 let g:jsx_ext_required = 0
+
 " NERDTree
 let NERDTreeShowLineNumbers=1
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 map <C-n> :NERDTreeToggle<CR>
+
 " The Silver Searcher
 if executable('ag')
   " Use ag over grep
@@ -121,10 +129,12 @@ if executable('ag')
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
 endif
+
 " bind K to grep word under cursor
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 " bind // for search visual selection
 vnoremap // y/<C-R>"<CR>
+
 " Use deoplete
 let g:deoplete#enable_at_startup = 1
 "let g:deoplete#disable_auto_complete = 1
@@ -146,6 +156,7 @@ inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
 inoremap <silent><expr><c-space> deoplete#mappings#manual_complete()
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
+
 " Use neosnippet
 " imap <C-n>     <Plug>(neosnippet_expand_or_jump)
 " smap <C-n>     <Plug>(neosnippet_expand_or_jump)
@@ -157,17 +168,36 @@ xmap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expan
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+
 " Neomake
-autocmd! BufWritePost * Neomake
-let g:neomake_javascript_enabled_makers = ['eslint', 'flow']
-let g:neomake_jsx_enabled_makers = ['eslint', 'flow']
-let g:neomake_java_enabled_makers = []
-let g:neomake_open_list = 0
-let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
-let g:neomake_warning_sign = {'text': '⚠','texthl': 'WarningMsg'}
-let g:neomake_message_sign = {'text': '➤','texthl': 'MessageMsg'}
-let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'InfoMsg'}
-let g:neomake_virtualtext_current_error = 0
+" autocmd! BufWritePost * Neomake
+" let g:neomake_javascript_enabled_makers = ['eslint', 'flow']
+" let g:neomake_jsx_enabled_makers = ['eslint', 'flow']
+" let g:neomake_java_enabled_makers = []
+" let g:neomake_open_list = 0
+" let g:neomake_error_sign = {'text': '✖', 'texthl': 'ErrorMsg'}
+" let g:neomake_warning_sign = {'text': '⚠','texthl': 'WarningMsg'}
+" let g:neomake_message_sign = {'text': '➤','texthl': 'MessageMsg'}
+" let g:neomake_info_sign = {'text': 'ℹ', 'texthl': 'InfoMsg'}
+" let g:neomake_virtualtext_current_error = 0
+
+" ale
+let g:ale_sign_error = '✖'
+let g:ale_sign_warning = '⚠'
+let g:ale_sign_info = 'ℹ'
+let g:airline#extensions#ale#enabled = 1
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_linters = {
+\  'javascript': ['flow', 'eslint']
+\}
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'javascript': ['prettier_eslint'],
+\}
+let g:ale_fix_on_save = 1
+
 " easymotion
 let mapleader=" "
 let g:EasyMotion_do_mapping = 0 "Disable default mappings
@@ -267,7 +297,8 @@ let g:gutentags_ctags_exclude=["node_modules"]
 " imap jw <Esc> :w<CR>
 " imap jj <Esc>
 
-autocmd BufWritePre * %s/\s\+$//e
+" auto strip trailing spaces
+" autocmd BufWritePre * %s/\s\+$//e
 
 " flow setup (neomake, deoplete, vim-flow)
 "let g:flow#enable = 0
@@ -287,13 +318,13 @@ endfunction
 let g:flow_path = StrTrim(system('PATH=$(npm bin):$PATH && which flow'))
 if g:flow_path != 'flow not found'
 "  let g:deoplete#sources#flow#flow_bin = g:flow_path
-  let g:neomake_javascript_flow_exe = g:flow_path
+"  let g:neomake_javascript_flow_exe = g:flow_path
 "  let g:flow#flowpath = g:flow_path
 endif
 
 let g:eslint_path = StrTrim(system('PATH=$(npm bin):$PATH && which eslint'))
 if g:eslint_path != 'eslint not found'
-  let g:neomake_javascript_eslint_exe = g:eslint_path
+"  let g:neomake_javascript_eslint_exe = g:eslint_path
 endif
 
 " RSpec.vim mappings
@@ -339,7 +370,8 @@ let delimitMate_expand_space = 1
 
 "go
 let g:go_fmt_command = "goimports"
-let g:neomake_go_gometalinter_args = []
+" let g:neomake_go_gometalinter_args = []
+" let g:go_auto_sameids = 1
 let g:go_autodetect_gopath = 1
 au FileType go let $GOPATH = go#path#Detect()
 let g:go_snippet_engine = "neosnippet"
