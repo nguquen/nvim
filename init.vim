@@ -316,8 +316,8 @@ let g:LanguageClient_rootMarkers = {
 \ }
 "automatically start language servers.
 let g:LanguageClient_autoStart = 1
-au FileType javascript nnoremap <silent> <c-]> :call LanguageClient_textDocument_definition()<cr>
-au FileType javascript nnoremap <silent> <leader>rn :call LanguageClient_textDocument_rename()<cr>
+nnoremap <silent> <c-]> :call LanguageClient_textDocument_definition()<cr>
+nnoremap <silent> <leader>rn :call LanguageClient_textDocument_rename()<cr>
 let g:LanguageClient_diagnosticsList='location'
 let g:LanguageClient_useVirtualText = 0
 
