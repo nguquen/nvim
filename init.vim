@@ -16,6 +16,8 @@ Plug 'tpope/vim-bundler'
 "Plug 'wakatime/vim-wakatime'
 Plug 'airblade/vim-gitgutter'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 "Plug 'flowtype/vim-flow'
 "Plug 'steelsojka/deoplete-flow'
 "Plug 'ternjs/tern_for_vim'
@@ -34,7 +36,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'kana/vim-textobj-user'
 Plug 'nelstrom/vim-textobj-rubyblock'
-"Plug 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'thoughtbot/vim-rspec'
 Plug 'skywind3000/asyncrun.vim'
@@ -45,7 +47,8 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ }
 Plug 'rhysd/vim-grammarous'
 Plug 'fatih/vim-go'
-Plug 'zchee/deoplete-go', { 'do': 'make'}
+"Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'jodosha/vim-godebug'
 " Plug 'sbdchd/neoformat'
 "Plug 'chaoren/vim-wordmotion'
 Plug 'bumaociyuan/vim-swift'
@@ -143,6 +146,17 @@ inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
 inoremap <silent><expr><c-space> deoplete#mappings#manual_complete()
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
+" Use neosnippet
+" imap <C-n>     <Plug>(neosnippet_expand_or_jump)
+" smap <C-n>     <Plug>(neosnippet_expand_or_jump)
+" xmap <C-n>     <Plug>(neosnippet_expand_target)
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+xmap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 " Neomake
 autocmd! BufWritePost * Neomake
 let g:neomake_javascript_enabled_makers = ['eslint', 'flow']
@@ -243,7 +257,7 @@ endfunction
 " nerdcommenter
 let NERDSpaceDelims=1
 " tagbar
-"nnoremap <silent> <Leader>tb :TagbarToggle<CR>
+nnoremap <silent> <Leader>tb :TagbarToggle<CR>
 " gutentags
 set statusline+=%{gutentags#statusline('[Generating...]')}
 let g:gutentags_add_default_project_roots=0
@@ -301,10 +315,15 @@ endfunc
 nnoremap <silent> <Leader>nt :call NumberToggle()<cr>
 
 " Language Servers
+let g:LanguageClient_rootMarkers = {
+\ 'go': ['.git', 'go.mod'],
+\ }
+
 let g:LanguageClient_serverCommands = {
 \ 'javascript': ['flow-language-server', '--try-flow-bin', '--stdio'],
 \ 'javascript.jsx': ['flow-language-server', '--try-flow-bin', '--stdio'],
 \ 'sh': ['bash-language-server', 'start'],
+\ 'go': ['bingo'],
 \ }
 " Automatically start language servers.
 let g:LanguageClient_autoStart = 1
@@ -323,6 +342,12 @@ let g:go_fmt_command = "goimports"
 let g:neomake_go_gometalinter_args = []
 let g:go_autodetect_gopath = 1
 au FileType go let $GOPATH = go#path#Detect()
+let g:go_snippet_engine = "neosnippet"
+"let g:go_gocode_unimported_packages = 1
+"let g:deoplete#sources#go#unimported_packages = 1
+"let g:deoplete#sources#go#pointer = 1
+"let g:deoplete#sources#go#builtin_objects = 1
+"let g:deoplete#sources#go#cgo = 1
 
 set updatetime=100
 
