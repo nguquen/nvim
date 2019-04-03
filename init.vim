@@ -249,7 +249,8 @@ let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_linters = {
-\  'javascript': ['flow', 'eslint']
+\  'javascript': ['flow', 'eslint'],
+\  'java': [],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -314,11 +315,21 @@ let g:LanguageClient_rootMarkers = {
 \ 'go': ['.git', 'go.mod'],
 \ 'javascript': ['.git', '.flowconfig'],
 \ 'javascript.jsx': ['.git', '.flowconfig'],
+\ 'java': ['.git'],
 \ }
 "automatically start language servers.
 let g:LanguageClient_autoStart = 1
 nnoremap <silent> <c-]> :call LanguageClient_textDocument_definition()<cr>
-nnoremap <silent> <leader>rn :call LanguageClient_textDocument_rename()<cr>
+nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
+nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
+nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
+nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
+nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
+nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
+nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
+nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
+nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
 let g:LanguageClient_diagnosticsList='location'
 let g:LanguageClient_useVirtualText = 0
 
@@ -332,3 +343,4 @@ let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 au FileType go let $GOPATH = go#path#Detect()
 let g:go_snippet_engine = "neosnippet"
+let g:go_doc_keywordprg_enabled = 0
