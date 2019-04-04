@@ -239,3 +239,9 @@ easymotion-prev: 'space-N'
 ## Search word under cursor in hole project
 
 Use `K` (shift + k). It'll show the result in Quickfix window at bottom.
+
+## Improve iTerm2 performance:
+Settings -> Terminal -> Scrollback Buffer
+- `Scrollback lines: 4096`
+- Disable `Save lines to scrollback when an app status bar is present`
+- Disable `Save lines to scrollback in alternate screen mode`
