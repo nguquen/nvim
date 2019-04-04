@@ -269,18 +269,18 @@ map <Leader>/ <Plug>(easymotion-sn)
 map <Leader>n <Plug>(easymotion-next)
 map <Leader>N <Plug>(easymotion-prev)
 
-" multi-cursors settings
+" multiple-cursors settings
 let g:multi_cursor_use_default_mapping = 0
 let g:multi_cursor_exit_from_insert_mode = 0
 let g:multi_cursor_next_key='<C-s>'
 let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
-function Multiple_cursors_before()
-  let g:deoplete#disable_auto_complete = 1
+function! Multiple_cursors_before()
+  call deoplete#custom#buffer_option('auto_complete', v:false)
 endfunction
-function Multiple_cursors_after()
-  let g:deoplete#disable_auto_complete = 0
+function! Multiple_cursors_after()
+  call deoplete#custom#buffer_option('auto_complete', v:true)
 endfunction
 
 " nerdcommenter settings
