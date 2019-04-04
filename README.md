@@ -9,7 +9,7 @@ https://www.iterm2.com/downloads.html
 ## Install neovim:
 
 ```
-$ brew install neovim/neovim/neovim
+$ brew install neovim
 ```
 
 ## Create symlink:
@@ -239,4 +239,3 @@ easymotion-prev: 'space-N'
 ## Search word under cursor in hole project
 
 Use `K` (shift + k). It'll show the result in Quickfix window at bottom.
-
