@@ -45,16 +45,11 @@ Plug 'bumaociyuan/vim-swift'
 Plug 'kelwin/vim-smali'
 
 "monitoring
-"Plug 'wakatime/vim-wakatime'
+Plug 'wakatime/vim-wakatime'
 
 "editor
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'honza/vim-snippets'
 Plug 'w0rp/ale'
 Plug 'nguquen/vim-shot-f'
 Plug 'terryma/vim-multiple-cursors'
@@ -209,40 +204,6 @@ if executable('ag')
   let g:ctrlp_use_caching = 0
 endif
 
-" deoplete settings
-let g:deoplete#enable_at_startup = 1
-"let g:deoplete#disable_auto_complete = 1
-let g:deoplete#file#enable_buffer_path = 1
-let g:deoplete#enable_smart_case = 1
-let deoplete#tag#cache_limit_size = 5000000
-let g:deoplete#omni#functions = {}
-let g:deoplete#omni#functions.javascript = []
-inoremap <silent><expr><tab> pumvisible() ? "\<C-n>" : "\<tab>"
-inoremap <silent><expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
-inoremap <silent><expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-imap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
-"inoremap <silent><expr><CR> <C-r>=<SID>deoplete_cr()<CR>
-function! s:deoplete_cr()
-  return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-"inoremap <silent><expr><Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
-inoremap <silent><expr><c-@> deoplete#mappings#manual_complete()
-inoremap <silent><expr><c-space> deoplete#mappings#manual_complete()
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
-
-" neosnippet settings
-"imap <C-n>     <Plug>(neosnippet_expand_or_jump)
-"smap <C-n>     <Plug>(neosnippet_expand_or_jump)
-"xmap <C-n>     <Plug>(neosnippet_expand_target)
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-xmap <expr><TAB> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-"For conceal markers.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
-
 " ale settings
 let g:ale_sign_error = '✖'
 let g:ale_sign_warning = '⚠'
@@ -279,12 +240,6 @@ let g:multi_cursor_next_key='<C-s>'
 let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
-function! Multiple_cursors_before()
-  call deoplete#custom#buffer_option('auto_complete', v:false)
-endfunction
-function! Multiple_cursors_after()
-  call deoplete#custom#buffer_option('auto_complete', v:true)
-endfunction
 
 " nerdcommenter settings
 let NERDSpaceDelims=1
@@ -305,38 +260,6 @@ map <silent> <Leader>sl :call RunLastSpec()<cr>
 map <silent> <Leader>sa :call RunAllSpecs()<cr>
 let g:rspec_command = "AsyncRun rspec {spec}"
 
-" LanguageServer settings
-"server commands
-let g:LanguageClient_serverCommands = {
-\ 'javascript': ['flow-language-server', '--try-flow-bin', '--stdio'],
-\ 'javascript.jsx': ['flow-language-server', '--try-flow-bin', '--stdio'],
-\ 'sh': ['bash-language-server', 'start'],
-\ 'java': ['/usr/local/bin/jdtls', '-data', getcwd()],
-\ 'go': ['bingo'],
-\ }
-"root markers
-let g:LanguageClient_rootMarkers = {
-\ 'go': ['.git', 'go.mod'],
-\ 'javascript': ['.git', '.flowconfig'],
-\ 'javascript.jsx': ['.git', '.flowconfig'],
-\ 'java': ['.git'],
-\ }
-"automatically start language servers.
-let g:LanguageClient_autoStart = 1
-nnoremap <silent> <c-]> :call LanguageClient_textDocument_definition()<cr>
-nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
-nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
-nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
-nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
-nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
-nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
-nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
-nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
-nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
-nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
-let g:LanguageClient_diagnosticsList='location'
-let g:LanguageClient_useVirtualText = 0
-
 " delimitMate settings
 let g:endwise_no_mappings = 1
 let delimitMate_expand_cr = 1
@@ -346,5 +269,27 @@ let delimitMate_expand_space = 1
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 au FileType go let $GOPATH = go#path#Detect()
-let g:go_snippet_engine = "neosnippet"
 let g:go_doc_keywordprg_enabled = 0
+
+" coc.nvim
+"use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+let g:coc_snippet_next = '<tab>'
+inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
+inoremap <silent><expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+imap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
+autocmd FileType json syntax match Comment +\/\/.\+$+
+let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
+let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'

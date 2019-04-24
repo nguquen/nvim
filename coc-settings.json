@@ -1,0 +1,23 @@
+{
+  "diagnostic.errorSign": "✖",
+  "diagnostic.warningSign": "⚠",
+  "diagnostic.infoSign": "ℹ",
+  "snippets.ultisnips.enable": false,
+  "java.jdt.ls.vmargs": "-noverify -Xmx2G -XX:+UseG1GC -XX:+UseStringDeduplication",
+  // disable tsserver for javascript
+  "tsserver.enableJavascript": false,
+  "languageserver": {
+    "flow": {
+      "command": "flow-language-server",
+      "args": ["--stdio"],
+      "rootPatterns": [".flowconfig", ".git/"],
+      "filetypes": ["javascript", "javascriptreact"]
+    },
+    "golang": {
+      "command": "bingo",
+      "args": ["--diagnostics-style=instant"],
+      "rootPatterns": ["go.mod", ".git/"],
+      "filetypes": ["go"]
+    }
+  }
+}
