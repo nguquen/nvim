@@ -35,6 +35,9 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'fatih/vim-go'
 Plug 'jodosha/vim-godebug'
 
+"protobuf
+Plug 'uarun/vim-protobuf'
+
 "swift
 Plug 'bumaociyuan/vim-swift'
 
@@ -95,7 +98,7 @@ set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 set list
 set tabstop=2 shiftwidth=2 expandtab
 set completeopt-=preview
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+"let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 "disable automatic comment insertion
 au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -308,6 +311,7 @@ let g:LanguageClient_serverCommands = {
 \ 'javascript': ['flow-language-server', '--try-flow-bin', '--stdio'],
 \ 'javascript.jsx': ['flow-language-server', '--try-flow-bin', '--stdio'],
 \ 'sh': ['bash-language-server', 'start'],
+\ 'java': ['/usr/local/bin/jdtls', '-data', getcwd()],
 \ 'go': ['bingo'],
 \ }
 "root markers
