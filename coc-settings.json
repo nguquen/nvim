@@ -1,10 +1,10 @@
 {
+  "suggest.autoTrigger": "always",
   "diagnostic.errorSign": "✖",
   "diagnostic.warningSign": "⚠",
   "diagnostic.infoSign": "ℹ",
   "snippets.ultisnips.enable": false,
   "java.jdt.ls.vmargs": "-noverify -Xmx2G -XX:+UseG1GC -XX:+UseStringDeduplication",
-  // disable tsserver for javascript
   "tsserver.enableJavascript": false,
   "languageserver": {
     "flow": {

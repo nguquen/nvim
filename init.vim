@@ -20,6 +20,10 @@ Plug 'mxw/vim-jsx'
 Plug 'moll/vim-node'
 Plug 'nikvdp/ejs-syntax'
 
+"typescript
+Plug 'ianks/vim-tsx'
+Plug 'leafgarland/typescript-vim'
+
 "ruby
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
@@ -43,6 +47,9 @@ Plug 'bumaociyuan/vim-swift'
 
 "smali
 Plug 'kelwin/vim-smali'
+
+"terraform
+Plug 'hashivim/vim-terraform'
 
 "monitoring
 Plug 'wakatime/vim-wakatime'
@@ -92,7 +99,6 @@ hi MatchParen guifg=#f43753 ctermfg=203 guibg=NONE ctermbg=NONE gui=bold cterm=b
 set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·
 set list
 set tabstop=2 shiftwidth=2 expandtab
-set completeopt-=preview
 "let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
 set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
 "disable automatic comment insertion
@@ -121,7 +127,7 @@ inoremap <Right> <NOP>
 "bind K to grep word under cursor
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 "bind // for search visual selection
-vnoremap // y/<C-R>"<CR>
+"vnoremap // y/<C-R>"<CR>
 "toggle
 function! GetBufferList()
   redir =>buflist
@@ -190,6 +196,7 @@ let g:javascript_plugin_flow = 1
 
 " NERDTree settings
 let NERDTreeShowLineNumbers=1
+let NERDTreeShowHidden=1
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 map <C-n> :NERDTreeToggle<CR>
@@ -199,9 +206,10 @@ if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  let g:ctrlp_user_command = 'ag %s --hidden -l --nocolor -g ""'
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
+  let g:ctrlp_show_hidden = 1
 endif
 
 " ale settings
@@ -218,7 +226,8 @@ let g:ale_linters = {
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['prettier_eslint'],
+\   'javascript': ['prettier', 'eslint'],
+\   'typescript': ['prettier'],
 \}
 let g:ale_fix_on_save = 1
 set signcolumn=yes
@@ -227,7 +236,7 @@ set signcolumn=yes
 let g:EasyMotion_do_mapping = 0 "Disable default mappings
 let g:EasyMotion_startofline = 0 "keep cursor column when JK motion
 let g:EasyMotion_smartcase = 1
-map <Leader>f <Plug>(easymotion-s)
+map <Leader>f <Plug>(easymotion-bd-w)
 nmap <Leader>s <Plug>(easymotion-overwin-f2)
 map <Leader>/ <Plug>(easymotion-sn)
 map <Leader>n <Plug>(easymotion-next)
@@ -272,6 +281,7 @@ au FileType go let $GOPATH = go#path#Detect()
 let g:go_doc_keywordprg_enabled = 0
 
 " coc.nvim
+set hidden
 "use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -291,5 +301,27 @@ imap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>Di
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
 autocmd FileType json syntax match Comment +\/\/.\+$+
+"integrate with airline
 let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
 let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
+"don't give |ins-completion-menu| messages.
+set shortmess+=c
+"Use `[c` and `]c` to navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+"Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+"Use K to show documentation in preview window
+"nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+"Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
