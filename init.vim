@@ -24,6 +24,9 @@ Plug 'nikvdp/ejs-syntax'
 Plug 'ianks/vim-tsx'
 Plug 'leafgarland/typescript-vim'
 
+"graphql
+Plug 'jparise/vim-graphql'
+
 "ruby
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-rails'
