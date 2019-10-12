@@ -295,6 +295,6 @@ nmap <leader>rn <Plug>(coc-rename)
 " Using CocList
 nnoremap <silent> <C-p> :<C-u>CocList --number-select files<cr>
 nnoremap <silent> <Leader>g :<C-u>CocList grep<cr>
-nnoremap <silent> <Leader>b :<C-u>CocList buffer<cr>
+nnoremap <silent> <Leader>b :<C-u>CocList buffers<cr>
 nnoremap <silent> <Leader>[ :<C-u>CocList locationlist<cr>
 nnoremap <silent> <Leader>] :<C-u>CocList quickfix<cr>
