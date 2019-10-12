@@ -6,6 +6,20 @@
   "snippets.ultisnips.enable": false,
   "java.jdt.ls.vmargs": "-noverify -Xmx2G -XX:+UseG1GC -XX:+UseStringDeduplication",
   "tsserver.enableJavascript": false,
+  "list.maxHeight": 10,
+  "list.normalMappings": {
+    "t": "action:tabe",
+    "v": "action:vsplit",
+    "s": "action:split",
+    "d": "expr:GetDeleteAction"
+  },
+  "list.insertMappings": {
+    "<C-t>": "action:tabe",
+    "<C-v>": "action:vsplit",
+    "<C-s>": "action:split",
+    "<C-w>": "command:wincmd k"
+  },
+  "list.source.grep.command": "rg",
   "languageserver": {
     "flow": {
       "command": "flow-language-server",

@@ -106,6 +106,11 @@ By default Vim will use local flow-bin in `node_modules`, so you don't need to i
 brew install the_silver_searcher
 ```
 
+## Install ripgrep:
+```
+brew install ripgrep
+```
+
 # 2. Key mapping
 Some basic key mapping of the plugins. For more detail, check the document of each plugin.
 

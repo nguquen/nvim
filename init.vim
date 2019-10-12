@@ -9,7 +9,6 @@ Plug 'vim-airline/vim-airline-themes'
 
 "navigation
 Plug 'scrooloose/nerdtree'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'christoomey/vim-tmux-navigator'
 
@@ -21,8 +20,8 @@ Plug 'moll/vim-node'
 Plug 'nikvdp/ejs-syntax'
 
 "typescript
-Plug 'ianks/vim-tsx'
 Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
 
 "graphql
 Plug 'jparise/vim-graphql'
@@ -58,7 +57,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'wakatime/vim-wakatime'
 
 "editor
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
 Plug 'honza/vim-snippets'
 Plug 'w0rp/ale'
 Plug 'nguquen/vim-shot-f'
@@ -128,39 +127,8 @@ inoremap <Down> <NOP>
 inoremap <Left> <NOP>
 inoremap <Right> <NOP>
 "bind K to grep word under cursor
-nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
-"bind // for search visual selection
-"vnoremap // y/<C-R>"<CR>
-"toggle
-function! GetBufferList()
-  redir =>buflist
-  silent! ls!
-  redir END
-  return buflist
-endfunction
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>
 
-function! ToggleList(bufname, pfx)
-  let buflist = GetBufferList()
-  for bufnum in map(filter(split(buflist, '\n'), 'v:val =~ "'.a:bufname.'"'), 'str2nr(matchstr(v:val, "\\d\\+"))')
-    if bufwinnr(bufnum) != -1
-      exec(a:pfx.'close')
-      return
-    endif
-  endfor
-  if a:pfx == 'l' && len(getloclist(0)) == 0
-    echohl ErrorMsg
-    echo "Location List is Empty."
-    return
-  endif
-  let winnr = winnr()
-  exec(a:pfx.'open')
-  if winnr() != winnr
-    wincmd p
-  endif
-endfunction
-
-nnoremap <silent> <Leader>[ :call ToggleList("Location List", 'l')<CR>
-nnoremap <silent> <Leader>] :call ToggleList("Quickfix List", 'c')<CR>
 "mapping misc keys
 let g:gitgutter_map_keys = 0
 nnoremap <silent> <Leader>w :w<CR>
@@ -204,15 +172,10 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 map <C-n> :NERDTreeToggle<CR>
 
-" The Silver Searcher settings
-if executable('ag')
+" grepprg settings
+if executable('rg')
   " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s --hidden -l --nocolor -g ""'
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-  let g:ctrlp_show_hidden = 1
+  set grepprg=rg\ --vimgrep\ --no-heading
 endif
 
 " ale settings
@@ -284,7 +247,7 @@ au FileType go let $GOPATH = go#path#Detect()
 let g:go_doc_keywordprg_enabled = 0
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml']
+let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg']
 set hidden
 "use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
@@ -329,3 +292,9 @@ function! s:show_documentation()
 endfunction
 "Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
+" Using CocList
+nnoremap <silent> <C-p> :<C-u>CocList --number-select files<cr>
+nnoremap <silent> <Leader>g :<C-u>CocList grep<cr>
+nnoremap <silent> <Leader>b :<C-u>CocList buffer<cr>
+nnoremap <silent> <Leader>[ :<C-u>CocList locationlist<cr>
+nnoremap <silent> <Leader>] :<C-u>CocList quickfix<cr>
