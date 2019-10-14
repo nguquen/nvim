@@ -296,7 +296,7 @@ nmap <leader>rn <Plug>(coc-rename)
 nnoremap <silent> <C-p> :<C-u>CocList --number-select files<cr>
 nnoremap <silent> <Leader>g :<C-u>CocList grep<cr>
 nnoremap <silent> <Leader>o :<C-u>CocList outline<cr>
-nnoremap <silent> <Leader>b :<C-u>CocList --normal buffers<cr>
+nnoremap <silent> <Leader>b :<C-u>CocList buffers<cr>
 nnoremap <silent> <Leader>[ :<C-u>CocList --normal locationlist<cr>
 nnoremap <silent> <Leader>] :<C-u>CocList --normal quickfix<cr>
 hi CursorLine guibg=#4f5b66
