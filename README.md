@@ -1,13 +1,12 @@
 # 1. Installation
 
-## Install iTerm2, current version is 3.0.14
+## Install iTerm2
 
 ```
 https://www.iterm2.com/downloads.html
 ```
 
 ## Install neovim:
-
 ```
 $ brew install neovim
 ```
@@ -28,8 +27,8 @@ $ brew install python3
 ## Install python providers:
 
 ```
-$ pip install neovim
-$ pip3 install neovim
+$ pip install pynvim
+$ pip3 install pynvim
 ```
 
 ## Open neovim & check health:
@@ -41,7 +40,7 @@ $ vi
 Inside vim, type this command:
 
 ```
-:CheckHealth
+:checkhealth
 ```
 
 ## Checkout pre-config:
@@ -64,7 +63,6 @@ Inside vim:
 
 ```
 :PlugInstall
-:UpdateRemotePlugins
 ```
 
 ## Install powerline fonts:
@@ -72,41 +70,7 @@ Inside vim:
 `vim-airline` use powerline fonts for display some special characters like arrow, install it here:
 [https://github.com/powerline/fonts](https://github.com/powerline/fonts). Choose a font that you like and install it for iTerm2.
 
-## Install eslint:
-
-We use `Neomake`, a asynchronous linting and make framework for Neovim/Vim. For javascript files, neomake will call to external linter like `eslint` or `flow`. We will install eslint and all of it's dependencies first.
-
-```
-$ sudo npm install -g eslint
-```
-
-Install dependencies
-
-```
-$ sudo npm install -g babel-eslint babel-plugin-istanbul eslint-config-standard eslint-config-standard-react eslint-plugin-babel eslint-plugin-promise eslint-plugin-react eslint-plugin-standard
-```
-
-Checkout a reactjs boilerplate and test eslint:
-
-```
-$ git clone https://github.com/davezuko/react-redux-starter-kit.git
-$ cd react-redux-starter-kit
-$ eslint src
-```
-
-`eslint` should exit normally. If not, it will throw some errors about missing some dependencies, you must install the missing dependencies by npm with `-g` option.
-
-## Install flow-bin:
-
-By default Vim will use local flow-bin in `node_modules`, so you don't need to install it globally, just add it as a dependency in your package.json.
-
-## Install Silver Search for use with Ctrl-P:
-
-```
-brew install the_silver_searcher
-```
-
-## Install ripgrep:
+## Install RipGrep:
 ```
 brew install ripgrep
 ```
@@ -129,35 +93,6 @@ Use `ctrl-p` to open fuzzy finder
 Comment: `space-cc`
 
 Uncomment: `space-cu`
-
-## deoplete: auto-completion
-
-Use `ctrl-space` for trigger auto-completion feature. Inside deoplete menu, you can use `j`, `k`, or `tab` to navigate between auto-completion items. `Enter` to select the auto-completion item and exit deoplete menu.
-
-## Neomake
-
-Save current file for trigger the linter. If that file has any errors, it'll show `E: <number>` at the bottom right corner. Then press `space-[` to toggle error detail list.
-
-## Working with flow
-
-There's an official plugin for vim: `vim-flow`. Basically, it provides some features:
-- auto-completion
-- check type errors
-- jump to definition
-- display variable type
-
-But it's not good enough, because it's missing asynchonous feature of Neovim. Then i just config vim-flow combine with deoplete (auto-completion) and neomake (check type errors) to maximum the benifit of neovim.
-
-- auto-completion: through `deoplete-flow`, trigger it normally by `ctrl-space` (deprecated)
-- check type errors: through neomake, just add `flow` to list of javascript makers. Trigger it on saving file.
-- jump to definition: use `ctrl-]`
-- display variable type: use `space-d`
-
-### UPDATE
-I just replaced `vim-flow`, `deoplete-flow` with `flow-language-server` and `LanguageClient-neovim`. It's better than old solution. Just install `flow-language-server`:
-```
-npm install -g flow-language-server
-```
 
 ## Working with ctags
 
