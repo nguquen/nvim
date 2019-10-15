@@ -194,6 +194,8 @@ let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'javascript': ['prettier', 'eslint'],
 \   'typescript': ['prettier'],
+\   'css': ['prettier'],
+\   'json': ['prettier'],
 \}
 let g:ale_fix_on_save = 1
 set signcolumn=yes
