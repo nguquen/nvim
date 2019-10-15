@@ -185,3 +185,15 @@ Settings -> Terminal -> Scrollback Buffer
 - `Scrollback lines: 4096`
 - Disable `Save lines to scrollback when an app status bar is present`
 - Disable `Save lines to scrollback in alternate screen mode`
+
+## Coc Lists mapping
+
+```
+ctrl + p: fuzzy search files
+space + b: list buffers
+space + o: list outline
+space + g: search content in all files
+space + ]: list quicklist
+space + [: list locationlist
+space + rl: resume previous list
+```
