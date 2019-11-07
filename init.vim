@@ -40,6 +40,7 @@ Plug 'skywind3000/asyncrun.vim'
 "golang
 Plug 'fatih/vim-go'
 Plug 'jodosha/vim-godebug'
+Plug 'towolf/vim-helm'
 
 "protobuf
 Plug 'uarun/vim-protobuf'
@@ -295,7 +296,7 @@ endfunction
 "Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
 " Using CocList
-nnoremap <silent> <C-p> :<C-u>CocList --number-select files<cr>
+nnoremap <silent> <C-p> :<C-u>CocList files<cr>
 nnoremap <silent> <Leader>g :<C-u>CocList grep<cr>
 nnoremap <silent> <Leader>o :<C-u>CocList outline<cr>
 nnoremap <silent> <Leader>b :<C-u>CocList buffers<cr>
