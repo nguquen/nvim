@@ -192,12 +192,15 @@ let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_linters = {
 \  'javascript': ['flow', 'eslint'],
+\  'javascriptreact': ['flow', 'eslint'],
 \  'java': [],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'javascript': ['prettier', 'eslint'],
+\   'javascriptreact': ['prettier', 'eslint'],
 \   'typescript': ['prettier'],
+\   'typescriptreact': ['prettier'],
 \   'css': ['prettier'],
 \   'json': ['prettier'],
 \}
