@@ -15,13 +15,16 @@ Plug 'christoomey/vim-tmux-navigator'
 "javascript
 Plug 'pangloss/vim-javascript'
 Plug 'crusoexia/vim-javascript-lib'
-Plug 'mxw/vim-jsx'
 Plug 'moll/vim-node'
 Plug 'nikvdp/ejs-syntax'
 
 "typescript
 Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
+Plug 'maxmellon/vim-jsx-pretty'
+
+"css in js
+Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'alampros/vim-styled-jsx'
 
 "graphql
 Plug 'jparise/vim-graphql'
