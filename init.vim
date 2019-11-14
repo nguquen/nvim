@@ -19,7 +19,8 @@ Plug 'moll/vim-node'
 Plug 'nikvdp/ejs-syntax'
 
 "typescript
-Plug 'leafgarland/typescript-vim'
+Plug 'HerringtonDarkholme/yats.vim'
+"Plug 'leafgarland/typescript-vim'
 Plug 'maxmellon/vim-jsx-pretty'
 
 "css in js
