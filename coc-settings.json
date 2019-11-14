@@ -20,6 +20,9 @@
     "<C-w>": "command:wincmd k"
   },
   "list.source.grep.command": "rg",
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
   "languageserver": {
     "flow": {
       "command": "flow-language-server",
