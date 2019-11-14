@@ -23,7 +23,7 @@ Plug 'leafgarland/typescript-vim'
 Plug 'maxmellon/vim-jsx-pretty'
 
 "css in js
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+"Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'alampros/vim-styled-jsx'
 
 "graphql
