@@ -19,8 +19,7 @@ Plug 'moll/vim-node'
 Plug 'nikvdp/ejs-syntax'
 
 "typescript
-Plug 'HerringtonDarkholme/yats.vim'
-"Plug 'leafgarland/typescript-vim'
+Plug 'leafgarland/typescript-vim'
 Plug 'maxmellon/vim-jsx-pretty'
 
 "css in js
@@ -311,3 +310,8 @@ nnoremap <silent> <Leader>[ :<C-u>CocList --normal locationlist<cr>
 nnoremap <silent> <Leader>] :<C-u>CocList --normal quickfix<cr>
 nnoremap <silent> <Leader>rl :<C-u>CocListResume<cr>
 hi CursorLine guibg=#4f5b66
+
+"jsx highlight
+autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
+autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
+highlight! def link jsxComponentName Identifier
