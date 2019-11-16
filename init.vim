@@ -13,13 +13,10 @@ Plug 'easymotion/vim-easymotion'
 Plug 'christoomey/vim-tmux-navigator'
 
 "javascript
-Plug 'pangloss/vim-javascript'
-Plug 'crusoexia/vim-javascript-lib'
+Plug 'yuezk/vim-js'
+Plug 'leafgarland/typescript-vim'
 Plug 'moll/vim-node'
 Plug 'nikvdp/ejs-syntax'
-
-"typescript
-Plug 'leafgarland/typescript-vim'
 Plug 'maxmellon/vim-jsx-pretty'
 
 "css in js
@@ -322,6 +319,8 @@ hi CursorLine guibg=#4f5b66
 autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
 autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
 highlight! def link jsxComponentName Identifier
+highlight! def link jsVariableType Identifier
+highlight! def link jsImport Identifier
 
 "emmet
 let g:user_emmet_leader_key=','
