@@ -74,6 +74,7 @@ Plug 'Raimondi/delimitMate'
 Plug 'mbbill/undotree'
 Plug 'majutsushi/tagbar'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'mattn/emmet-vim'
 "Plug 'chaoren/vim-wordmotion'
 call plug#end()
 
@@ -173,7 +174,14 @@ let NERDTreeShowLineNumbers=1
 let NERDTreeShowHidden=1
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-map <C-n> :NERDTreeToggle<CR>
+function NerdTreeToggleAndFind()
+    if &filetype == 'nerdtree' || exists("g:NERDTree") && g:NERDTree.IsOpen()
+        :NERDTreeToggle
+    else
+        :NERDTreeFind
+    endif
+endfunction
+nnoremap <silent> <C-n> :call NerdTreeToggleAndFind()<CR>
 
 " grepprg settings
 if executable('rg')
@@ -314,3 +322,6 @@ hi CursorLine guibg=#4f5b66
 autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
 autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
 highlight! def link jsxComponentName Identifier
+
+"emmet
+let g:user_emmet_leader_key=','
