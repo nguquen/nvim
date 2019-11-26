@@ -47,5 +47,6 @@
       "filetypes": ["sh"],
       "ignoredRootPaths": ["~"]
     }
-  }
+  },
+  "java.errors.incompleteClasspath.severity": "ignore"
 }

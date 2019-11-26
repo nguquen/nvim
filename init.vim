@@ -20,7 +20,7 @@ Plug 'nikvdp/ejs-syntax'
 Plug 'maxmellon/vim-jsx-pretty'
 
 "css in js
-"Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+Plug 'nguquen/vim-styled-components', { 'branch': 'main' }
 Plug 'alampros/vim-styled-jsx'
 
 "graphql
@@ -260,7 +260,7 @@ au FileType go let $GOPATH = go#path#Detect()
 let g:go_doc_keywordprg_enabled = 0
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet']
+let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-imselect']
 set hidden
 "use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
