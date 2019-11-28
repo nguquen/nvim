@@ -170,10 +170,12 @@ let g:javascript_plugin_flow = 1
 " NERDTree settings
 let NERDTreeShowLineNumbers=1
 let NERDTreeShowHidden=1
+"open NERDTree automatically when vim starts up on opening a directory
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+"NerdTreeToggleAndFind
 function NerdTreeToggleAndFind()
-    if &filetype == 'nerdtree' || exists("g:NERDTree") && g:NERDTree.IsOpen()
+    if &filetype == 'nerdtree' || exists("g:NERDTree") && g:NERDTree.IsOpen() || bufname('%') == ''
         :NERDTreeToggle
     else
         :NERDTreeFind
