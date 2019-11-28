@@ -270,7 +270,7 @@ function! s:check_back_space() abort
 endfunction
 
 imap <silent><expr> <TAB>
-      \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ pumvisible() ? coc#_select_confirm() :
       \ emmet#isExpandable() ? "\<plug>(emmet-expand-abbr)" :
       \ <SID>check_back_space() ? "\<TAB>" :
