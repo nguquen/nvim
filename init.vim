@@ -59,6 +59,7 @@ Plug 'wakatime/vim-wakatime'
 
 "editor
 Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'}
+Plug 'xabikos/vscode-react'
 Plug 'honza/vim-snippets'
 Plug 'w0rp/ale'
 Plug 'nguquen/vim-shot-f'
@@ -260,7 +261,7 @@ au FileType go let $GOPATH = go#path#Detect()
 let g:go_doc_keywordprg_enabled = 0
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-imselect']
+let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet']
 set hidden
 "use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
@@ -268,9 +269,10 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
+imap <silent><expr> <TAB>
       \ coc#expandableOrJumpable() ? coc#rpc#request('doKeymap', ['snippets-expand-jump','']) :
+      \ pumvisible() ? coc#_select_confirm() :
+      \ emmet#isExpandable() ? "\<plug>(emmet-expand-abbr)" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 let g:coc_snippet_next = '<tab>'
