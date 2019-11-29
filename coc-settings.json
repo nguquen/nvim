@@ -5,7 +5,7 @@
   "diagnostic.infoSign": "ℹ",
   "snippets.ultisnips.enable": false,
   "java.jdt.ls.vmargs": "-noverify -Xmx2G -XX:+UseG1GC -XX:+UseStringDeduplication",
-  "tsserver.enableJavascript": false,
+  "javascript.validate.enable": false,
   "list.maxHeight": 10,
   "list.normalMappings": {
     "t": "action:tabe",
@@ -35,17 +35,6 @@
       "args": ["--diagnostics-style=instant"],
       "rootPatterns": ["go.mod", ".git/"],
       "filetypes": ["go"]
-    },
-    "dockerfile": {
-      "command": "docker-langserver",
-      "filetypes": ["dockerfile"],
-      "args": ["--stdio"]
-    },
-    "bash": {
-      "command": "bash-language-server",
-      "args": ["start"],
-      "filetypes": ["sh"],
-      "ignoredRootPaths": ["~"]
     }
   },
   "java.errors.incompleteClasspath.severity": "ignore"
