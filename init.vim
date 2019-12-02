@@ -213,6 +213,7 @@ let g:ale_fixers = {
 \   'typescriptreact': ['prettier', 'eslint'],
 \   'css': ['prettier'],
 \   'json': ['prettier'],
+\   'graphql': ['prettier'],
 \}
 let g:ale_fix_on_save = 1
 set signcolumn=yes
