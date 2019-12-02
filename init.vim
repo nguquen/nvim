@@ -201,14 +201,16 @@ let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 let g:ale_linters = {
 \  'javascript': ['flow', 'eslint'],
 \  'javascriptreact': ['flow', 'eslint'],
+\  'typescript': ['eslint'],
+\  'typescriptreact': ['eslint'],
 \  'java': [],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'javascript': ['prettier', 'eslint'],
 \   'javascriptreact': ['prettier', 'eslint'],
-\   'typescript': ['prettier'],
-\   'typescriptreact': ['prettier'],
+\   'typescript': ['prettier', 'eslint'],
+\   'typescriptreact': ['prettier', 'eslint'],
 \   'css': ['prettier'],
 \   'json': ['prettier'],
 \}
