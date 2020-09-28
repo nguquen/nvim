@@ -25,6 +25,7 @@ Plug 'alampros/vim-styled-jsx'
 
 "graphql
 Plug 'jparise/vim-graphql'
+Plug 'pantharshit00/vim-prisma'
 
 "ruby
 Plug 'vim-ruby/vim-ruby'
@@ -50,6 +51,9 @@ Plug 'bumaociyuan/vim-swift'
 
 "smali
 Plug 'kelwin/vim-smali'
+
+"pine
+Plug 'jbmorgado/vim-pine-script'
 
 "terraform
 Plug 'hashivim/vim-terraform'
@@ -214,6 +218,7 @@ let g:ale_fixers = {
 \   'css': ['prettier'],
 \   'json': ['prettier'],
 \   'graphql': ['prettier'],
+\   'html': ['prettier'],
 \}
 let g:ale_fix_on_save = 1
 set signcolumn=yes
@@ -267,7 +272,7 @@ au FileType go let $GOPATH = go#path#Detect()
 let g:go_doc_keywordprg_enabled = 0
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-sh', 'coc-docker']
+let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-sh', 'coc-docker', 'coc-prisma']
 set hidden
 "use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
