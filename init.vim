@@ -191,7 +191,20 @@ function NerdTreeToggleAndFind()
     if &filetype == 'nerdtree' || exists("g:NERDTree") && g:NERDTree.IsOpen() || bufname('%') == ''
         :NERDTreeToggle
     else
-        :NERDTreeFind
+        let l:pathStr = expand('%:p')
+        try
+            let l:pathStr = g:NERDTreePath.Resolve(l:pathStr)
+            let l:pathObj = g:NERDTreePath.New(l:pathStr)
+            let l:cwd = g:NERDTreePath.New(getcwd())
+            if l:pathObj.isUnder(l:cwd)
+              :NERDTreeFind
+            else
+              :NERDTreeToggle
+            endif
+        catch /^NERDTree.InvalidArgumentsError/
+            call nerdtree#echoWarning('invalid path')
+            return
+        endtry
     endif
 endfunction
 nnoremap <silent> <C-n> :call NerdTreeToggleAndFind()<CR>
