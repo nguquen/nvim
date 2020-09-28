@@ -38,5 +38,6 @@
     }
   },
   "java.errors.incompleteClasspath.severity": "ignore",
-  "coc.preferences.formatOnSaveFiletypes": ["prisma"]
+  "coc.preferences.formatOnSaveFiletypes": ["prisma"],
+  "graphql.filetypes": ["graphql"]
 }
