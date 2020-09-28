@@ -61,10 +61,11 @@ Plug 'hashivim/vim-terraform'
 "monitoring
 Plug 'wakatime/vim-wakatime'
 
+Plug 'tpope/vim-dotenv'
+
 "database
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
-Plug 'tpope/vim-dotenv'
 
 "editor
 Plug 'neoclide/coc.nvim', {'tag': 'v0.0.78'}
@@ -83,6 +84,7 @@ Plug 'majutsushi/tagbar'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'mattn/emmet-vim'
 "Plug 'chaoren/vim-wordmotion'
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 " clipboard settings
@@ -343,3 +345,6 @@ highlight! def link jsImport Identifier
 
 "emmet
 "let g:user_emmet_leader_key=','
+
+"dbui
+let g:db_ui_use_nerd_fonts=1
