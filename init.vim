@@ -349,3 +349,4 @@ highlight! def link jsImport Identifier
 
 "dbui
 let g:db_ui_use_nerd_fonts=1
+let g:db_ui_win_position='right'
