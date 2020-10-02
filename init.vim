@@ -230,6 +230,7 @@ let g:ale_linters = {
 \  'typescriptreact': ['eslint'],
 \  'graphql': [],
 \  'java': [],
+\  'sql': ['sqlint'],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -241,6 +242,7 @@ let g:ale_fixers = {
 \   'json': ['prettier'],
 \   'graphql': ['prettier'],
 \   'html': ['prettier'],
+\   'sql': ['pgformatter'],
 \}
 let g:ale_fix_on_save = 1
 set signcolumn=yes
