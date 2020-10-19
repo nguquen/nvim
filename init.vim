@@ -231,6 +231,7 @@ let g:ale_linters = {
 \  'graphql': [],
 \  'java': [],
 \  'sql': ['sqlint'],
+\  'python': ['flake8'],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -243,6 +244,7 @@ let g:ale_fixers = {
 \   'graphql': ['prettier'],
 \   'html': ['prettier'],
 \   'sql': ['pgformatter'],
+\   'python': ['black'],
 \}
 let g:ale_fix_on_save = 1
 set signcolumn=yes
@@ -296,7 +298,7 @@ au FileType go let $GOPATH = go#path#Detect()
 let g:go_doc_keywordprg_enabled = 0
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-sh', 'coc-docker', 'coc-prisma', 'coc-db', 'coc-graphql']
+let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-sh', 'coc-docker', 'coc-prisma', 'coc-db', 'coc-graphql', 'coc-python']
 set hidden
 "use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
