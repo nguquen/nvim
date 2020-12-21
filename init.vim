@@ -69,7 +69,7 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 
 "editor
-Plug 'neoclide/coc.nvim', {'tag': 'v0.0.78'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'xabikos/vscode-react'
 Plug 'honza/vim-snippets'
 Plug 'w0rp/ale'
