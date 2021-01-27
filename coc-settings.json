@@ -57,5 +57,6 @@
   "coc.preferences.formatOnSaveFiletypes": ["prisma", "dart"],
   "graphql.filetypes": ["graphql"],
   "python.jediEnabled": false,
-  "python.linting.enabled": false
+  "python.linting.enabled": false,
+  "flutter.openDevLogSplitCommand": "botright 10split"
 }
