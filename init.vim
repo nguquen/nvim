@@ -355,6 +355,7 @@ nnoremap <silent> <Leader>b :<C-u>CocList buffers<cr>
 nnoremap <silent> <Leader>[ :<C-u>CocList --normal locationlist<cr>
 nnoremap <silent> <Leader>] :<C-u>CocList --normal quickfix<cr>
 nnoremap <silent> <Leader>rl :<C-u>CocListResume<cr>
+nnoremap <silent> <Leader>m :<C-u>CocList commands<cr>
 hi CursorLine guibg=#4f5b66
 
 "jsx highlight
