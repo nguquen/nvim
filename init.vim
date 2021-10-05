@@ -62,6 +62,9 @@ Plug 'dart-lang/dart-vim-plugin'
 "terraform
 Plug 'hashivim/vim-terraform'
 
+"toml
+Plug 'cespare/vim-toml', { 'branch': 'main' }
+
 "monitoring
 Plug 'wakatime/vim-wakatime'
 
@@ -145,7 +148,7 @@ inoremap <Down> <NOP>
 inoremap <Left> <NOP>
 inoremap <Right> <NOP>
 "bind K to grep word under cursor
-nnoremap K :grep! "\b<C-R><C-W>\b"<CR>
+" nnoremap K :grep! "\b<C-R><C-W>\b"<CR>
 
 "mapping misc keys
 let g:gitgutter_map_keys = 0
@@ -235,6 +238,7 @@ let g:ale_linters = {
 \  'java': [],
 \  'sql': ['sqlint'],
 \  'python': ['flake8'],
+\  'rust': [],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -248,6 +252,7 @@ let g:ale_fixers = {
 \   'html': ['prettier'],
 \   'sql': ['pgformatter'],
 \   'python': ['black'],
+\   'rust': [],
 \}
 let g:ale_fix_on_save = 1
 set signcolumn=yes
@@ -301,7 +306,7 @@ au FileType go let $GOPATH = go#path#Detect()
 let g:go_doc_keywordprg_enabled = 0
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-sh', 'coc-docker', 'coc-prisma', 'coc-db', 'coc-graphql', 'coc-python', 'coc-flutter']
+let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-sh', 'coc-docker', 'coc-prisma', 'coc-db', 'coc-graphql', 'coc-python', 'coc-flutter', 'coc-rust-analyzer']
 set hidden
 "use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
@@ -337,14 +342,34 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 "Use K to show documentation in preview window
-"nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
   else
-    call CocAction('doHover')
+    execute '!' . &keywordprg . " " . expand('<cword>')
   endif
 endfunction
+" grep from selected text
+vnoremap <leader>g :<C-u>call <SID>GrepFromSelected(visualmode())<CR>
+function! s:GrepFromSelected(type)
+  let saved_unnamed_register = @@
+  if a:type ==# 'v'
+    normal! `<v`>y
+  elseif a:type ==# 'char'
+    normal! `[v`]y
+  else
+    return
+  endif
+  let word = substitute(@@, '\n$', '', 'g')
+  let word = escape(word, '| ')
+  let @@ = saved_unnamed_register
+  execute 'CocList grep '.word
+endfunction
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
 "Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
 " Using CocList
@@ -356,7 +381,11 @@ nnoremap <silent> <Leader>[ :<C-u>CocList --normal locationlist<cr>
 nnoremap <silent> <Leader>] :<C-u>CocList --normal quickfix<cr>
 nnoremap <silent> <Leader>rl :<C-u>CocListResume<cr>
 nnoremap <silent> <Leader>m :<C-u>CocList commands<cr>
+nnoremap <silent> <Leader>d :<C-u>CocList diagnostics<cr>
+" Change highlight colors for coc
 hi CursorLine guibg=#4f5b66
+hi CocHintSign ctermfg=59 guifg=#5c6370
+hi CocRustChainingHint ctermfg=59 guifg=#5c6370
 
 "jsx highlight
 autocmd BufNewFile,BufRead *.jsx set filetype=javascript.jsx
@@ -371,3 +400,6 @@ highlight! def link jsImport Identifier
 "dbui
 let g:db_ui_use_nerd_fonts=1
 let g:db_ui_win_position='right'
+
+"rust
+au FileType rust let b:delimitMate_quotes = "\""

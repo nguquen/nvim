@@ -54,9 +54,10 @@
     }
   },
   "java.errors.incompleteClasspath.severity": "ignore",
-  "coc.preferences.formatOnSaveFiletypes": ["prisma", "dart"],
+  "coc.preferences.formatOnSaveFiletypes": ["prisma", "dart", "rust"],
   "graphql.filetypes": ["graphql"],
   "python.jediEnabled": false,
   "python.linting.enabled": false,
-  "flutter.openDevLogSplitCommand": "botright 10split"
+  "flutter.openDevLogSplitCommand": "botright 10split",
+  "rust-analyzer.enable": true
 }
