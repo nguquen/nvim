@@ -239,6 +239,7 @@ let g:ale_linters = {
 \  'sql': ['sqlint'],
 \  'python': ['flake8'],
 \  'rust': [],
+\  'go': [],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
@@ -300,10 +301,16 @@ let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
 
 "golang settings
-let g:go_fmt_command = "goimports"
-let g:go_autodetect_gopath = 1
-au FileType go let $GOPATH = go#path#Detect()
+let g:go_def_mapping_enabled = 0
+let g:go_diagnostics_enabled = 0
 let g:go_doc_keywordprg_enabled = 0
+let g:go_metalinter_enabled = []
+let g:go_code_completion_enabled = 0
+let g:go_fmt_command = "goimports"
+let g:go_fmt_autosave = 0
+let g:go_mod_fmt_autosave = 1
+let g:go_auto_sameids = 0
+let g:go_jump_to_error = 0
 
 " coc.nvim
 let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-sh', 'coc-docker', 'coc-prisma', 'coc-db', 'coc-graphql', 'coc-python', 'coc-flutter', 'coc-rust-analyzer']
@@ -368,8 +375,8 @@ function! s:GrepFromSelected(type)
   let @@ = saved_unnamed_register
   execute 'CocList grep '.word
 endfunction
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+"Highlight the symbol and its references when holding the cursor.
+" autocmd CursorHold * silent call CocActionAsync('highlight')
 "Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
 " Using CocList
@@ -385,6 +392,7 @@ nnoremap <silent> <Leader>d :<C-u>CocList diagnostics<cr>
 " Change highlight colors for coc
 hi CursorLine guibg=#4f5b66
 hi CocHintSign ctermfg=59 guifg=#5c6370
+hi CocRustTypeHint ctermfg=59 guifg=#5c6370
 hi CocRustChainingHint ctermfg=59 guifg=#5c6370
 
 "jsx highlight

@@ -31,8 +31,7 @@
       "filetypes": ["javascript", "javascriptreact"]
     },
     "golang": {
-      "command": "bingo",
-      "args": ["--diagnostics-style=instant"],
+      "command": "gopls",
       "rootPatterns": ["go.mod", ".git/"],
       "filetypes": ["go"]
     },
@@ -54,7 +53,7 @@
     }
   },
   "java.errors.incompleteClasspath.severity": "ignore",
-  "coc.preferences.formatOnSaveFiletypes": ["prisma", "dart", "rust"],
+  "coc.preferences.formatOnSaveFiletypes": ["prisma", "dart", "rust", "go"],
   "graphql.filetypes": ["graphql"],
   "python.jediEnabled": false,
   "python.linting.enabled": false,
