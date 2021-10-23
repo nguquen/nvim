@@ -58,5 +58,7 @@
   "python.jediEnabled": false,
   "python.linting.enabled": false,
   "flutter.openDevLogSplitCommand": "botright 10split",
-  "rust-analyzer.enable": true
+  "rust-analyzer.enable": true,
+  "rust-analyzer.experimental.procAttrMacros": true,
+  "rust-analyzer.procMacro.enable": true
 }
