@@ -24,6 +24,12 @@
     "javascript": "javascriptreact"
   },
   "languageserver": {
+    "solidity": {
+      "command": "solidity-language-server",
+      "args": ["--stdio"],
+      "rootPatterns": [".git/"],
+      "filetypes": ["solidity"]
+    },
     "flow": {
       "command": "flow-language-server",
       "args": ["--stdio"],
@@ -53,7 +59,13 @@
     }
   },
   "java.errors.incompleteClasspath.severity": "ignore",
-  "coc.preferences.formatOnSaveFiletypes": ["prisma", "dart", "rust", "go"],
+  "coc.preferences.formatOnSaveFiletypes": [
+    "prisma",
+    "dart",
+    "rust",
+    "go",
+    "solidity"
+  ],
   "graphql.filetypes": ["graphql"],
   "python.jediEnabled": false,
   "python.linting.enabled": false,

@@ -74,6 +74,8 @@ Plug 'tpope/vim-dotenv'
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 
+Plug 'tomlion/vim-solidity'
+
 "editor
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'xabikos/vscode-react'
@@ -254,6 +256,7 @@ let g:ale_fixers = {
 \   'sql': ['pgformatter'],
 \   'python': ['black'],
 \   'rust': [],
+\   'solidity': ['prettier'],
 \}
 let g:ale_fix_on_save = 1
 set signcolumn=yes
@@ -299,6 +302,9 @@ let g:rspec_command = "AsyncRun rspec {spec}"
 let g:endwise_no_mappings = 1
 let delimitMate_expand_cr = 1
 let delimitMate_expand_space = 1
+" let delimitMate_smart_matchpairs = '^\%(\w\|\!\|£\|\$\|_\|["''\[]\s*\S\)'
+let delimitMate_smart_matchpairs = '^\%(\w\|\!\|[£$]\|_\|["''\[]\s*\S\|[^[:space:][:punct:]]\)'
+
 
 "golang settings
 let g:go_def_mapping_enabled = 0
