@@ -242,6 +242,7 @@ let g:ale_linters = {
 \  'python': ['flake8'],
 \  'rust': [],
 \  'go': [],
+\   'solidity': ['solhint'],
 \}
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
