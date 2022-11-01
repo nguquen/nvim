@@ -330,16 +330,16 @@ endfunction
 
 imap <silent><expr> <TAB>
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#pum#visible() ? coc#_select_confirm() :
       \ emmet#isExpandable() ? "\<plug>(emmet-expand-abbr)" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 let g:coc_snippet_next = '<tab>'
 inoremap <silent><expr> <c-space> coc#refresh()
-inoremap <silent><expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
-inoremap <silent><expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
-imap <silent><expr><CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+inoremap <silent><expr> <C-j> coc#pum#visible() ? coc#pum#next(1) : "\<C-j>"
+inoremap <silent><expr> <C-k> coc#pum#visible() ? coc#pum#prev(1) : "\<C-k>"
+imap <silent><expr><CR> coc#pum#visible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+autocmd InsertLeave,CompleteDone * if coc#pum#visible() == 0 | pclose | endif
 autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
 autocmd FileType json syntax match Comment +\/\/.\+$+
 "integrate with airline
