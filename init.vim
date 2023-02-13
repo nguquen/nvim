@@ -320,7 +320,7 @@ let g:go_auto_sameids = 0
 let g:go_jump_to_error = 0
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-sh', 'coc-docker', 'coc-prisma', 'coc-db', 'coc-graphql', 'coc-python', 'coc-flutter', 'coc-rust-analyzer']
+let g:coc_global_extensions = ['coc-css', 'coc-highlight', 'coc-html', 'coc-java', 'coc-json', 'coc-lists', 'coc-snippets', 'coc-tsserver', 'coc-yaml', 'coc-vimlsp', 'coc-svg', 'coc-emmet', 'coc-sh', 'coc-docker', 'coc-prisma', 'coc-db', 'coc-graphql', 'coc-flutter', 'coc-rust-analyzer', 'coc-pyright']
 set hidden
 "use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
