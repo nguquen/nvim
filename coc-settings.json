@@ -30,12 +30,6 @@
       "rootPatterns": [".git/"],
       "filetypes": ["solidity"]
     },
-    "flow": {
-      "command": "flow-language-server",
-      "args": ["--stdio"],
-      "rootPatterns": [".flowconfig", ".git/"],
-      "filetypes": ["javascript", "javascriptreact"]
-    },
     "golang": {
       "command": "gopls",
       "rootPatterns": ["go.mod", ".git/"],
@@ -73,5 +67,6 @@
   "rust-analyzer.enable": true,
   "rust-analyzer.experimental.procAttrMacros": true,
   "rust-analyzer.procMacro.enable": true,
-  "rust-analyzer.checkOnSave.command": "clippy"
+  "rust-analyzer.checkOnSave.command": "clippy",
+  "python.analysis.typeCheckingMode": "off"
 }
