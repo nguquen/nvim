@@ -22,7 +22,7 @@ Plug 'maxmellon/vim-jsx-pretty'
 
 "css in js
 Plug 'nguquen/vim-styled-components', { 'branch': 'main' }
-Plug 'alampros/vim-styled-jsx'
+" Plug 'alampros/vim-styled-jsx'
 
 "graphql
 Plug 'jparise/vim-graphql'
