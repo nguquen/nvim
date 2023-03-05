@@ -74,7 +74,7 @@
   "rust-analyzer.enable": true,
   "rust-analyzer.experimental.procAttrMacros": true,
   "rust-analyzer.procMacro.enable": true,
-  "rust-analyzer.checkOnSave.command": "clippy",
+  "rust-analyzer.check.command": "clippy",
   "python.analysis.typeCheckingMode": "off",
   "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
 }
