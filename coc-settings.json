@@ -59,13 +59,13 @@
       "settings": {}
     }
   },
-  "java.errors.incompleteClasspath.severity": "ignore",
   "coc.preferences.formatOnSaveFiletypes": [
     "prisma",
     "dart",
     "rust",
     "go",
-    "solidity"
+    "solidity",
+    "java"
   ],
   "graphql.filetypes": ["graphql"],
   "python.jediEnabled": false,
@@ -75,5 +75,6 @@
   "rust-analyzer.experimental.procAttrMacros": true,
   "rust-analyzer.procMacro.enable": true,
   "rust-analyzer.checkOnSave.command": "clippy",
-  "python.analysis.typeCheckingMode": "off"
+  "python.analysis.typeCheckingMode": "off",
+  "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
 }

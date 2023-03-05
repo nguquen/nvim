@@ -237,7 +237,7 @@ let g:ale_linters = {
 \  'typescript': ['eslint'],
 \  'typescriptreact': ['eslint'],
 \  'graphql': [],
-\  'java': [],
+\  'java': ['checkstyle'],
 \  'sql': ['sqlint'],
 \  'python': ['flake8'],
 \  'rust': [],
@@ -257,6 +257,7 @@ let g:ale_fixers = {
 \   'sql': ['pgformatter'],
 \   'python': ['black'],
 \   'rust': [],
+\   'java': [],
 \   'solidity': ['prettier'],
 \}
 let g:ale_fix_on_save = 1
