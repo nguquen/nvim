@@ -21,7 +21,7 @@ Plug 'nikvdp/ejs-syntax'
 Plug 'maxmellon/vim-jsx-pretty'
 
 "css in js
-Plug 'nguquen/vim-styled-components', { 'branch': 'main' }
+" Plug 'nguquen/vim-styled-components', { 'branch': 'main' }
 " Plug 'alampros/vim-styled-jsx'
 
 "graphql
