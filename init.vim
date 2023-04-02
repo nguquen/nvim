@@ -339,7 +339,7 @@ let g:coc_snippet_next = '<tab>'
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <silent><expr> <C-j> coc#pum#visible() ? coc#pum#next(1) : "\<C-j>"
 inoremap <silent><expr> <C-k> coc#pum#visible() ? coc#pum#prev(1) : "\<C-k>"
-imap <silent><expr><CR> coc#pum#visible() ? "\<C-y>" : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
+imap <silent><expr><CR> coc#pum#visible() ? coc#pum#confirm() : "\<Plug>delimitMateCR\<Plug>DiscretionaryEnd"
 autocmd InsertLeave,CompleteDone * if coc#pum#visible() == 0 | pclose | endif
 autocmd FileType css,scss setlocal iskeyword=@,48-57,_,-,?,!,192-255
 autocmd FileType json syntax match Comment +\/\/.\+$+
