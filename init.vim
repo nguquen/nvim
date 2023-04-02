@@ -330,8 +330,8 @@ function! s:check_back_space() abort
 endfunction
 
 imap <silent><expr> <TAB>
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ coc#pum#visible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ emmet#isExpandable() ? "\<plug>(emmet-expand-abbr)" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
