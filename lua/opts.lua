@@ -21,7 +21,7 @@ opt.softtabstop = 2
 opt.tabstop = 2
 opt.splitbelow = true
 opt.splitright = true
-opt.formatoptions = opt.formatoptions - { "c", "r", "o" }
+vim.api.nvim_create_autocmd("BufEnter", { callback = function() vim.opt.formatoptions = vim.opt.formatoptions - { "c","r","o" } end, })
 
 -- [[ filetypes ]]
 opt.encoding = 'utf8'
