@@ -26,3 +26,6 @@ map('n', '<Leader>l', '<C-W><C-L>', { noremap = true, silent = true })
 map('n', '<Leader>ch', ':noh<CR>', { noremap = true, silent = true })
 map('n', '<Leader>p', '"0p', { noremap = true, silent = true })
 map('n', '<Leader>y', ':let @0=@*<CR>', { noremap = true, silent = true })
+
+-- nvim-tree
+map('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })

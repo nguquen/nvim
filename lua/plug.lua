@@ -7,6 +7,8 @@ return require('packer').startup(function(use)
   use 'lewis6991/impatient.nvim'
   -- navigation
   use 'christoomey/vim-tmux-navigator'
+  use 'nvim-tree/nvim-web-devicons'
+  use 'nvim-tree/nvim-tree.lua'
   -- mason
   use 'williamboman/mason.nvim'
   use 'williamboman/mason-lspconfig.nvim'
@@ -15,8 +17,5 @@ return require('packer').startup(function(use)
   -- colorscheme
   use "rebelot/kanagawa.nvim"
   use "navarasu/onedark.nvim"
-  use {
-    'nvim-lualine/lualine.nvim',
-    requires = { 'nvim-tree/nvim-web-devicons', opt = true }
-  }
+  use 'nvim-lualine/lualine.nvim'
 end)

@@ -35,6 +35,8 @@ end
 -- colorscheme
 require('onedark').setup {
   style = 'dark',
+  transparent = false,
+  term_colors = true,
   code_style = {
     comments = 'none',
     keywords = 'none',
@@ -46,7 +48,9 @@ require('onedark').setup {
     special_grey = "#3b4048",
   },
   highlights = {
-    ["Whitespace"] = {fg = '$special_grey'},
+    Whitespace = { fg = '$special_grey' },
+    NvimTreeNormal = { bg = '$bg0' },
+    NvimTreeEndOfBuffer = { bg = '$bg0' },
   },
   lualine = {
     transparent = false,
@@ -54,12 +58,33 @@ require('onedark').setup {
 }
 require('onedark').load()
 
+-- devicons
+require('nvim-web-devicons').setup {}
+
 -- lualine
 require('lualine').setup {
   options = {
     theme = 'onedark',
   }
 }
+
+-- nvim-tree
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  renderer = {
+    group_empty = true,
+    icons = {
+      show = {
+        git = true,
+        file = true,
+        folder = true,
+        folder_arrow = true,
+      },
+    },
+  },
+  filters = {
+  },
+})
 
 -- mason setup
 require("mason").setup()
