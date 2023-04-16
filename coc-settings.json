@@ -1,5 +1,6 @@
 {
   "suggest.autoTrigger": "always",
+  "suggest.noselect": false,
   "diagnostic.errorSign": "✖",
   "diagnostic.warningSign": "⚠",
   "diagnostic.infoSign": "ℹ",
@@ -72,7 +73,7 @@
   "python.linting.enabled": false,
   "flutter.openDevLogSplitCommand": "botright 10split",
   "rust-analyzer.enable": true,
-  "rust-analyzer.experimental.procAttrMacros": true,
+  "rust-analyzer.procMacro.attributes.enable": true,
   "rust-analyzer.procMacro.enable": true,
   "rust-analyzer.check.command": "clippy",
   "python.analysis.typeCheckingMode": "off",
