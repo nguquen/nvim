@@ -1,5 +1,11 @@
 -- [[ init.lua ]]
 
+-- impatient for faster loading
+require('impatient')
+
+-- leader; works across all nvim files
+vim.g.mapleader = " "
+
 -- ensure the packer plugin manager is installed
 local ensure_packer = function()
   local fn = vim.fn
@@ -15,7 +21,10 @@ end
 local packer_bootstrap = ensure_packer()
 
 -- imports
-require('plug')
+require('vars') -- variables
+require('opts') -- options
+require('keys') -- keymaps
+require('plug') -- plugins
 
 -- the first run will install packer and our plugins
 if packer_bootstrap then
