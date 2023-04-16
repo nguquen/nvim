@@ -35,6 +35,13 @@ end
 -- colorscheme
 require('onedark').setup {
   style = 'dark',
+  code_style = {
+    comments = 'none',
+    keywords = 'none',
+    functions = 'none',
+    strings = 'none',
+    variables = 'none'
+  },
   colors = {
     special_grey = "#3b4048",
   },
