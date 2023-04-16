@@ -14,6 +14,7 @@ return require('packer').startup(function(use)
   use 'neovim/nvim-lspconfig'
   -- colorscheme
   use "rebelot/kanagawa.nvim"
+  use "navarasu/onedark.nvim"
   use {
     'nvim-lualine/lualine.nvim',
     requires = { 'nvim-tree/nvim-web-devicons', opt = true }

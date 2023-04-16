@@ -33,20 +33,24 @@ if packer_bootstrap then
 end
 
 -- colorscheme
-require('kanagawa').setup({
-  keywordStyle = { italic = false, bold = true },
-  theme = "wave",
-  background = {
-    dark = "wave",
-    light = "lotus"
+require('onedark').setup {
+  style = 'dark',
+  colors = {
+    special_grey = "#3b4048",
   },
-})
-vim.cmd("colorscheme kanagawa")
+  highlights = {
+    ["Whitespace"] = {fg = '$special_grey'},
+  },
+  lualine = {
+    transparent = false,
+  },
+}
+require('onedark').load()
 
 -- lualine
 require('lualine').setup {
   options = {
-    theme = 'kanagawa',
+    theme = 'onedark',
   }
 }
 
