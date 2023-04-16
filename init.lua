@@ -1,3 +1,5 @@
+-- [[ init.lua ]]
+
 -- ensure the packer plugin manager is installed
 local ensure_packer = function()
   local fn = vim.fn
@@ -12,6 +14,7 @@ end
 
 local packer_bootstrap = ensure_packer()
 
+-- imports
 require('plug')
 
 -- the first run will install packer and our plugins
@@ -19,3 +22,25 @@ if packer_bootstrap then
   require("packer").sync()
   return
 end
+
+-- colorscheme
+require('kanagawa').setup({
+  keywordStyle = { italic = false, bold = true },
+  theme = "wave",
+  background = {
+    dark = "wave",
+    light = "lotus"
+  },
+})
+vim.cmd("colorscheme kanagawa")
+
+-- lualine
+require('lualine').setup {
+  options = {
+    theme = 'kanagawa',
+  }
+}
+
+-- mason setup
+require("mason").setup()
+require("mason-lspconfig").setup()
