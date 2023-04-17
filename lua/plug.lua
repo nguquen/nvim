@@ -30,4 +30,6 @@ return require('packer').startup(function(use)
   use "navarasu/onedark.nvim"
   -- status
   use 'nvim-lualine/lualine.nvim'
+  -- editing
+  use 'windwp/nvim-autopairs'
 end)
