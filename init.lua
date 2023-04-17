@@ -86,6 +86,19 @@ require("nvim-tree").setup({
   },
 })
 
+-- telescope setup
+require('telescope').setup {
+  defaults = {
+    mappings = {
+      i = {
+        ["<esc>"] = "close",
+        ["<C-j>"] = "move_selection_next",
+        ["<C-k>"] = "move_selection_previous",
+      }
+    }
+  },
+}
+
 -- mason setup
 require("mason").setup()
 require("mason-lspconfig").setup()
