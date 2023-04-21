@@ -23,8 +23,7 @@ return require('packer').startup(function(use)
   -- mason
   use 'williamboman/mason.nvim'
   use 'williamboman/mason-lspconfig.nvim'
-  -- lsp
-  use 'neovim/nvim-lspconfig'
+  use 'WhoIsSethDaniel/mason-tool-installer.nvim'
   -- colorscheme
   use "rebelot/kanagawa.nvim"
   use "navarasu/onedark.nvim"
@@ -32,4 +31,17 @@ return require('packer').startup(function(use)
   use 'nvim-lualine/lualine.nvim'
   -- editing
   use 'windwp/nvim-autopairs'
+  use 'lewis6991/gitsigns.nvim'
+  -- completion
+  use 'hrsh7th/nvim-cmp' 
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-nvim-lua'
+  use 'hrsh7th/cmp-nvim-lsp-signature-help'
+  use 'hrsh7th/cmp-vsnip'
+  use 'hrsh7th/cmp-path'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/vim-vsnip'
+  -- lsp
+  use 'neovim/nvim-lspconfig'
+  use 'simrat39/rust-tools.nvim'
 end)

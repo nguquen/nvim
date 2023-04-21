@@ -31,3 +31,11 @@ opt.fileencoding = 'utf8'
 opt.syntax = "ON"
 opt.termguicolors = true
 
+-- [[ completion ]]
+opt.completeopt = {'menuone', 'noselect', 'noinsert'}
+opt.shortmess = vim.opt.shortmess + { c = true}
+vim.cmd([[
+set signcolumn=yes
+autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
+]])
+
