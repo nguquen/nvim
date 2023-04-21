@@ -179,7 +179,7 @@ cmp.setup({
   formatting = {
     fields = {'menu', 'abbr', 'kind'},
     format = function(entry, item)
-      local menu_icon ={
+      local menu_icon = {
         nvim_lsp = 'λ',
         vsnip = '⋗',
         buffer = 'Ω',
@@ -201,4 +201,5 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
     additional_vim_regex_highlighting = false,
   },
+  ident = { enable = true },
 }
