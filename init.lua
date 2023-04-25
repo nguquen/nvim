@@ -139,6 +139,16 @@ rt.setup({
 })
 
 -- Completion Plugin Setup
+local has_words_before = function()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local feedkey = function(key, mode)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
+
 local cmp = require'cmp'
 cmp.setup({
   -- Enable LSP snippets
@@ -151,8 +161,20 @@ cmp.setup({
     ['<C-k>'] = cmp.mapping.select_prev_item(),
     ['<C-j>'] = cmp.mapping.select_next_item(),
     -- Add tab support
-    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-    ['<Tab>'] = cmp.mapping.select_next_item(),
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if vim.fn["vsnip#available"](1) == 1 then
+        feedkey("<Plug>(vsnip-expand-or-jump)", "")
+      elseif cmp.visible() then
+        cmp.confirm({
+          behavior = cmp.ConfirmBehavior.Insert,
+          select = true,
+        })
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+      end
+    end, { "i", "s" }),
     ['<C-S-f>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -160,17 +182,16 @@ cmp.setup({
     ['<CR>'] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Insert,
       select = true,
-    })
+    }),
   },
   -- Installed sources:
   sources = {
     { name = 'path' },                              -- file paths
-    { name = 'nvim_lsp', keyword_length = 3 },      -- from language server
+    { name = 'nvim_lsp', keyword_length = 2 },      -- from language server
     { name = 'nvim_lsp_signature_help'},            -- display function signatures with current parameter emphasized
     { name = 'nvim_lua', keyword_length = 2},       -- complete neovim's Lua runtime API such vim.lsp.*
     { name = 'buffer', keyword_length = 2 },        -- source current buffer
-    { name = 'vsnip', keyword_length = 2 },         -- nvim-cmp source for vim-vsnip 
-    { name = 'calc'},                               -- source for math calculation
+    { name = 'vsnip', keyword_length = 1 },         -- nvim-cmp source for vim-vsnip
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -182,8 +203,8 @@ cmp.setup({
       local menu_icon = {
         nvim_lsp = 'λ',
         vsnip = '⋗',
-        buffer = 'Ω',
-        path = '🖫',
+        buffer = 'b',
+        path = 'p',
       }
       item.menu = menu_icon[entry.source.name]
       return item
