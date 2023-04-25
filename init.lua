@@ -224,3 +224,6 @@ require'nvim-treesitter.configs'.setup {
   },
   ident = { enable = true },
 }
+
+-- null-ls
+-- require('null-ls').setup {}
