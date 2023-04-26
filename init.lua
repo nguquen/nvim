@@ -191,6 +191,8 @@ local feedkey = function(key, mode)
 end
 
 local cmp = require('cmp')
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+
 cmp.setup({
   -- Enable LSP snippets
   snippet = {
@@ -252,6 +254,8 @@ cmp.setup({
     end,
   },
 })
+
+cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 -- treesitter
 require('nvim-treesitter.configs').setup({
