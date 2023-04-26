@@ -302,7 +302,11 @@ require 'eyeliner'.setup {
 
 -- null-ls
 local null_ls = require('null-ls')
+
 null_ls.setup({
+  on_attach = on_attach_lsp_format,
   sources = {
+    null_ls.builtins.formatting.trim_newlines,
+    null_ls.builtins.formatting.trim_whitespace,
   },
 })
