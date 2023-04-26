@@ -64,6 +64,9 @@ vim.diagnostic.config({
   },
 })
 
+-- Format on Save
+-- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
+
 -- [[ completion ]]
 -- completeopt is used to manage code suggestions
 -- menuone: show popup even when there is only one suggestion

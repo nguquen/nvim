@@ -223,6 +223,33 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
   ident = { enable = true },
+  context_commentstring = {
+    enable = true,
+    enable_autocmd = false,
+  },
+}
+
+-- todo
+require('todo-comments').setup {}
+
+-- trouble
+require('trouble').setup {}
+
+-- comment
+require('Comment').setup {
+  toggler = {
+    line = '<leader>cc',
+    block = '<leader>bc',
+  },
+  opleader = {
+    line = '<leader>c',
+    block = '<leader>b',
+  },
+   mappings = {
+    basic = true,
+    extra = false,
+  },
+  pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
 }
 
 -- null-ls

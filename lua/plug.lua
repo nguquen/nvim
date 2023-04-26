@@ -32,6 +32,10 @@ return require('packer').startup(function(use)
   -- editing
   use 'windwp/nvim-autopairs'
   use 'lewis6991/gitsigns.nvim'
+  use 'folke/todo-comments.nvim'
+  use 'folke/trouble.nvim'
+  use 'numToStr/Comment.nvim'
+  use 'JoosepAlviste/nvim-ts-context-commentstring'
   -- completion
   use 'hrsh7th/nvim-cmp' 
   use 'hrsh7th/cmp-nvim-lsp'
