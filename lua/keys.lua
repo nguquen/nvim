@@ -29,6 +29,7 @@ map('n', '<Leader>y', ':let @0=@*<CR>', { noremap = true, silent = true })
 
 -- nvim-tree
 map('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+
 -- telescope
 local telescope_builtin = require('telescope.builtin')
 vim.keymap.set('n', '<C-p>', telescope_builtin.find_files, {})

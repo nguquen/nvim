@@ -252,5 +252,15 @@ require('Comment').setup {
   pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
 }
 
+-- eyeliner
+require'eyeliner'.setup {
+  highlight_on_key = true, -- show highlights only after keypress
+  dim = true,              -- dim all other characters if set to true (recommended!)
+}
+
 -- null-ls
--- require('null-ls').setup {}
+local null_ls = require('null-ls')
+null_ls.setup({
+  sources = {
+  },
+})

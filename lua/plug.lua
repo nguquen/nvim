@@ -36,6 +36,7 @@ return require('packer').startup(function(use)
   use 'folke/trouble.nvim'
   use 'numToStr/Comment.nvim'
   use 'JoosepAlviste/nvim-ts-context-commentstring'
+  use 'jinh0/eyeliner.nvim'
   -- completion
   use 'hrsh7th/nvim-cmp' 
   use 'hrsh7th/cmp-nvim-lsp'
