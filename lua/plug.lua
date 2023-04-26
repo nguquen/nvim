@@ -10,11 +10,11 @@ return require('packer').startup(function(use)
   use 'nvim-lua/plenary.nvim'
   use 'BurntSushi/ripgrep'
   use {
-      'nvim-treesitter/nvim-treesitter',
-      run = function()
-          local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-          ts_update()
-      end,
+    'nvim-treesitter/nvim-treesitter',
+    run = function()
+      local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+      ts_update()
+    end,
   }
   -- navigation
   use 'christoomey/vim-tmux-navigator'
@@ -38,7 +38,7 @@ return require('packer').startup(function(use)
   use 'JoosepAlviste/nvim-ts-context-commentstring'
   use 'jinh0/eyeliner.nvim'
   -- completion
-  use 'hrsh7th/nvim-cmp' 
+  use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-nvim-lua'
   use 'hrsh7th/cmp-nvim-lsp-signature-help'
@@ -47,6 +47,7 @@ return require('packer').startup(function(use)
   use 'hrsh7th/cmp-vsnip'
   use 'hrsh7th/vim-vsnip'
   use 'rafamadriz/friendly-snippets'
+  use 'lukas-reineke/lsp-format.nvim'
   -- lsp
   use 'neovim/nvim-lspconfig'
   use 'simrat39/rust-tools.nvim'

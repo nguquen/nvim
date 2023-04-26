@@ -9,9 +9,9 @@ vim.g.mapleader = " "
 -- ensure the packer plugin manager is installed
 local ensure_packer = function()
   local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+  local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
   if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+    fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
     vim.cmd [[packadd packer.nvim]]
     return true
   end
@@ -109,19 +109,54 @@ require('gitsigns').setup {}
 require("mason").setup({
   ui = {
     icons = {
-        package_installed = "✓",
-        package_pending = "➜",
-        package_uninstalled = "✗"
+      package_installed = "✓",
+      package_pending = "➜",
+      package_uninstalled = "✗"
     }
   },
 })
 
 require("mason-lspconfig").setup {
-  ensure_installed = { "rust_analyzer" },
+  ensure_installed = {
+    "rust_analyzer",
+    "lua_ls",
+  },
 }
 
 require('mason-tool-installer').setup {
   ensure_installed = { "codelldb" },
+}
+
+-- lsp-format
+require("lsp-format").setup {}
+
+local on_attach_lsp_format = function(client)
+  require("lsp-format").on_attach(client)
+end
+
+-- Setup language servers
+require 'lspconfig'.lua_ls.setup {
+  on_attach = on_attach_lsp_format,
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+      },
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = { 'vim' },
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = vim.api.nvim_get_runtime_file("", true),
+      },
+      -- Do not send telemetry data containing a randomized but unique identifier
+      telemetry = {
+        enable = false,
+      },
+    },
+  },
 }
 
 -- rust
@@ -129,7 +164,9 @@ local rt = require("rust-tools")
 
 rt.setup({
   server = {
-    on_attach = function(_, bufnr)
+    on_attach = function(client, bufnr)
+      -- auto format
+      on_attach_lsp_format(client)
       -- hover actions
       vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
       -- code action groups
@@ -149,12 +186,12 @@ local feedkey = function(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
-local cmp = require'cmp'
+local cmp = require 'cmp'
 cmp.setup({
   -- Enable LSP snippets
   snippet = {
     expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body)
+      vim.fn["vsnip#anonymous"](args.body)
     end,
   },
   mapping = {
@@ -186,19 +223,19 @@ cmp.setup({
   },
   -- Installed sources:
   sources = {
-    { name = 'path' },                              -- file paths
-    { name = 'nvim_lsp', keyword_length = 2 },      -- from language server
-    { name = 'nvim_lsp_signature_help'},            -- display function signatures with current parameter emphasized
-    { name = 'nvim_lua', keyword_length = 2},       -- complete neovim's Lua runtime API such vim.lsp.*
-    { name = 'buffer', keyword_length = 2 },        -- source current buffer
-    { name = 'vsnip', keyword_length = 1 },         -- nvim-cmp source for vim-vsnip
+    { name = 'path' },                                       -- file paths
+    { name = 'nvim_lsp',               keyword_length = 2 }, -- from language server
+    { name = 'nvim_lsp_signature_help' },                    -- display function signatures with current parameter emphasized
+    { name = 'nvim_lua',               keyword_length = 2 }, -- complete neovim's Lua runtime API such vim.lsp.*
+    { name = 'buffer',                 keyword_length = 2 }, -- source current buffer
+    { name = 'vsnip',                  keyword_length = 1 }, -- nvim-cmp source for vim-vsnip
   },
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
   },
   formatting = {
-    fields = {'menu', 'abbr', 'kind'},
+    fields = { 'menu', 'abbr', 'kind' },
     format = function(entry, item)
       local menu_icon = {
         nvim_lsp = 'λ',
@@ -213,7 +250,7 @@ cmp.setup({
 })
 
 -- treesitter
-require'nvim-treesitter.configs'.setup {
+require 'nvim-treesitter.configs'.setup {
   ensure_installed = "all",
   sync_install = false,
   auto_install = true,
@@ -245,7 +282,7 @@ require('Comment').setup {
     line = '<leader>c',
     block = '<leader>b',
   },
-   mappings = {
+  mappings = {
     basic = true,
     extra = false,
   },
@@ -253,7 +290,7 @@ require('Comment').setup {
 }
 
 -- eyeliner
-require'eyeliner'.setup {
+require 'eyeliner'.setup {
   highlight_on_key = true, -- show highlights only after keypress
   dim = true,              -- dim all other characters if set to true (recommended!)
 }

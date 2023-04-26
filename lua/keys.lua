@@ -37,3 +37,18 @@ vim.keymap.set('n', '<Leader>g', telescope_builtin.live_grep, {})
 vim.keymap.set('n', '<Leader>b', telescope_builtin.buffers, {})
 vim.keymap.set('n', '<Leader>[', telescope_builtin.loclist, {})
 vim.keymap.set('n', '<Leader>]', telescope_builtin.quickfix, {})
+
+-- lsp
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  end,
+})

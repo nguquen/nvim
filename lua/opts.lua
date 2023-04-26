@@ -24,7 +24,7 @@ opt.splitbelow = true
 opt.splitright = true
 vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
-    vim.opt.formatoptions = vim.opt.formatoptions - { "c","r","o" }
+    vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
   end,
 })
 
@@ -45,10 +45,10 @@ local sign = function(opts)
   })
 end
 
-sign({name = 'DiagnosticSignError', text = ''})
-sign({name = 'DiagnosticSignWarn', text = ''})
-sign({name = 'DiagnosticSignHint', text = ''})
-sign({name = 'DiagnosticSignInfo', text = ''})
+sign({ name = 'DiagnosticSignError', text = '' })
+sign({ name = 'DiagnosticSignWarn', text = '' })
+sign({ name = 'DiagnosticSignHint', text = '' })
+sign({ name = 'DiagnosticSignInfo', text = '' })
 
 vim.diagnostic.config({
   virtual_text = false,
@@ -64,15 +64,12 @@ vim.diagnostic.config({
   },
 })
 
--- Format on Save
--- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()]]
-
 -- [[ completion ]]
 -- completeopt is used to manage code suggestions
 -- menuone: show popup even when there is only one suggestion
 -- noinsert: Only insert text when selection is confirmed
 -- noselect: force us to select one from the suggestions
-opt.completeopt = {'menuone', 'noselect', 'noinsert'}
+opt.completeopt = { 'menuone', 'noselect', 'noinsert' }
 opt.shortmess = vim.opt.shortmess + { c = true }
 vim.api.nvim_create_autocmd("CursorHold", {
   callback = function()
