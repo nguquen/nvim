@@ -38,6 +38,7 @@ return require('packer').startup(function(use)
   use('numToStr/Comment.nvim')
   use('JoosepAlviste/nvim-ts-context-commentstring')
   use('jinh0/eyeliner.nvim')
+  use('kylechui/nvim-surround')
   -- completion
   use('hrsh7th/nvim-cmp')
   use('hrsh7th/cmp-nvim-lsp')

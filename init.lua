@@ -314,3 +314,6 @@ null_ls.setup({
     null_ls.builtins.formatting.stylua,
   },
 })
+
+-- surround
+require('nvim-surround').setup({})
