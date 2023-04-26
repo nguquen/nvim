@@ -29,6 +29,7 @@ return require('packer').startup(function(use)
   use "navarasu/onedark.nvim"
   -- status
   use 'nvim-lualine/lualine.nvim'
+  use 'arkav/lualine-lsp-progress'
   -- editing
   use 'windwp/nvim-autopairs'
   use 'lewis6991/gitsigns.nvim'
