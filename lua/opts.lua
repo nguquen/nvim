@@ -5,16 +5,16 @@ local opt = vim.opt
 local cmd = vim.api.nvim_command
 
 -- [[ clipboard ]]
-opt.clipboard = "unnamedplus"
-opt.pastetoggle = "<F2>"
+opt.clipboard = 'unnamedplus'
+opt.pastetoggle = '<F2>'
 
 -- [[ editor ]]
 opt.updatetime = 300
-opt.signcolumn = "yes"
+opt.signcolumn = 'yes'
 opt.number = true
 opt.relativenumber = true
 opt.visualbell = true
-opt.listchars = "eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·"
+opt.listchars = 'eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:·'
 opt.list = true
 opt.expandtab = true
 opt.shiftwidth = 2
@@ -22,9 +22,9 @@ opt.softtabstop = 2
 opt.tabstop = 2
 opt.splitbelow = true
 opt.splitright = true
-vim.api.nvim_create_autocmd("BufEnter", {
+vim.api.nvim_create_autocmd('BufEnter', {
   callback = function()
-    vim.opt.formatoptions = vim.opt.formatoptions - { "c", "r", "o" }
+    vim.opt.formatoptions = vim.opt.formatoptions - { 'c', 'r', 'o' }
   end,
 })
 
@@ -33,7 +33,7 @@ opt.encoding = 'utf8'
 opt.fileencoding = 'utf8'
 
 -- [[ theme ]]
-opt.syntax = "ON"
+opt.syntax = 'ON'
 opt.termguicolors = true
 
 -- [[ lsp diagnostic ]]
@@ -41,7 +41,7 @@ local sign = function(opts)
   vim.fn.sign_define(opts.name, {
     texthl = opts.name,
     text = opts.text,
-    numhl = ''
+    numhl = '',
   })
 end
 
@@ -71,7 +71,7 @@ vim.diagnostic.config({
 -- noselect: force us to select one from the suggestions
 opt.completeopt = { 'menuone', 'noselect', 'noinsert' }
 opt.shortmess = vim.opt.shortmess + { c = true }
-vim.api.nvim_create_autocmd("CursorHold", {
+vim.api.nvim_create_autocmd('CursorHold', {
   callback = function()
     vim.diagnostic.open_float(nil, { focusable = false })
   end,
