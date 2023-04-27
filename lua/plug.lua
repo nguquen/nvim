@@ -20,6 +20,7 @@ return require('packer').startup(function(use)
   use('christoomey/vim-tmux-navigator')
   use('nvim-tree/nvim-tree.lua')
   use('nvim-telescope/telescope.nvim')
+  use('nvim-telescope/telescope-ui-select.nvim')
   -- mason
   use('williamboman/mason.nvim')
   use('williamboman/mason-lspconfig.nvim')

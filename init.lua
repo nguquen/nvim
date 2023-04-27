@@ -100,8 +100,38 @@ require('telescope').setup({
         ['<C-k>'] = 'move_selection_previous',
       },
     },
+    layout_config = {
+      prompt_position = 'bottom',
+    },
+  },
+  pickers = {
+    find_files = {
+      theme = 'ivy',
+    },
+    live_grep = {
+      theme = 'ivy',
+    },
+    grep_string = {
+      theme = 'ivy',
+    },
+    buffers = {
+      theme = 'ivy',
+    },
+    keymaps = {
+      theme = 'ivy',
+    },
+    lsp_document_symbols = {
+      theme = 'ivy',
+    },
+  },
+  extensions = {
+    ['ui-select'] = {
+      require('telescope.themes').get_cursor({}),
+    },
   },
 })
+
+require('telescope').load_extension('ui-select')
 
 -- autopairs
 require('nvim-autopairs').setup({})
@@ -168,13 +198,9 @@ local rt = require('rust-tools')
 
 rt.setup({
   server = {
-    on_attach = function(client, bufnr)
+    on_attach = function(client, _)
       -- auto format
       on_attach_lsp_format(client)
-      -- hover actions
-      vim.keymap.set('n', '<C-space>', rt.hover_actions.hover_actions, { buffer = bufnr })
-      -- code action groups
-      vim.keymap.set('n', '<Leader>a', rt.code_action_group.code_action_group, { buffer = bufnr })
     end,
   },
 })
@@ -229,12 +255,12 @@ cmp.setup({
   },
   -- Installed sources:
   sources = {
-    { name = 'path' }, -- file paths
-    { name = 'nvim_lsp', keyword_length = 2 }, -- from language server
-    { name = 'nvim_lsp_signature_help' }, -- display function signatures with current parameter emphasized
-    { name = 'nvim_lua', keyword_length = 2 }, -- complete neovim's Lua runtime API such vim.lsp.*
-    { name = 'buffer', keyword_length = 2 }, -- source current buffer
-    { name = 'vsnip', keyword_length = 1 }, -- nvim-cmp source for vim-vsnip
+    { name = 'path' },
+    { name = 'nvim_lsp', keyword_length = 2 },
+    { name = 'nvim_lsp_signature_help' },
+    { name = 'nvim_lua', keyword_length = 2 },
+    { name = 'buffer', keyword_length = 2 },
+    { name = 'vsnip', keyword_length = 1 },
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -283,12 +309,12 @@ require('trouble').setup({})
 -- comment
 require('Comment').setup({
   toggler = {
-    line = '<leader>cc',
-    block = '<leader>bc',
+    line = 'gcc',
+    block = 'gbc',
   },
   opleader = {
-    line = '<leader>c',
-    block = '<leader>b',
+    line = 'gc',
+    block = 'gb',
   },
   mappings = {
     basic = true,
