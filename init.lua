@@ -224,6 +224,13 @@ rt.setup({
       -- auto format
       on_attach_lsp_format(client)
     end,
+    settings = {
+      ['rust-analyzer'] = {
+        check = {
+          command = 'clippy',
+        },
+      },
+    },
   },
 })
 
