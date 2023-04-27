@@ -175,11 +175,12 @@ require('mason-lspconfig').setup({
   ensure_installed = {
     'rust_analyzer',
     'lua_ls',
+    'tsserver',
   },
 })
 
 require('mason-tool-installer').setup({
-  ensure_installed = { 'codelldb', 'stylua' },
+  ensure_installed = { 'codelldb', 'stylua', 'prettier', 'eslint_d' },
 })
 
 -- lsp-format
@@ -223,6 +224,17 @@ rt.setup({
       -- auto format
       on_attach_lsp_format(client)
     end,
+  },
+})
+
+-- typescript
+require('typescript').setup({
+  disable_commands = false, -- prevent the plugin from creating Vim commands
+  debug = false, -- enable debug logging for commands
+  go_to_source_definition = {
+    fallback = true, -- fall back to standard LSP definition on failure
+  },
+  server = { -- pass options to lspconfig's setup method
   },
 })
 
@@ -356,6 +368,10 @@ null_ls.setup({
     null_ls.builtins.formatting.trim_newlines,
     null_ls.builtins.formatting.trim_whitespace,
     null_ls.builtins.formatting.stylua,
+    require('typescript.extensions.null-ls.code-actions'),
+    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.formatting.eslint_d,
+    null_ls.builtins.diagnostics.eslint_d,
   },
 })
 
