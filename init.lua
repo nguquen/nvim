@@ -100,28 +100,49 @@ require('telescope').setup({
         ['<C-k>'] = 'move_selection_previous',
       },
     },
-    layout_config = {
-      prompt_position = 'bottom',
-    },
   },
   pickers = {
     find_files = {
       theme = 'ivy',
+      sorting_strategy = 'descending',
+      layout_config = {
+        prompt_position = 'bottom',
+      },
     },
     live_grep = {
       theme = 'ivy',
+      sorting_strategy = 'descending',
+      layout_config = {
+        prompt_position = 'bottom',
+      },
     },
     grep_string = {
       theme = 'ivy',
+      sorting_strategy = 'descending',
+      layout_config = {
+        prompt_position = 'bottom',
+      },
     },
     buffers = {
       theme = 'ivy',
+      sorting_strategy = 'descending',
+      layout_config = {
+        prompt_position = 'bottom',
+      },
     },
     keymaps = {
       theme = 'ivy',
+      sorting_strategy = 'descending',
+      layout_config = {
+        prompt_position = 'bottom',
+      },
     },
     lsp_document_symbols = {
       theme = 'ivy',
+      sorting_strategy = 'descending',
+      layout_config = {
+        prompt_position = 'bottom',
+      },
     },
   },
   extensions = {
@@ -170,7 +191,7 @@ end
 
 -- Setup language servers
 require('lspconfig').lua_ls.setup({
-  on_attach = on_attach_lsp_format,
+  -- on_attach = on_attach_lsp_format,
   settings = {
     Lua = {
       runtime = {
