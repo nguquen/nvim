@@ -39,15 +39,19 @@ vim.keymap.set('n', '<leader>b', telescope_builtin.buffers, {})
 vim.keymap.set('n', '<leader>rl', telescope_builtin.resume, {})
 vim.keymap.set('n', '<leader>km', telescope_builtin.keymaps, {})
 vim.keymap.set('n', '<leader>o', telescope_builtin.lsp_document_symbols, {})
+vim.keymap.set('n', '<leader>d', telescope_builtin.diagnostics, {})
+vim.keymap.set('n', '<leader>[', telescope_builtin.loclist, {})
+vim.keymap.set('n', '<leader>]', telescope_builtin.quickfix, {})
+vim.keymap.set('n', 'gr', telescope_builtin.lsp_references, {})
+vim.keymap.set('n', 'gi', telescope_builtin.lsp_implementations, {})
+vim.keymap.set('n', 'gd', telescope_builtin.lsp_definitions, {})
+vim.keymap.set('n', 'gD', telescope_builtin.lsp_type_definitions, {})
 
 -- lsp
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
   callback = function(ev)
     local opts = { buffer = ev.buf }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<a-enter>', vim.lsp.buf.code_action, opts)
@@ -55,9 +59,3 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
   end,
 })
-
--- trouble
-vim.keymap.set('n', '<leader>d', '<cmd>TroubleToggle workspace_diagnostics<cr>', { silent = true, noremap = true })
-vim.keymap.set('n', '<leader>[', '<cmd>TroubleToggle loclist<cr>', { silent = true, noremap = true })
-vim.keymap.set('n', '<leader>]', '<cmd>TroubleToggle quickfix<cr>', { silent = true, noremap = true })
-vim.keymap.set('n', 'gr', '<cmd>TroubleToggle lsp_references<cr>', { silent = true, noremap = true })

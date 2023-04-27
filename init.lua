@@ -324,9 +324,6 @@ require('nvim-treesitter.configs').setup({
 -- todo
 require('todo-comments').setup({})
 
--- trouble
-require('trouble').setup({})
-
 -- comment
 require('Comment').setup({
   toggler = {
