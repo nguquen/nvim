@@ -176,6 +176,7 @@ require('mason-lspconfig').setup({
     'rust_analyzer',
     'lua_ls',
     'tsserver',
+    'jdtls',
   },
 })
 
