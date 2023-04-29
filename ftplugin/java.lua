@@ -3,7 +3,7 @@ local jdtls_path = mason_path .. '/packages/jdtls'
 local lombok_path = jdtls_path .. '/lombok.jar'
 
 local config = {
-  cmd = { 'jdtls', '--jvm-arg=-javaagent:' .. lombok_path },
+  cmd = { 'jdtls', '--jvm-arg=-javaagent:' .. lombok_path, '--jvm-arg=-Xbootclasspath/a:' .. lombok_path },
   root_dir = require('jdtls.setup').find_root({ '.git', 'mvnw', 'gradlew' }),
 }
 
