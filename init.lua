@@ -112,6 +112,7 @@ require('telescope').setup({
       sorting_strategy = 'descending',
       layout_config = {
         prompt_position = 'bottom',
+        preview_cutoff = 180,
       },
     },
     live_grep = {
@@ -119,6 +120,7 @@ require('telescope').setup({
       sorting_strategy = 'descending',
       layout_config = {
         prompt_position = 'bottom',
+        preview_cutoff = 180,
       },
     },
     grep_string = {
@@ -126,6 +128,7 @@ require('telescope').setup({
       sorting_strategy = 'descending',
       layout_config = {
         prompt_position = 'bottom',
+        preview_cutoff = 180,
       },
     },
     buffers = {
@@ -133,6 +136,7 @@ require('telescope').setup({
       sorting_strategy = 'descending',
       layout_config = {
         prompt_position = 'bottom',
+        preview_cutoff = 180,
       },
     },
     keymaps = {
@@ -140,6 +144,7 @@ require('telescope').setup({
       sorting_strategy = 'descending',
       layout_config = {
         prompt_position = 'bottom',
+        preview_cutoff = 180,
       },
     },
     lsp_document_symbols = {
@@ -147,6 +152,7 @@ require('telescope').setup({
       sorting_strategy = 'descending',
       layout_config = {
         prompt_position = 'bottom',
+        preview_cutoff = 180,
       },
     },
   },
@@ -154,10 +160,36 @@ require('telescope').setup({
     ['ui-select'] = {
       require('telescope.themes').get_cursor({}),
     },
+    ['zf-native'] = {
+      -- options for sorting file-like items
+      file = {
+        -- override default telescope file sorter
+        enable = true,
+
+        -- highlight matching text in results
+        highlight_results = true,
+
+        -- enable zf filename match priority
+        match_filename = true,
+      },
+
+      -- options for sorting all other items
+      generic = {
+        -- override default telescope generic item sorter
+        enable = true,
+
+        -- highlight matching text in results
+        highlight_results = true,
+
+        -- disable zf filename match priority
+        match_filename = false,
+      },
+    },
   },
 })
 
 require('telescope').load_extension('ui-select')
+require('telescope').load_extension('zf-native')
 
 -- autopairs
 require('nvim-autopairs').setup({})
