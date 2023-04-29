@@ -68,9 +68,14 @@ require('lualine').setup({
   },
   sections = {
     lualine_c = {
+      {
+        'filename',
+        path = 4,
+      },
       'lsp_progress',
     },
   },
+  extensions = { 'nvim-tree' },
 })
 
 -- nvim-tree
