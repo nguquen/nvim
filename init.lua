@@ -249,6 +249,9 @@ require('mason-tool-installer').setup({
   ensure_installed = { 'codelldb', 'stylua', 'prettier', 'eslint_d', 'java-debug-adapter', 'java-test' },
 })
 
+local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
+local this_os = vim.loop.os_uname().sysname
+
 -- lsp-format
 require('lsp-format').setup({})
 
@@ -283,6 +286,10 @@ require('lspconfig').lua_ls.setup({
 
 -- rust
 local rt = require('rust-tools')
+local codelldb_path = mason_path .. '/packages/codelldb/extension/adapter/codelldb'
+local liblldb_path = mason_path .. '/packages/codelldb/extension/lldb/lib/liblldb'
+
+liblldb_path = liblldb_path .. (this_os == 'Linux' and '.so' or '.dylib')
 
 rt.setup({
   server = {
@@ -297,6 +304,9 @@ rt.setup({
         },
       },
     },
+  },
+  dap = {
+    adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path),
   },
 })
 
