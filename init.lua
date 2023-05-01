@@ -155,6 +155,30 @@ require('telescope').setup({
         preview_cutoff = 180,
       },
     },
+    diagnostics = {
+      theme = 'ivy',
+      sorting_strategy = 'descending',
+      layout_config = {
+        prompt_position = 'bottom',
+        preview_cutoff = 180,
+      },
+    },
+    loclist = {
+      theme = 'ivy',
+      sorting_strategy = 'descending',
+      layout_config = {
+        prompt_position = 'bottom',
+        preview_cutoff = 180,
+      },
+    },
+    quickfix = {
+      theme = 'ivy',
+      sorting_strategy = 'descending',
+      layout_config = {
+        prompt_position = 'bottom',
+        preview_cutoff = 180,
+      },
+    },
   },
   extensions = {
     ['ui-select'] = {
