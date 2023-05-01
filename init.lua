@@ -159,7 +159,7 @@ require('telescope').setup({
     diagnostics = {
       theme = 'ivy',
       sorting_strategy = 'descending',
-      path_display = 'hidden',
+      -- path_display = 'hidden',
       layout_config = {
         prompt_position = 'bottom',
         preview_cutoff = 180,
@@ -445,6 +445,9 @@ null_ls.setup({
     null_ls.builtins.formatting.prettier,
     null_ls.builtins.formatting.eslint_d,
     null_ls.builtins.diagnostics.eslint_d,
+    null_ls.builtins.diagnostics.checkstyle.with({
+      extra_args = { '-c', '/google_checks.xml' }, -- or "/sun_checks.xml" or path to self written rules
+    }),
   },
 })
 
