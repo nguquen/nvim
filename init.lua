@@ -260,6 +260,7 @@ require('mason-tool-installer').setup({
     'black',
     'debugpy',
     'delve',
+    'js-debug-adapter',
   },
 })
 
@@ -334,6 +335,35 @@ require('typescript').setup({
   server = { -- pass options to lspconfig's setup method
   },
 })
+
+require('dap').adapters['pwa-node'] = {
+  type = 'server',
+  host = 'localhost',
+  port = '${port}',
+  executable = {
+    command = 'js-debug-adapter',
+    args = { '${port}' },
+  },
+}
+
+for _, language in ipairs({ 'typescript', 'javascript' }) do
+  require('dap').configurations[language] = {
+    {
+      type = 'pwa-node',
+      request = 'launch',
+      name = 'Launch file',
+      program = '${file}',
+      cwd = '${workspaceFolder}',
+    },
+    {
+      type = 'pwa-node',
+      request = 'attach',
+      name = 'Attach',
+      processId = require('dap.utils').pick_process,
+      cwd = '${workspaceFolder}',
+    },
+  }
+end
 
 -- gradle
 require('lspconfig').gradle_ls.setup({})
