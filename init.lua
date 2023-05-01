@@ -51,6 +51,7 @@ require('onedark').setup({
     Whitespace = { fg = '$special_grey' },
     NvimTreeNormal = { bg = '$bg0' },
     NvimTreeEndOfBuffer = { bg = '$bg0' },
+    debugPC = { fg = '$fg', bg = '$bg1' },
   },
   lualine = {
     transparent = false,
@@ -75,7 +76,7 @@ require('lualine').setup({
       'lsp_progress',
     },
   },
-  extensions = { 'nvim-tree' },
+  extensions = { 'nvim-tree', 'nvim-dap-ui' },
 })
 
 -- nvim-tree
@@ -216,6 +217,7 @@ require('telescope').setup({
 
 require('telescope').load_extension('ui-select')
 require('telescope').load_extension('zf-native')
+require('telescope').load_extension('dap')
 
 -- autopairs
 require('nvim-autopairs').setup({})
@@ -244,7 +246,7 @@ require('mason-lspconfig').setup({
 })
 
 require('mason-tool-installer').setup({
-  ensure_installed = { 'codelldb', 'stylua', 'prettier', 'eslint_d' },
+  ensure_installed = { 'codelldb', 'stylua', 'prettier', 'eslint_d', 'java-debug-adapter', 'java-test' },
 })
 
 -- lsp-format
@@ -385,6 +387,15 @@ cmp.setup({
       end,
     }),
   },
+  enabled = function()
+    return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt' or require('cmp_dap').is_dap_buffer()
+  end,
+})
+
+require('cmp').setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
+  sources = {
+    { name = 'dap' },
+  },
 })
 
 cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
@@ -453,3 +464,22 @@ null_ls.setup({
 
 -- surround
 require('nvim-surround').setup({})
+
+-- dapui
+local dap, dapui = require('dap'), require('dapui')
+
+dapui.setup()
+
+dap.listeners.after.event_initialized['dapui_config'] = function()
+  dapui.open()
+end
+
+dap.listeners.before.event_terminated['dapui_config'] = function()
+  dapui.close()
+end
+
+dap.listeners.before.event_exited['dapui_config'] = function()
+  dapui.close()
+end
+
+require('nvim-dap-virtual-text').setup({})

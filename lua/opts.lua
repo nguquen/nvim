@@ -2,7 +2,6 @@
 
 -- with vim.opt we can set global, window and buffer settings, acting like :set in vimscript
 local opt = vim.opt
-local cmd = vim.api.nvim_command
 
 -- [[ clipboard ]]
 opt.clipboard = 'unnamedplus'
