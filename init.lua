@@ -322,6 +322,7 @@ end
 
 local cmp = require('cmp')
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+local lspkind = require('lspkind')
 
 cmp.setup({
   -- Enable LSP snippets
@@ -371,17 +372,18 @@ cmp.setup({
     documentation = cmp.config.window.bordered(),
   },
   formatting = {
-    fields = { 'menu', 'abbr', 'kind' },
-    format = function(entry, item)
-      local menu_icon = {
-        nvim_lsp = 'λ',
-        vsnip = '⋗',
-        buffer = 'b',
-        path = 'p',
-      }
-      item.menu = menu_icon[entry.source.name]
-      return item
-    end,
+    fields = { 'abbr', 'kind', 'menu' },
+    format = lspkind.cmp_format({
+      mode = 'symbol_text',
+      preset = 'codicons',
+      before = function(entry, vim_item)
+        vim_item.menu = ({
+          nvim_lsp = '[lsp]',
+          nvim_lsp_signature_help = '[lsp signature]',
+        })[entry.source.name] or ('[' .. entry.source.name:gsub('_', ' ') .. ']')
+        return vim_item
+      end,
+    }),
   },
 })
 

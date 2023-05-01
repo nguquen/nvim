@@ -53,6 +53,7 @@ return require('packer').startup(function(use)
   use('lukas-reineke/lsp-format.nvim')
   -- lsp
   use('neovim/nvim-lspconfig')
+  use('onsails/lspkind.nvim')
   use('simrat39/rust-tools.nvim')
   use('jose-elias-alvarez/null-ls.nvim')
   use('jose-elias-alvarez/typescript.nvim')
