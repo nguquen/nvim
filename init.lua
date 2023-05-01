@@ -242,6 +242,8 @@ require('mason-lspconfig').setup({
     'lua_ls',
     'tsserver',
     'jdtls',
+    'gradle_ls',
+    'gopls',
   },
 })
 
@@ -319,6 +321,14 @@ require('typescript').setup({
   },
   server = { -- pass options to lspconfig's setup method
   },
+})
+
+-- gradle
+require('lspconfig').gradle_ls.setup({})
+
+-- gopls
+require('lspconfig').gopls.setup({
+  on_attach = on_attach_lsp_format,
 })
 
 -- Completion Plugin Setup
