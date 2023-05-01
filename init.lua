@@ -407,13 +407,13 @@ cmp.setup({
     ['<C-j>'] = cmp.mapping.select_next_item(),
     -- Add tab support
     ['<Tab>'] = cmp.mapping(function(fallback)
-      if vim.fn['vsnip#available'](1) == 1 then
-        feedkey('<Plug>(vsnip-expand-or-jump)', '')
-      elseif cmp.visible() then
+      if cmp.visible() then
         cmp.confirm({
           behavior = cmp.ConfirmBehavior.Insert,
-          select = true,
+          select = false,
         })
+      elseif vim.fn['vsnip#available'](1) == 1 then
+        feedkey('<Plug>(vsnip-expand-or-jump)', '')
       elseif has_words_before() then
         cmp.complete()
       else
@@ -426,7 +426,7 @@ cmp.setup({
     ['<C-e>'] = cmp.mapping.close(),
     ['<CR>'] = cmp.mapping.confirm({
       behavior = cmp.ConfirmBehavior.Insert,
-      select = true,
+      select = false,
     }),
   },
   -- Installed sources:
