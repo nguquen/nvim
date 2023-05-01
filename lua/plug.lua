@@ -60,6 +60,7 @@ return require('packer').startup(function(use)
   use('jose-elias-alvarez/null-ls.nvim')
   use('jose-elias-alvarez/typescript.nvim')
   use('mfussenegger/nvim-jdtls')
+  use('ThePrimeagen/refactoring.nvim')
   -- dap
   use('mfussenegger/nvim-dap')
   use('rcarriga/nvim-dap-ui')

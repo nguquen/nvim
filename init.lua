@@ -244,11 +244,21 @@ require('mason-lspconfig').setup({
     'jdtls',
     'gradle_ls',
     'gopls',
+    'pyright',
   },
 })
 
 require('mason-tool-installer').setup({
-  ensure_installed = { 'codelldb', 'stylua', 'prettier', 'eslint_d', 'java-debug-adapter', 'java-test' },
+  ensure_installed = {
+    'codelldb',
+    'stylua',
+    'prettier',
+    'eslint_d',
+    'java-debug-adapter',
+    'java-test',
+    'flake8',
+    'black',
+  },
 })
 
 local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
@@ -330,6 +340,9 @@ require('lspconfig').gradle_ls.setup({})
 require('lspconfig').gopls.setup({
   on_attach = on_attach_lsp_format,
 })
+
+-- pyright
+require('lspconfig').pyright.setup({})
 
 -- Completion Plugin Setup
 local has_words_before = function()
@@ -469,16 +482,20 @@ local null_ls = require('null-ls')
 null_ls.setup({
   on_attach = on_attach_lsp_format,
   sources = {
+    null_ls.builtins.code_actions.refactoring,
+    require('typescript.extensions.null-ls.code-actions'),
+    null_ls.builtins.code_actions.eslint_d,
     null_ls.builtins.formatting.trim_newlines,
     null_ls.builtins.formatting.trim_whitespace,
     null_ls.builtins.formatting.stylua,
-    require('typescript.extensions.null-ls.code-actions'),
     null_ls.builtins.formatting.prettier,
     null_ls.builtins.formatting.eslint_d,
+    null_ls.builtins.formatting.black,
     null_ls.builtins.diagnostics.eslint_d,
     null_ls.builtins.diagnostics.checkstyle.with({
       extra_args = { '-c', '/google_checks.xml' }, -- or "/sun_checks.xml" or path to self written rules
     }),
+    null_ls.builtins.diagnostics.flake8,
   },
 })
 
