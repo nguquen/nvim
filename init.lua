@@ -105,6 +105,7 @@ require('telescope').setup({
         ['<C-k>'] = 'move_selection_previous',
       },
     },
+    wrap_results = true,
   },
   pickers = {
     find_files = {
@@ -158,6 +159,7 @@ require('telescope').setup({
     diagnostics = {
       theme = 'ivy',
       sorting_strategy = 'descending',
+      path_display = 'hidden',
       layout_config = {
         prompt_position = 'bottom',
         preview_cutoff = 180,
