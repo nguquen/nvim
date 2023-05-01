@@ -258,6 +258,8 @@ require('mason-tool-installer').setup({
     'java-test',
     'flake8',
     'black',
+    'debugpy',
+    'delve',
   },
 })
 
@@ -340,9 +342,13 @@ require('lspconfig').gradle_ls.setup({})
 require('lspconfig').gopls.setup({
   on_attach = on_attach_lsp_format,
 })
+require('dap-go').setup({})
 
 -- pyright
+local debugpy_path = mason_path .. '/packages/debugpy/venv/bin/python'
+
 require('lspconfig').pyright.setup({})
+require('dap-python').setup(debugpy_path)
 
 -- Completion Plugin Setup
 local has_words_before = function()

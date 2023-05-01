@@ -39,7 +39,7 @@ vim.keymap.set('n', '<leader>b', telescope_builtin.current_buffer_fuzzy_find, {}
 vim.keymap.set('n', '<leader>rl', telescope_builtin.resume, {})
 vim.keymap.set('n', '<leader>km', telescope_builtin.keymaps, {})
 vim.keymap.set('n', '<leader>o', telescope_builtin.lsp_document_symbols, {})
-vim.keymap.set('n', '<leader>dd', telescope_builtin.diagnostics, {})
+vim.keymap.set('n', '<leader>d', telescope_builtin.diagnostics, {})
 vim.keymap.set('n', '<leader>[', telescope_builtin.loclist, {})
 vim.keymap.set('n', '<leader>]', telescope_builtin.quickfix, {})
 vim.keymap.set('n', 'gr', telescope_builtin.lsp_references, {})
@@ -63,13 +63,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- nvim-dap
 local dap = require('dap')
 local dapui = require('dapui')
-local telescope_dap = require('telescope').extensions.dap
 vim.keymap.set('n', '<f5>', dap.continue, {})
 vim.keymap.set('n', '<f10>', dap.step_over, {})
 vim.keymap.set('n', '<f11>', dap.step_into, {})
 vim.keymap.set('n', '<f12>', dap.step_out, {})
 vim.keymap.set('n', '<f9>', dap.toggle_breakpoint, {})
 vim.keymap.set('n', '<s-f5>', dap.terminate, {})
-vim.keymap.set('n', '<leader>db', telescope_dap.list_breakpoints, {})
-vim.keymap.set('n', '<leader>dc', telescope_dap.configurations, {})
-vim.keymap.set('n', '<leader>dq', dapui.close, {})
+vim.keymap.set('n', '<f2>', dapui.close, {})
