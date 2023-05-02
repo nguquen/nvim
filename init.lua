@@ -245,6 +245,7 @@ require('mason-lspconfig').setup({
     'gradle_ls',
     'gopls',
     'pyright',
+    'yamlls',
   },
 })
 
@@ -379,6 +380,11 @@ local debugpy_path = mason_path .. '/packages/debugpy/venv/bin/python'
 
 require('lspconfig').pyright.setup({})
 require('dap-python').setup(debugpy_path)
+
+-- yamlls
+require('lspconfig').yamlls.setup({
+  on_attach = on_attach_lsp_format,
+})
 
 -- Completion Plugin Setup
 local has_words_before = function()
