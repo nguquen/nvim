@@ -246,6 +246,7 @@ require('mason-lspconfig').setup({
     'gopls',
     'pyright',
     'yamlls',
+    'bufls',
   },
 })
 
@@ -388,6 +389,12 @@ require('lspconfig').yamlls.setup({
       keyOrdering = false,
     },
   },
+})
+
+-- bufls
+require('lspconfig').bufls.setup({
+  -- on_attach = on_attach_lsp_format,
+  root_dir = require('lspconfig.util').root_pattern('buf.yaml', '.git'),
 })
 
 -- Completion Plugin Setup
@@ -537,12 +544,15 @@ null_ls.setup({
     null_ls.builtins.formatting.prettierd,
     null_ls.builtins.formatting.eslint_d,
     null_ls.builtins.formatting.black,
+    null_ls.builtins.formatting.buf,
     null_ls.builtins.diagnostics.eslint_d,
     null_ls.builtins.diagnostics.checkstyle.with({
       extra_args = { '-c', '/google_checks.xml' }, -- or "/sun_checks.xml" or path to self written rules
     }),
     null_ls.builtins.diagnostics.flake8,
+    null_ls.builtins.diagnostics.buf,
   },
+  temp_dir = '/tmp',
 })
 
 -- surround

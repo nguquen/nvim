@@ -43,6 +43,7 @@ return require('packer').startup(function(use)
   use('kylechui/nvim-surround')
   use('norcalli/nvim-colorizer.lua')
   use('kdheepak/lazygit.nvim')
+  use('uarun/vim-protobuf')
   -- completion
   use('hrsh7th/nvim-cmp')
   use('hrsh7th/cmp-nvim-lsp')
