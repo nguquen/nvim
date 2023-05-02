@@ -548,6 +548,9 @@ null_ls.setup({
 -- surround
 require('nvim-surround').setup({})
 
+-- colorizer
+require('colorizer').setup()
+
 -- dapui
 local dap, dapui = require('dap'), require('dapui')
 
