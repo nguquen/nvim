@@ -253,7 +253,7 @@ require('mason-tool-installer').setup({
   ensure_installed = {
     'codelldb',
     'stylua',
-    'prettier',
+    'prettierd',
     'eslint_d',
     'java-debug-adapter',
     'java-test',
@@ -383,7 +383,11 @@ require('dap-python').setup(debugpy_path)
 
 -- yamlls
 require('lspconfig').yamlls.setup({
-  on_attach = on_attach_lsp_format,
+  settings = {
+    yaml = {
+      keyOrdering = false,
+    },
+  },
 })
 
 -- Completion Plugin Setup
@@ -530,7 +534,7 @@ null_ls.setup({
     null_ls.builtins.formatting.trim_newlines,
     null_ls.builtins.formatting.trim_whitespace,
     null_ls.builtins.formatting.stylua,
-    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.formatting.prettierd,
     null_ls.builtins.formatting.eslint_d,
     null_ls.builtins.formatting.black,
     null_ls.builtins.diagnostics.eslint_d,
