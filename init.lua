@@ -579,3 +579,6 @@ dap.listeners.before.event_exited['dapui_config'] = function()
 end
 
 require('nvim-dap-virtual-text').setup({})
+
+-- gitblame
+vim.g.gitblame_enabled = 0

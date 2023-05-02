@@ -42,6 +42,7 @@ vim.keymap.set('n', '<leader>o', telescope_builtin.lsp_document_symbols, {})
 vim.keymap.set('n', '<leader>d', telescope_builtin.diagnostics, {})
 vim.keymap.set('n', '<leader>[', telescope_builtin.loclist, {})
 vim.keymap.set('n', '<leader>]', telescope_builtin.quickfix, {})
+vim.keymap.set('n', '<leader>\\', telescope_builtin.git_bcommits, {})
 vim.keymap.set('n', 'gr', telescope_builtin.lsp_references, {})
 vim.keymap.set('n', 'gi', telescope_builtin.lsp_implementations, {})
 vim.keymap.set('n', 'gd', telescope_builtin.lsp_definitions, {})
@@ -72,4 +73,4 @@ vim.keymap.set('n', '<s-f5>', dap.terminate, {})
 vim.keymap.set('n', '<f2>', dapui.close, {})
 
 -- lazygit
-map('n', '<leader>\\', ':LazyGit<cr>', {})
+-- map('n', '<leader>\\', ':LazyGit<cr>', {})
