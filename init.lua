@@ -334,6 +334,12 @@ rt.setup({
         },
         procMacro = {
           enable = true,
+          attributes = {
+            enable = true,
+          },
+          ignored = {
+            ['async-trait'] = { 'async_trait' },
+          },
         },
       },
     },
