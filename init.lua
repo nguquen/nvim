@@ -310,12 +310,20 @@ liblldb_path = liblldb_path .. (this_os == 'Linux' and '.so' or '.dylib')
 
 rt.setup({
   server = {
-    on_attach = function(client, _)
+    on_attach = function(client, bufnr)
       -- auto format
       on_attach_lsp_format(client)
+      -- Hover actions
+      vim.keymap.set('n', 'K', rt.hover_actions.hover_actions, { buffer = bufnr })
     end,
     settings = {
       ['rust-analyzer'] = {
+        imports = {
+          granularity = {
+            group = 'module',
+          },
+          prefix = 'self',
+        },
         check = {
           command = 'clippy',
         },
@@ -323,6 +331,9 @@ rt.setup({
           buildScripts = {
             enable = true,
           },
+        },
+        procMacro = {
+          enable = true,
         },
       },
     },
@@ -437,7 +448,7 @@ cmp.setup({
       elseif vim.fn['vsnip#available'](1) == 1 then
         feedkey('<Plug>(vsnip-expand-or-jump)', '')
       elseif has_words_before() then
-        cmp.complete()
+        cmp.complete({})
       else
         fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
       end
@@ -457,6 +468,7 @@ cmp.setup({
     { name = 'nvim_lsp', keyword_length = 2 },
     { name = 'nvim_lsp_signature_help' },
     { name = 'nvim_lua', keyword_length = 2 },
+    { name = 'crates' },
     { name = 'buffer', keyword_length = 2 },
     { name = 'vsnip', keyword_length = 1 },
   },
@@ -587,3 +599,11 @@ require('nvim-dap-virtual-text').setup({})
 
 -- gitblame
 vim.g.gitblame_enabled = 0
+
+-- crates
+require('crates').setup({
+  null_ls = {
+    enabled = true,
+    name = 'crates.nvim',
+  },
+})

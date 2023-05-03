@@ -57,6 +57,7 @@ return require('packer').startup(function(use)
   use('rcarriga/cmp-dap')
   use('rafamadriz/friendly-snippets')
   use('lukas-reineke/lsp-format.nvim')
+  use('saecki/crates.nvim')
   -- lsp
   use('neovim/nvim-lspconfig')
   use('onsails/lspkind.nvim')

@@ -49,11 +49,24 @@ vim.keymap.set('n', 'gd', telescope_builtin.lsp_definitions, {})
 vim.keymap.set('n', 'gD', telescope_builtin.lsp_type_definitions, {})
 
 -- lsp
+local function show_documentation()
+  local filetype = vim.bo.filetype
+  if vim.tbl_contains({ 'vim', 'help' }, filetype) then
+    vim.cmd('h ' .. vim.fn.expand('<cword>'))
+  elseif vim.tbl_contains({ 'man' }, filetype) then
+    vim.cmd('Man ' .. vim.fn.expand('<cword>'))
+  elseif vim.fn.expand('%:t') == 'Cargo.toml' and require('crates').popup_available() then
+    require('crates').show_features_popup()
+  else
+    vim.lsp.buf.hover()
+  end
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
   callback = function(ev)
     local opts = { buffer = ev.buf }
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'K', show_documentation, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<a-enter>', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
