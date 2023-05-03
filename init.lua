@@ -394,7 +394,7 @@ require('lspconfig').yamlls.setup({
 -- bufls
 require('lspconfig').bufls.setup({
   -- on_attach = on_attach_lsp_format,
-  root_dir = require('lspconfig.util').root_pattern('buf.yaml', '.git'),
+  root_dir = require('lspconfig.util').root_pattern('buf.yaml', 'buf.work.yaml', '.git'),
 })
 
 -- Completion Plugin Setup
