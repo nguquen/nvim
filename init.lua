@@ -247,6 +247,7 @@ require('mason-lspconfig').setup({
     'pyright',
     'yamlls',
     'bufls',
+    'prismals',
   },
 })
 
@@ -417,6 +418,11 @@ require('lspconfig').yamlls.setup({
 require('lspconfig').bufls.setup({
   -- on_attach = on_attach_lsp_format,
   root_dir = require('lspconfig.util').root_pattern('buf.work.yaml', '.git'),
+})
+
+-- prismals
+require('lspconfig').prismals.setup({
+  on_attach = on_attach_lsp_format,
 })
 
 -- Completion Plugin Setup
