@@ -45,6 +45,7 @@ return require('packer').startup(function(use)
   use('lewis6991/gitsigns.nvim')
   use('kdheepak/lazygit.nvim')
   use('f-person/git-blame.nvim')
+  use('wakatime/vim-wakatime')
   -- completion
   use('hrsh7th/nvim-cmp')
   use('hrsh7th/cmp-nvim-lsp')
