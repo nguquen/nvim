@@ -477,12 +477,13 @@ cmp.setup({
   -- Installed sources:
   sources = {
     { name = 'path' },
-    { name = 'nvim_lsp', keyword_length = 2 },
+    { name = 'nvim_lsp', priority = 100 },
     { name = 'nvim_lsp_signature_help' },
-    { name = 'nvim_lua', keyword_length = 2 },
+    { name = 'nvim_lua' },
     { name = 'crates' },
-    { name = 'buffer', keyword_length = 2 },
-    { name = 'vsnip', keyword_length = 1 },
+    { name = 'vsnip' },
+    { name = 'buffer' },
+    { name = 'vim-dadbod-completion', priority = 100 },
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -497,6 +498,7 @@ cmp.setup({
         vim_item.menu = ({
           nvim_lsp = '[lsp]',
           nvim_lsp_signature_help = '[lsp signature]',
+          ['vim-dadbod-completion'] = '[DB]',
         })[entry.source.name] or ('[' .. entry.source.name:gsub('_', ' ') .. ']')
         return vim_item
       end,
@@ -619,3 +621,8 @@ require('crates').setup({
     name = 'crates.nvim',
   },
 })
+
+-- dadbod
+vim.g.db_ui_use_nerd_fonts = 1
+vim.g.db_ui_win_position = 'right'
+vim.g.db_ui_save_location = './queries'
