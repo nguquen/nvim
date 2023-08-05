@@ -323,7 +323,7 @@ rt.setup({
           granularity = {
             group = 'module',
           },
-          prefix = 'self',
+          prefix = 'crate',
         },
         check = {
           command = 'clippy',
