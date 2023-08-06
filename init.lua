@@ -93,7 +93,10 @@ require('nvim-tree').setup({
       },
     },
   },
-  filters = {},
+  filters = {
+    dotfiles = false,
+    git_ignored = false,
+  },
 })
 
 -- telescope setup
