@@ -267,6 +267,7 @@ require('mason-tool-installer').setup({
     'debugpy',
     'delve',
     'js-debug-adapter',
+    'taplo',
   },
 })
 
@@ -585,6 +586,7 @@ null_ls.setup({
     }),
     null_ls.builtins.diagnostics.flake8,
     null_ls.builtins.diagnostics.buf,
+    null_ls.builtins.formatting.taplo,
   },
   temp_dir = '/tmp',
 })
