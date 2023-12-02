@@ -532,16 +532,16 @@ require('nvim-treesitter.configs').setup({
     additional_vim_regex_highlighting = false,
   },
   ident = { enable = true },
-  context_commentstring = {
-    enable = true,
-    enable_autocmd = false,
-  },
 })
 
 -- todo
 require('todo-comments').setup({})
 
 -- comment
+require('ts_context_commentstring').setup({
+  enable_autocmd = false,
+})
+
 require('Comment').setup({
   toggler = {
     line = 'gcc',
