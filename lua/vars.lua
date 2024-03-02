@@ -4,3 +4,8 @@
 local g = vim.g
 g.t_co = 256
 g.background = 'dark'
+
+-- to appropriately highlight codefences returned from denols
+g.markdown_fenced_languages = {
+  'ts=typescript',
+}

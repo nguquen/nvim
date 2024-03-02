@@ -362,6 +362,8 @@ require('typescript').setup({
     fallback = true, -- fall back to standard LSP definition on failure
   },
   server = { -- pass options to lspconfig's setup method
+    root_dir = require('lspconfig').util.root_pattern('package.json'),
+    -- single_file_support = false
   },
 })
 
@@ -393,6 +395,11 @@ for _, language in ipairs({ 'typescript', 'javascript' }) do
     },
   }
 end
+
+-- deno
+require('lspconfig').denols.setup({
+  root_dir = require('lspconfig').util.root_pattern('deno.json', 'deno.jsonc'),
+})
 
 -- gradle
 require('lspconfig').gradle_ls.setup({})
