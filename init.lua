@@ -363,7 +363,7 @@ require('typescript').setup({
   },
   server = { -- pass options to lspconfig's setup method
     root_dir = require('lspconfig').util.root_pattern('package.json'),
-    -- single_file_support = false
+    single_file_support = false,
   },
 })
 
