@@ -251,6 +251,8 @@ require('mason-lspconfig').setup({
     'yamlls',
     'bufls',
     'prismals',
+    'denols',
+    'sqlls',
   },
 })
 
@@ -435,6 +437,9 @@ require('lspconfig').bufls.setup({
 require('lspconfig').prismals.setup({
   on_attach = on_attach_lsp_format,
 })
+
+-- sqlls
+require('lspconfig').sqlls.setup({})
 
 -- Completion Plugin Setup
 local has_words_before = function()
