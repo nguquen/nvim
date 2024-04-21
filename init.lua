@@ -115,6 +115,7 @@ require('telescope').setup({
     find_files = {
       theme = 'ivy',
       sorting_strategy = 'descending',
+      hidden = true,
       layout_config = {
         prompt_position = 'bottom',
         preview_cutoff = 180,
