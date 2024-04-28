@@ -46,6 +46,7 @@ return require('packer').startup(function(use)
   use('kdheepak/lazygit.nvim')
   use('f-person/git-blame.nvim')
   use('wakatime/vim-wakatime')
+  use('maxmellon/vim-jsx-pretty')
   -- completion
   use('hrsh7th/nvim-cmp')
   use('hrsh7th/cmp-nvim-lsp')
