@@ -30,6 +30,7 @@ return require('packer').startup(function(use)
   -- colorscheme
   use('rebelot/kanagawa.nvim')
   use('navarasu/onedark.nvim')
+  use({ 'briones-gabriel/darcula-solid.nvim', requires = 'rktjmp/lush.nvim' })
   -- status
   use('nvim-lualine/lualine.nvim')
   use('arkav/lualine-lsp-progress')

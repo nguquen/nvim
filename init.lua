@@ -33,31 +33,33 @@ if packer_bootstrap then
 end
 
 -- colorscheme
-require('onedark').setup({
-  style = 'dark',
-  transparent = false,
-  term_colors = true,
-  code_style = {
-    comments = 'none',
-    keywords = 'none',
-    functions = 'none',
-    strings = 'none',
-    variables = 'none',
-  },
-  colors = {
-    special_grey = '#3b4048',
-  },
-  highlights = {
-    Whitespace = { fg = '$special_grey' },
-    NvimTreeNormal = { bg = '$bg0' },
-    NvimTreeEndOfBuffer = { bg = '$bg0' },
-    debugPC = { fg = '$fg', bg = '$bg1' },
-  },
-  lualine = {
-    transparent = false,
-  },
-})
-require('onedark').load()
+-- require('onedark').setup({
+--   style = 'dark',
+--   transparent = false,
+--   term_colors = true,
+--   code_style = {
+--     comments = 'none',
+--     keywords = 'none',
+--     functions = 'none',
+--     strings = 'none',
+--     variables = 'none',
+--   },
+--   colors = {
+--     special_grey = '#3b4048',
+--   },
+--   highlights = {
+--     Whitespace = { fg = '$special_grey' },
+--     NvimTreeNormal = { bg = '$bg0' },
+--     NvimTreeEndOfBuffer = { bg = '$bg0' },
+--     debugPC = { fg = '$fg', bg = '$bg1' },
+--   },
+--   lualine = {
+--     transparent = false,
+--   },
+-- })
+-- require('onedark').load()
+
+vim.cmd('colorscheme darcula-solid-ex')
 
 -- devicons
 require('nvim-web-devicons').setup({})
@@ -65,7 +67,7 @@ require('nvim-web-devicons').setup({})
 -- lualine
 require('lualine').setup({
   options = {
-    theme = 'onedark',
+    theme = 'auto',
   },
   sections = {
     lualine_c = {
@@ -458,6 +460,10 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local lspkind = require('lspkind')
 
 cmp.setup({
+  preselect = cmp.PreselectMode.Item,
+  completion = {
+    completeopt = 'menu,menuone,noinsert',
+  },
   -- Enable LSP snippets
   snippet = {
     expand = function(args)
@@ -520,6 +526,20 @@ cmp.setup({
         return vim_item
       end,
     }),
+  },
+  sorting = {
+    priority_weight = 2,
+    comparators = {
+      cmp.config.compare.score,
+      cmp.config.compare.offset,
+      cmp.config.compare.exact,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.locality,
+      cmp.config.compare.sort_text,
+      cmp.config.compare.length,
+      cmp.config.compare.order,
+      cmp.config.compare.kind,
+    },
   },
   enabled = function()
     return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt' or require('cmp_dap').is_dap_buffer()
