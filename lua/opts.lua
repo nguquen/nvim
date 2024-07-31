@@ -5,7 +5,7 @@ local opt = vim.opt
 
 -- [[ clipboard ]]
 opt.clipboard = 'unnamedplus'
-opt.pastetoggle = '<F2>'
+-- opt.pastetoggle = '<F2>'
 
 -- [[ editor ]]
 opt.updatetime = 300
