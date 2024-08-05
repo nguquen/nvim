@@ -334,6 +334,7 @@ rt.setup({
           },
           prefix = 'crate',
         },
+        checkOnSave = false,
         check = {
           command = 'clippy',
         },
@@ -349,6 +350,12 @@ rt.setup({
           },
           ignored = {
             ['async-trait'] = { 'async_trait' },
+          },
+        },
+        diagnostics = {
+          enable = true,
+          experimental = {
+            enable = true,
           },
         },
       },
