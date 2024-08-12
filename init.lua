@@ -73,7 +73,7 @@ require('lualine').setup({
     lualine_c = {
       {
         'filename',
-        path = 4,
+        path = 3,
       },
       'lsp_progress',
     },
@@ -334,9 +334,8 @@ rt.setup({
           },
           prefix = 'crate',
         },
-        checkOnSave = false,
         check = {
-          command = 'clippy',
+          allTargets = false,
         },
         cargo = {
           buildScripts = {
@@ -354,9 +353,13 @@ rt.setup({
         },
         diagnostics = {
           enable = true,
+          disabled = { 'macro-error' },
           experimental = {
             enable = true,
           },
+        },
+        cachePriming = {
+          enable = false,
         },
       },
     },
