@@ -328,6 +328,7 @@ rt.setup({
     end,
     settings = {
       ['rust-analyzer'] = {
+        -- numThreads = 5,
         imports = {
           granularity = {
             group = 'module',
@@ -335,7 +336,9 @@ rt.setup({
           prefix = 'crate',
         },
         check = {
-          allTargets = false,
+          command = 'clippy',
+          allTargets = true,
+          extraArgs = { '--no-deps' },
         },
         cargo = {
           buildScripts = {
@@ -347,20 +350,21 @@ rt.setup({
           attributes = {
             enable = true,
           },
-          ignored = {
-            ['async-trait'] = { 'async_trait' },
-          },
+          -- ignored = {
+          --   ['async-trait'] = { 'async_trait' },
+          -- },
         },
         diagnostics = {
           enable = true,
-          disabled = { 'macro-error' },
+          disabled = { 'macro-error', 'proc-macro-disabled' },
           experimental = {
             enable = true,
           },
         },
-        cachePriming = {
-          enable = false,
-        },
+        -- cachePriming = {
+        --   enable = true,
+        --   numThreads = 5,
+        -- },
       },
     },
   },
@@ -432,6 +436,12 @@ require('lspconfig').pyright.setup({})
 require('dap-python').setup(debugpy_path)
 
 -- yamlls
+-- set YAML syntax for *.yaml.gotmpl
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  pattern = '*.yaml.gotmpl',
+  command = 'set filetype=yaml',
+})
+
 require('lspconfig').yamlls.setup({
   settings = {
     yaml = {
@@ -668,6 +678,7 @@ require('nvim-dap-virtual-text').setup({})
 
 -- gitblame
 vim.g.gitblame_enabled = 0
+vim.g.gitblame_delay = 250
 
 -- crates
 require('crates').setup({
