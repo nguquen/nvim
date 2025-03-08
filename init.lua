@@ -113,12 +113,16 @@ require('telescope').setup({
       },
     },
     wrap_results = true,
+    file_ignore_patterns = {
+      '%.git/',
+    },
   },
   pickers = {
     find_files = {
       theme = 'ivy',
       sorting_strategy = 'descending',
       hidden = true,
+      no_ignore = false,
       layout_config = {
         prompt_position = 'bottom',
         preview_cutoff = 180,
