@@ -77,6 +77,7 @@ require('lualine').setup({
       },
       'lsp_progress',
     },
+    lualine_x = { require('plugins/codecompanion/lualine'), 'copilot', 'encoding', 'fileformat', 'filetype' },
   },
   extensions = { 'nvim-tree', 'nvim-dap-ui' },
 })
@@ -225,6 +226,11 @@ require('telescope').load_extension('ui-select')
 require('telescope').load_extension('zf-native')
 require('telescope').load_extension('dap')
 
+-- markdown
+require('render-markdown').setup({
+  file_types = { 'markdown', 'codecompanion' },
+})
+
 -- autopairs
 require('nvim-autopairs').setup({})
 
@@ -246,13 +252,13 @@ require('mason-lspconfig').setup({
   ensure_installed = {
     'rust_analyzer',
     'lua_ls',
-    'tsserver',
+    'ts_ls',
     'jdtls',
     'gradle_ls',
     'gopls',
     'pyright',
     'yamlls',
-    'bufls',
+    'buf_ls',
     'prismals',
     'denols',
     'sqlls',
@@ -278,6 +284,37 @@ require('mason-tool-installer').setup({
 
 local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
 local this_os = vim.loop.os_uname().sysname
+
+-- ai
+require('copilot').setup({
+  suggestion = { enabled = false },
+  panel = { enabled = false },
+  filetypes = {
+    yaml = true,
+    markdown = true,
+    codecompanion = true,
+  },
+})
+
+require('copilot_cmp').setup()
+
+require('codecompanion').setup({
+  strategies = {
+    chat = {
+      adapter = 'copilot',
+    },
+    inline = {
+      adapter = 'copilot',
+    },
+    agent = {
+      adapter = 'copilot',
+    },
+  },
+  opts = {
+    send_code = false,
+    show_defaults = false,
+  },
+})
 
 -- lsp-format
 require('lsp-format').setup({})
@@ -374,17 +411,8 @@ rt.setup({
 })
 
 -- typescript
-require('typescript').setup({
-  disable_commands = false, -- prevent the plugin from creating Vim commands
-  debug = false, -- enable debug logging for commands
-  go_to_source_definition = {
-    fallback = true, -- fall back to standard LSP definition on failure
-  },
-  server = { -- pass options to lspconfig's setup method
-    root_dir = require('lspconfig').util.root_pattern('package.json'),
-    single_file_support = false,
-  },
-})
+-- consider https://github.com/pmizio/typescript-tools.nvim
+require('lspconfig').ts_ls.setup({})
 
 require('dap').adapters['pwa-node'] = {
   type = 'server',
@@ -451,7 +479,7 @@ require('lspconfig').yamlls.setup({
 })
 
 -- bufls
-require('lspconfig').bufls.setup({
+require('lspconfig').buf_ls.setup({
   -- on_attach = on_attach_lsp_format,
   root_dir = require('lspconfig.util').root_pattern('buf.work.yaml', '.git'),
 })
@@ -534,6 +562,8 @@ cmp.setup({
       },
     },
     { name = 'vim-dadbod-completion', priority = 100 },
+    { name = 'render-markdown' },
+    { name = 'copilot' },
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -544,6 +574,9 @@ cmp.setup({
     format = lspkind.cmp_format({
       mode = 'symbol_text',
       preset = 'codicons',
+      symbol_map = {
+        Copilot = '',
+      },
       before = function(entry, vim_item)
         vim_item.menu = ({
           nvim_lsp = '[lsp]',
@@ -631,7 +664,7 @@ null_ls.setup({
   on_attach = on_attach_lsp_format,
   sources = {
     null_ls.builtins.code_actions.refactoring,
-    require('typescript.extensions.null-ls.code-actions'),
+    -- require('typescript.extensions.null-ls.code-actions'),
     null_ls.builtins.code_actions.eslint_d,
     null_ls.builtins.formatting.trim_newlines,
     null_ls.builtins.formatting.trim_whitespace,
