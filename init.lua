@@ -516,6 +516,9 @@ cmp.setup({
   completion = {
     completeopt = 'menu,menuone,noinsert',
   },
+  experimental = {
+    ghost_text = true,
+  },
   -- Enable LSP snippets
   snippet = {
     expand = function(args)
@@ -551,6 +554,7 @@ cmp.setup({
   },
   -- Installed sources:
   sources = {
+    { name = 'copilot', priority = 100 },
     { name = 'path' },
     { name = 'nvim_lsp', priority = 100 },
     { name = 'nvim_lsp_signature_help' },
@@ -567,7 +571,6 @@ cmp.setup({
     },
     { name = 'vim-dadbod-completion', priority = 100 },
     { name = 'render-markdown' },
-    { name = 'copilot' },
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -594,6 +597,9 @@ cmp.setup({
   sorting = {
     priority_weight = 2,
     comparators = {
+      require('copilot_cmp.comparators').prioritize,
+      require('copilot_cmp.comparators').score,
+
       cmp.config.compare.score,
       cmp.config.compare.offset,
       cmp.config.compare.exact,
