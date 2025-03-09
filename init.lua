@@ -348,8 +348,8 @@ require('codecompanion').setup({
     end,
   },
   opts = {
-    send_code = false,
-    show_defaults = false,
+    -- send_code = false,
+    -- show_defaults = false,
   },
 })
 
