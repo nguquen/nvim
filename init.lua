@@ -315,11 +315,37 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
 
 require('copilot_cmp').setup()
 
+-- fn.stdpath('data')
+require('mcphub').setup({
+  port = 3333,
+  config = vim.fn.expand(vim.fn.stdpath('config') .. '/mcpservers.json'),
+})
+
 require('codecompanion').setup({
   strategies = {
     chat = {
       adapter = 'copilot',
       -- adapter = 'deepseek_coder_v2',
+      tools = {
+        ['mcp'] = {
+          callback = require('mcphub.extensions.codecompanion'),
+          description = 'Call tools and resources from the MCP Servers',
+          opts = {
+            user_approval = true,
+            -- requires_approval = true,
+          },
+        },
+      },
+      roles = {
+        llm = function(adapter)
+          return string.format(
+            '  %s%s',
+            adapter.formatted_name,
+            adapter.parameters.model and ' (' .. adapter.parameters.model .. ')' or ''
+          )
+        end,
+        user = '  ' .. vim.env.USER:gsub('^%l', string.upper),
+      },
     },
     inline = {
       adapter = 'copilot',
@@ -346,6 +372,26 @@ require('codecompanion').setup({
         },
       })
     end,
+    copilot = function()
+      return require('codecompanion.adapters').extend('copilot', {
+        schema = {
+          model = {
+            default = 'claude-3.5-sonnet',
+          },
+        },
+      })
+    end,
+  },
+  display = {
+    chat = {
+      intro_message = 'Welcome to CodeCompanion ✨! Press ? for options',
+      show_header_separator = false,
+      separator = '─',
+      show_references = true,
+      show_settings = true,
+      show_token_count = true,
+      start_in_insert_mode = false,
+    },
   },
   opts = {
     -- send_code = false,
@@ -550,7 +596,7 @@ cmp.setup({
     completeopt = 'menu,menuone,noinsert',
   },
   experimental = {
-    ghost_text = true,
+    ghost_text = false,
   },
   -- Enable LSP snippets
   snippet = {
