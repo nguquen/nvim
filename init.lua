@@ -241,6 +241,9 @@ require('nvim-autopairs').setup({})
 -- gitsigns
 require('gitsigns').setup({})
 
+-- mini.diff
+require('mini.diff').setup()
+
 -- mason setup
 require('mason').setup({
   ui = {
@@ -300,19 +303,49 @@ require('copilot').setup({
   },
 })
 
+vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+  pattern = { '*' },
+  callback = function()
+    if vim.bo.filetype == 'codecompanion' and not vim.b.copilot_attached then
+      vim.api.nvim_command('Copilot! attach')
+      vim.b.copilot_attached = true
+    end
+  end,
+})
+
 require('copilot_cmp').setup()
 
 require('codecompanion').setup({
   strategies = {
     chat = {
       adapter = 'copilot',
+      -- adapter = 'deepseek_coder_v2',
     },
     inline = {
       adapter = 'copilot',
+      -- adapter = 'deepseek_coder_v2',
     },
     agent = {
       adapter = 'copilot',
+      -- adapter = 'deepseek_coder_v2',
     },
+  },
+  adapters = {
+    deepseek_coder_v2 = function()
+      return require('codecompanion.adapters').extend('ollama', {
+        name = 'deepseek_coder_v2',
+        formatted_name = 'DeepseekCoder:v2',
+        env = {
+          url = 'http://127.0.0.1:11434',
+        },
+        headers = {
+          ['Content-Type'] = 'application/json',
+        },
+        parameters = {
+          sync = true,
+        },
+      })
+    end,
   },
   opts = {
     send_code = false,

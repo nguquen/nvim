@@ -49,6 +49,7 @@ return require('packer').startup(function(use)
   use('f-person/git-blame.nvim')
   use('wakatime/vim-wakatime')
   use('maxmellon/vim-jsx-pretty')
+  use('echasnovski/mini.diff')
   -- completion
   use('hrsh7th/nvim-cmp')
   use('hrsh7th/cmp-nvim-lsp')
