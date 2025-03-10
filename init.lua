@@ -325,7 +325,7 @@ require('codecompanion').setup({
   strategies = {
     chat = {
       adapter = 'copilot',
-      -- adapter = 'deepseek_coder_v2',
+      -- adapter = 'deepseek_local',
       tools = {
         ['mcp'] = {
           callback = require('mcphub.extensions.codecompanion'),
@@ -349,18 +349,21 @@ require('codecompanion').setup({
     },
     inline = {
       adapter = 'copilot',
-      -- adapter = 'deepseek_coder_v2',
+      -- adapter = 'deepseek_local',
     },
     agent = {
       adapter = 'copilot',
-      -- adapter = 'deepseek_coder_v2',
+      -- adapter = 'deepseek_local',
     },
   },
   adapters = {
-    deepseek_coder_v2 = function()
+    opts = {
+      show_defaults = false,
+    },
+    deepseek_local = function()
       return require('codecompanion.adapters').extend('ollama', {
-        name = 'deepseek_coder_v2',
-        formatted_name = 'DeepseekCoder:v2',
+        name = 'deepseek_local',
+        formatted_name = 'DeepseekLocal',
         env = {
           url = 'http://127.0.0.1:11434',
         },
@@ -369,6 +372,48 @@ require('codecompanion').setup({
         },
         parameters = {
           sync = true,
+        },
+        schema = {
+          model = {
+            default = 'deepseek-coder-v2:local',
+            -- default = 'deepseek-r1:local',
+          },
+        },
+        handlers = {
+          chat_output = function(self, data)
+            local output = {}
+
+            if data and data ~= '' then
+              if not self.opts.stream then
+                data = data.body
+              end
+              local ok, json = pcall(vim.json.decode, data, { luanil = { object = true } })
+
+              if not ok then
+                return { status = 'error' }
+              end
+
+              local message = json.message
+
+              if message.content then
+                if message.content:sub(1, 7) == '<think>' then
+                  output.content = '### Reasoning\n' .. message.content:sub(8)
+                elseif message.content:sub(-8) == '</think>' then
+                  output.content = message.content:sub(1, -9) .. '\n### Response'
+                else
+                  output.content = message.content
+                end
+                output.role = message.role or nil
+              end
+
+              return {
+                status = 'success',
+                output = output,
+              }
+            end
+
+            return nil
+          end,
         },
       })
     end,
@@ -388,14 +433,13 @@ require('codecompanion').setup({
       show_header_separator = false,
       separator = '─',
       show_references = true,
-      show_settings = true,
+      show_settings = false,
       show_token_count = true,
       start_in_insert_mode = false,
     },
   },
   opts = {
     -- send_code = false,
-    -- show_defaults = false,
   },
 })
 
