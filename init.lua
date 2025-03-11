@@ -325,7 +325,7 @@ require('codecompanion').setup({
   strategies = {
     chat = {
       adapter = 'copilot',
-      -- adapter = 'deepseek_local',
+      -- adapter = 'ollama',
       tools = {
         ['mcp'] = {
           callback = require('mcphub.extensions.codecompanion'),
@@ -349,34 +349,30 @@ require('codecompanion').setup({
     },
     inline = {
       adapter = 'copilot',
-      -- adapter = 'deepseek_local',
+      -- adapter = 'ollama',
     },
     agent = {
       adapter = 'copilot',
-      -- adapter = 'deepseek_local',
+      -- adapter = 'ollama',
     },
   },
   adapters = {
     opts = {
       show_defaults = false,
     },
-    deepseek_local = function()
+    ollama = function()
       return require('codecompanion.adapters').extend('ollama', {
-        name = 'deepseek_local',
-        formatted_name = 'DeepseekLocal',
+        name = 'ollama',
+        formatted_name = 'Ollama',
         env = {
           url = 'http://127.0.0.1:11434',
         },
         headers = {
           ['Content-Type'] = 'application/json',
         },
-        parameters = {
-          sync = true,
-        },
         schema = {
           model = {
-            default = 'deepseek-coder-v2:local',
-            -- default = 'deepseek-r1:local',
+            default = 'qwen2.5-coder:14b-instruct-q4_K_M',
           },
         },
         handlers = {
