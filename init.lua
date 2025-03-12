@@ -77,7 +77,14 @@ require('lualine').setup({
       },
       'lsp_progress',
     },
-    lualine_x = { require('plugins/codecompanion/lualine'), 'copilot', 'encoding', 'fileformat', 'filetype' },
+    lualine_x = {
+      require('minuet.lualine'),
+      require('plugins/codecompanion/lualine'),
+      'copilot',
+      'encoding',
+      'fileformat',
+      'filetype',
+    },
   },
   extensions = { 'nvim-tree', 'nvim-dap-ui' },
 })
@@ -315,10 +322,32 @@ vim.api.nvim_create_autocmd({ 'BufEnter' }, {
 
 require('copilot_cmp').setup()
 
--- fn.stdpath('data')
 require('mcphub').setup({
   port = 3333,
   config = vim.fn.expand(vim.fn.stdpath('config') .. '/mcpservers.json'),
+})
+
+require('minuet').setup({
+  provider = 'openai_fim_compatible',
+  n_completions = 1,
+  context_window = 16000,
+  provider_options = {
+    openai_fim_compatible = {
+      api_key = 'TERM',
+      name = 'Ollama',
+      end_point = 'http://localhost:11434/v1/completions',
+      model = 'qwen2.5-coder:7b-base-q6_K',
+      -- model = 'qwen2.5-coder:14b-base-q4_K_M',
+      optional = {
+        max_tokens = 256,
+        top_p = 0.9,
+      },
+    },
+  },
+  request_timeout = 10,
+  cmp = {
+    enable_auto_complete = true,
+  },
 })
 
 require('codecompanion').setup({
@@ -372,7 +401,7 @@ require('codecompanion').setup({
         },
         schema = {
           model = {
-            default = 'qwen2.5-coder:14b-instruct-q4_K_M',
+            default = 'deepseek-r1:14b-qwen-distill-q4_K_M',
           },
         },
         handlers = {
@@ -432,6 +461,11 @@ require('codecompanion').setup({
       show_settings = false,
       show_token_count = true,
       start_in_insert_mode = false,
+    },
+  },
+  prompt_library = {
+    ['Unit Tests'] = {
+      strategy = 'chat',
     },
   },
   opts = {
@@ -634,6 +668,10 @@ cmp.setup({
   preselect = cmp.PreselectMode.Item,
   completion = {
     completeopt = 'menu,menuone,noinsert',
+    autocomplete = {
+      cmp.TriggerEvent.TextChanged,
+      cmp.TriggerEvent.InsertEnter,
+    },
   },
   experimental = {
     ghost_text = false,
@@ -666,14 +704,22 @@ cmp.setup({
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm({
-      behavior = cmp.ConfirmBehavior.Insert,
-      select = false,
+    ['<CR>'] = cmp.mapping({
+      i = function(fallback)
+        if cmp.core.view:visible() and cmp.core.view:get_active_entry() then
+          cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+        else
+          fallback()
+        end
+      end,
+      s = cmp.mapping.confirm({ select = true }),
+      c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
     }),
   },
   -- Installed sources:
   sources = {
     { name = 'copilot', priority = 100 },
+    { name = 'minuet', priority = 100 },
     { name = 'path' },
     { name = 'nvim_lsp', priority = 100 },
     { name = 'nvim_lsp_signature_help' },
@@ -691,6 +737,9 @@ cmp.setup({
     { name = 'vim-dadbod-completion', priority = 100 },
     { name = 'render-markdown' },
   },
+  performance = {
+    fetching_timeout = 10000,
+  },
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
@@ -702,6 +751,7 @@ cmp.setup({
       preset = 'codicons',
       symbol_map = {
         Copilot = '',
+        Ollama = '󰳆',
       },
       before = function(entry, vim_item)
         vim_item.menu = ({
