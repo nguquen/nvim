@@ -301,12 +301,15 @@ local this_os = vim.loop.os_uname().sysname
 
 -- ai
 require('copilot').setup({
+  copilot_model = 'gpt-4o-copilot',
   suggestion = { enabled = false },
   panel = { enabled = false },
   filetypes = {
     yaml = true,
     markdown = true,
     codecompanion = true,
+    gitcommit = true,
+    gitrebase = true,
   },
 })
 
@@ -329,17 +332,16 @@ require('mcphub').setup({
 
 require('minuet').setup({
   provider = 'openai_fim_compatible',
-  n_completions = 1,
+  n_completions = 3,
   context_window = 16000,
   provider_options = {
     openai_fim_compatible = {
       api_key = 'TERM',
       name = 'Ollama',
       end_point = 'http://localhost:11434/v1/completions',
-      model = 'qwen2.5-coder:7b-base-q6_K',
-      -- model = 'qwen2.5-coder:14b-base-q4_K_M',
+      model = 'qwen2.5-coder:14b-base-q4_K_M',
       optional = {
-        max_tokens = 256,
+        max_tokens = 512,
         top_p = 0.9,
       },
     },
@@ -401,7 +403,8 @@ require('codecompanion').setup({
         },
         schema = {
           model = {
-            default = 'deepseek-r1:14b-qwen-distill-q4_K_M',
+            -- default = 'deepseek-r1:14b-qwen-distill-q4_K_M',
+            default = 'qwen2.5-coder:14b-instruct-q4_K_M',
           },
         },
         handlers = {
@@ -446,7 +449,7 @@ require('codecompanion').setup({
       return require('codecompanion.adapters').extend('copilot', {
         schema = {
           model = {
-            default = 'claude-3.5-sonnet',
+            default = 'claude-3.7-sonnet',
           },
         },
       })
@@ -480,9 +483,13 @@ local on_attach_lsp_format = function(client)
   require('lsp-format').on_attach(client)
 end
 
+-- cmp-nvim-lsp capabilities
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
 -- Setup language servers
 require('lspconfig').lua_ls.setup({
   -- on_attach = on_attach_lsp_format,
+  capabilities = capabilities,
   settings = {
     Lua = {
       runtime = {
@@ -514,6 +521,7 @@ liblldb_path = liblldb_path .. (this_os == 'Linux' and '.so' or '.dylib')
 
 rt.setup({
   server = {
+    capabilities = capabilities,
     on_attach = function(client, bufnr)
       -- auto format
       on_attach_lsp_format(client)
@@ -665,7 +673,7 @@ local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local lspkind = require('lspkind')
 
 cmp.setup({
-  preselect = cmp.PreselectMode.Item,
+  preselect = cmp.PreselectMode.None,
   completion = {
     completeopt = 'menu,menuone,noinsert',
     autocomplete = {
@@ -687,11 +695,12 @@ cmp.setup({
     ['<C-j>'] = cmp.mapping.select_next_item(),
     -- Add tab support
     ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.confirm({
-          behavior = cmp.ConfirmBehavior.Insert,
-          select = false,
-        })
+      if cmp.core.view:visible() then
+        local entry = cmp.get_selected_entry()
+        if not entry then
+          cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+        end
+        cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = false })
       elseif vim.fn['vsnip#available'](1) == 1 then
         feedkey('<Plug>(vsnip-expand-or-jump)', '')
       elseif has_words_before() then
@@ -707,19 +716,19 @@ cmp.setup({
     ['<CR>'] = cmp.mapping({
       i = function(fallback)
         if cmp.core.view:visible() and cmp.core.view:get_active_entry() then
-          cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+          cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = false })
         else
           fallback()
         end
       end,
       s = cmp.mapping.confirm({ select = true }),
-      c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
     }),
+    ['<M-y>'] = require('minuet').make_cmp_map(),
   },
   -- Installed sources:
   sources = {
     { name = 'copilot', priority = 100 },
-    { name = 'minuet', priority = 100 },
+    -- { name = 'minuet', priority = 100 },
     { name = 'path' },
     { name = 'nvim_lsp', priority = 100 },
     { name = 'nvim_lsp_signature_help' },
@@ -770,9 +779,9 @@ cmp.setup({
       require('copilot_cmp.comparators').score,
 
       cmp.config.compare.score,
+      cmp.config.compare.recently_used,
       cmp.config.compare.offset,
       cmp.config.compare.exact,
-      cmp.config.compare.recently_used,
       cmp.config.compare.locality,
       cmp.config.compare.sort_text,
       cmp.config.compare.length,
