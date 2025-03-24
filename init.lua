@@ -293,6 +293,7 @@ require('mason-tool-installer').setup({
     'delve',
     'js-debug-adapter',
     'taplo',
+    'sqlfluff',
   },
 })
 
@@ -310,7 +311,18 @@ require('copilot').setup({
     codecompanion = true,
     gitcommit = true,
     gitrebase = true,
+    sh = function()
+      if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '^%.env.*') then
+        -- disable for .env files
+        return false
+      end
+      return true
+    end,
   },
+})
+
+require('vectorcode').setup({
+  n_query = 1,
 })
 
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
@@ -366,6 +378,12 @@ require('codecompanion').setup({
             -- requires_approval = true,
           },
         },
+        ['vectorcode'] = {
+          description = 'Run VectorCode to retrieve the project context.',
+          callback = require('vectorcode.integrations').codecompanion.chat.make_tool({
+            auto_submit = { query = true, ls = true },
+          }),
+        },
       },
       roles = {
         llm = function(adapter)
@@ -376,6 +394,10 @@ require('codecompanion').setup({
           )
         end,
         user = '  ' .. vim.env.USER:gsub('^%l', string.upper),
+      },
+      slash_commands = {
+        -- add the vectorcode command here.
+        codebase = require('vectorcode.integrations').codecompanion.chat.make_slash_command(),
       },
     },
     inline = {
@@ -868,6 +890,9 @@ null_ls.setup({
     null_ls.builtins.diagnostics.flake8,
     null_ls.builtins.diagnostics.buf,
     null_ls.builtins.formatting.taplo,
+    null_ls.builtins.formatting.sqlfluff.with({
+      extra_args = { '--dialect', 'postgres' }, -- change to your dialect
+    }),
   },
   temp_dir = '/tmp',
 })
