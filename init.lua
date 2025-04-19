@@ -251,6 +251,23 @@ require('gitsigns').setup({})
 -- mini.diff
 require('mini.diff').setup()
 
+-- inlay-hint
+require('inlay-hint').setup()
+vim.api.nvim_create_autocmd({ 'LspAttach', 'LspDetach' }, {
+  callback = function(args)
+    local bufnr = args.buf ---@type number
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+    local inlayHintProvider = client and client.server_capabilities.inlayHintProvider
+    if not inlayHintProvider then
+      return
+    end
+
+    local enable = args.event == 'LspAttach'
+    vim.lsp.inlay_hint.enable(enable, { bufnr = bufnr })
+  end,
+})
+
 -- mason setup
 require('mason').setup({
   ui = {
@@ -298,7 +315,6 @@ require('mason-tool-installer').setup({
 })
 
 local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
-local this_os = vim.loop.os_uname().sysname
 
 -- ai
 require('copilot').setup({
@@ -384,6 +400,10 @@ require('codecompanion').setup({
             auto_submit = { query = true, ls = true },
           }),
         },
+        -- opts = {
+        --   auto_submit_errors = true,
+        --   auto_submit_success = true,
+        -- },
       },
       roles = {
         llm = function(adapter)
@@ -514,6 +534,7 @@ require('lspconfig').lua_ls.setup({
   capabilities = capabilities,
   settings = {
     Lua = {
+      hint = { enable = true },
       runtime = {
         -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
         version = 'LuaJIT',
@@ -535,34 +556,24 @@ require('lspconfig').lua_ls.setup({
 })
 
 -- rust
-local rt = require('rust-tools')
-local codelldb_path = mason_path .. '/packages/codelldb/extension/adapter/codelldb'
-local liblldb_path = mason_path .. '/packages/codelldb/extension/lldb/lib/liblldb'
-
-liblldb_path = liblldb_path .. (this_os == 'Linux' and '.so' or '.dylib')
-
-rt.setup({
+vim.g.rustaceanvim = {
+  -- Plugin configuration
+  tools = {},
+  -- LSP configuration
   server = {
     capabilities = capabilities,
-    on_attach = function(client, bufnr)
+    on_attach = function(client)
       -- auto format
       on_attach_lsp_format(client)
-      -- Hover actions
-      vim.keymap.set('n', 'K', rt.hover_actions.hover_actions, { buffer = bufnr })
     end,
-    settings = {
+    default_settings = {
+      -- rust-analyzer language server configuration
       ['rust-analyzer'] = {
-        -- numThreads = 5,
         imports = {
           granularity = {
             group = 'module',
           },
           prefix = 'crate',
-        },
-        check = {
-          command = 'clippy',
-          allTargets = true,
-          extraArgs = { '--no-deps' },
         },
         cargo = {
           buildScripts = {
@@ -574,28 +585,24 @@ rt.setup({
           attributes = {
             enable = true,
           },
-          -- ignored = {
-          --   ['async-trait'] = { 'async_trait' },
-          -- },
+          ignored = {
+            ['async-trait'] = { 'async_trait' },
+          },
         },
         diagnostics = {
           enable = true,
-          disabled = { 'macro-error', 'proc-macro-disabled' },
+          -- disabled = { 'macro-error', 'proc-macro-disabled' },
+          disabled = { 'proc-macro-disabled' },
           experimental = {
-            enable = true,
+            enable = false,
           },
         },
-        -- cachePriming = {
-        --   enable = true,
-        --   numThreads = 5,
-        -- },
       },
     },
   },
-  dap = {
-    adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path),
-  },
-})
+  -- DAP configuration
+  dap = {},
+}
 
 -- typescript
 -- consider https://github.com/pmizio/typescript-tools.nvim
@@ -678,6 +685,11 @@ require('lspconfig').prismals.setup({
 
 -- sqlls
 require('lspconfig').sqlls.setup({})
+
+-- taplo
+require('lspconfig').taplo.setup({
+  on_attach = on_attach_lsp_format,
+})
 
 -- Completion Plugin Setup
 local has_words_before = function()
@@ -826,7 +838,7 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 -- treesitter
 require('nvim-treesitter.configs').setup({
-  ensure_installed = 'all',
+  ensure_installed = { 'lua', 'rust', 'javascript', 'typescript' },
   sync_install = false,
   auto_install = true,
   ignore_install = {},
@@ -875,21 +887,21 @@ null_ls.setup({
   sources = {
     null_ls.builtins.code_actions.refactoring,
     -- require('typescript.extensions.null-ls.code-actions'),
-    null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.formatting.trim_newlines,
-    null_ls.builtins.formatting.trim_whitespace,
+    require('none-ls.code_actions.eslint_d'),
+    require('none-ls.formatting.trim_newlines'),
+    require('none-ls.formatting.trim_whitespace'),
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.formatting.prettierd,
-    null_ls.builtins.formatting.eslint_d,
+    require('none-ls.formatting.eslint_d'),
     null_ls.builtins.formatting.black,
     null_ls.builtins.formatting.buf,
-    null_ls.builtins.diagnostics.eslint_d,
+    require('none-ls.diagnostics.eslint_d'),
     null_ls.builtins.diagnostics.checkstyle.with({
       extra_args = { '-c', '/google_checks.xml' }, -- or "/sun_checks.xml" or path to self written rules
     }),
-    null_ls.builtins.diagnostics.flake8,
+    require('none-ls.diagnostics.flake8'),
     null_ls.builtins.diagnostics.buf,
-    null_ls.builtins.formatting.taplo,
+    -- null_ls.builtins.formatting.taplo,
     null_ls.builtins.formatting.sqlfluff.with({
       extra_args = { '--dialect', 'postgres' }, -- change to your dialect
     }),

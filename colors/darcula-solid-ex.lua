@@ -10,6 +10,7 @@ local spec = lush.extends({ darcula_solid }).with(function()
   return {
     Comment({ darcula_solid.Comment, gui = 'none' }),
     Whitespace({ fg = special_grey }),
+    LspInlayHint({ darcula_solid.Comment, gui = 'none' }),
   }
 end)
 
