@@ -356,6 +356,7 @@ require('copilot_cmp').setup()
 require('mcphub').setup({
   port = 3333,
   config = vim.fn.expand(vim.fn.stdpath('config') .. '/mcpservers.json'),
+  auto_approve = true,
 })
 
 require('minuet').setup({
@@ -385,26 +386,6 @@ require('codecompanion').setup({
     chat = {
       adapter = 'copilot',
       -- adapter = 'ollama',
-      tools = {
-        ['mcp'] = {
-          callback = require('mcphub.extensions.codecompanion'),
-          description = 'Call tools and resources from the MCP Servers',
-          opts = {
-            user_approval = true,
-            -- requires_approval = true,
-          },
-        },
-        ['vectorcode'] = {
-          description = 'Run VectorCode to retrieve the project context.',
-          callback = require('vectorcode.integrations').codecompanion.chat.make_tool({
-            auto_submit = { query = true, ls = true },
-          }),
-        },
-        -- opts = {
-        --   auto_submit_errors = true,
-        --   auto_submit_success = true,
-        -- },
-      },
       roles = {
         llm = function(adapter)
           return string.format(
@@ -414,10 +395,6 @@ require('codecompanion').setup({
           )
         end,
         user = '  ' .. vim.env.USER:gsub('^%l', string.upper),
-      },
-      slash_commands = {
-        -- add the vectorcode command here.
-        codebase = require('vectorcode.integrations').codecompanion.chat.make_slash_command(),
       },
     },
     inline = {
@@ -515,6 +492,25 @@ require('codecompanion').setup({
   },
   opts = {
     -- send_code = false,
+  },
+  extensions = {
+    mcphub = {
+      callback = 'mcphub.extensions.codecompanion',
+      opts = {
+        make_vars = true,
+        make_slash_commands = true,
+        show_result_in_chat = true,
+      },
+    },
+    vectorcode = {
+      opts = {
+        add_tool = true,
+        add_slash_command = true,
+        tool_opts = {
+          auto_submit = { query = true, ls = true },
+        },
+      },
+    },
   },
 })
 
