@@ -339,6 +339,7 @@ require('copilot').setup({
 
 require('vectorcode').setup({
   n_query = 1,
+  timeout_ms = 15000,
 })
 
 vim.api.nvim_create_autocmd({ 'BufEnter' }, {
@@ -386,6 +387,12 @@ require('codecompanion').setup({
     chat = {
       adapter = 'copilot',
       -- adapter = 'ollama',
+      tools = {
+        opts = {
+          auto_submit_success = true,
+          auto_submit_errors = true,
+        },
+      },
       roles = {
         llm = function(adapter)
           return string.format(
@@ -499,7 +506,7 @@ require('codecompanion').setup({
       opts = {
         make_vars = true,
         make_slash_commands = true,
-        show_result_in_chat = true,
+        show_result_in_chat = false,
       },
     },
     vectorcode = {
@@ -507,7 +514,7 @@ require('codecompanion').setup({
         add_tool = true,
         add_slash_command = true,
         tool_opts = {
-          auto_submit = { query = true, ls = true },
+          default_num = 5,
         },
       },
     },
