@@ -280,6 +280,7 @@ require('mason').setup({
 })
 
 require('mason-lspconfig').setup({
+  automatic_enable = false,
   ensure_installed = {
     'rust_analyzer',
     'lua_ls',
@@ -509,15 +510,15 @@ require('codecompanion').setup({
         show_result_in_chat = false,
       },
     },
-    vectorcode = {
-      opts = {
-        add_tool = true,
-        add_slash_command = true,
-        tool_opts = {
-          default_num = 5,
-        },
-      },
-    },
+    -- vectorcode = {
+    --   opts = {
+    --     add_tool = true,
+    --     add_slash_command = true,
+    --     tool_opts = {
+    --       default_num = 5,
+    --     },
+    --   },
+    -- },
   },
 })
 
