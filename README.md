@@ -197,4 +197,3 @@ space + ]: list quicklist
 space + [: list locationlist
 space + rl: resume previous list
 ```
-
