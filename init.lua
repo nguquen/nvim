@@ -476,7 +476,7 @@ require('codecompanion').setup({
       return require('codecompanion.adapters').extend('copilot', {
         schema = {
           model = {
-            default = 'claude-3.7-sonnet',
+            default = 'claude-haiku-4.5',
           },
         },
       })
@@ -533,7 +533,7 @@ end
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- Setup language servers
-require('lspconfig').lua_ls.setup({
+vim.lsp.config('lua_ls', {
   -- on_attach = on_attach_lsp_format,
   capabilities = capabilities,
   settings = {
@@ -558,6 +558,7 @@ require('lspconfig').lua_ls.setup({
     },
   },
 })
+vim.lsp.enable({ 'lua_ls' })
 
 -- rust
 vim.g.rustaceanvim = {
@@ -610,7 +611,7 @@ vim.g.rustaceanvim = {
 
 -- typescript
 -- consider https://github.com/pmizio/typescript-tools.nvim
-require('lspconfig').ts_ls.setup({})
+vim.lsp.enable({ 'ts_ls' })
 
 require('dap').adapters['pwa-node'] = {
   type = 'server',
@@ -642,23 +643,25 @@ for _, language in ipairs({ 'typescript', 'javascript' }) do
 end
 
 -- deno
-require('lspconfig').denols.setup({
+vim.lsp.config('denols', {
   root_dir = require('lspconfig').util.root_pattern('deno.json', 'deno.jsonc'),
 })
+vim.lsp.enable({ 'denols' })
 
 -- gradle
-require('lspconfig').gradle_ls.setup({})
+vim.lsp.enable({ 'gradle_ls' })
 
 -- gopls
-require('lspconfig').gopls.setup({
+vim.lsp.config('gopls', {
   on_attach = on_attach_lsp_format,
 })
+vim.lsp.enable({ 'gopls' })
 require('dap-go').setup({})
 
 -- pyright
 local debugpy_path = mason_path .. '/packages/debugpy/venv/bin/python'
 
-require('lspconfig').pyright.setup({})
+vim.lsp.enable({ 'pyright' })
 require('dap-python').setup(debugpy_path)
 
 -- yamlls
@@ -668,32 +671,35 @@ vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
   command = 'set filetype=yaml',
 })
 
-require('lspconfig').yamlls.setup({
+vim.lsp.config('yamlls', {
   settings = {
     yaml = {
       keyOrdering = false,
     },
   },
 })
+vim.lsp.enable({ 'yamlls' })
 
 -- bufls
-require('lspconfig').buf_ls.setup({
-  -- on_attach = on_attach_lsp_format,
+vim.lsp.config('buf_ls', {
   root_dir = require('lspconfig.util').root_pattern('buf.work.yaml', '.git'),
 })
+vim.lsp.enable({ 'buf_ls' })
 
 -- prismals
-require('lspconfig').prismals.setup({
+vim.lsp.config('prismals', {
   on_attach = on_attach_lsp_format,
 })
+vim.lsp.enable({ 'prismals' })
 
 -- sqlls
-require('lspconfig').sqlls.setup({})
+vim.lsp.enable({ 'sqlls' })
 
 -- taplo
-require('lspconfig').taplo.setup({
+vim.lsp.config('taplo', {
   on_attach = on_attach_lsp_format,
 })
+vim.lsp.enable({ 'taplo' })
 
 -- Completion Plugin Setup
 local has_words_before = function()
