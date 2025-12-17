@@ -319,9 +319,10 @@ local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
 
 -- ai
 require('copilot').setup({
-  copilot_model = 'gpt-4o-copilot',
+  copilot_model = '',
   suggestion = { enabled = false },
   panel = { enabled = false },
+  nes = { enabled = false },
   filetypes = {
     yaml = true,
     markdown = true,
@@ -343,10 +344,10 @@ require('vectorcode').setup({
   timeout_ms = 15000,
 })
 
-vim.api.nvim_create_autocmd({ 'BufEnter' }, {
-  pattern = { '*' },
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  pattern = { 'codecompanion' },
   callback = function()
-    if vim.bo.filetype == 'codecompanion' and not vim.b.copilot_attached then
+    if not vim.b.copilot_attached then
       vim.api.nvim_command('Copilot! attach')
       vim.b.copilot_attached = true
     end
@@ -644,7 +645,7 @@ end
 
 -- deno
 vim.lsp.config('denols', {
-  root_dir = require('lspconfig').util.root_pattern('deno.json', 'deno.jsonc'),
+  root_dir = require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc'),
 })
 vim.lsp.enable({ 'denols' })
 
@@ -950,9 +951,11 @@ vim.g.gitblame_delay = 250
 
 -- crates
 require('crates').setup({
-  null_ls = {
+  lsp = {
     enabled = true,
-    name = 'crates.nvim',
+    actions = true,
+    completion = true,
+    hover = true,
   },
 })
 
