@@ -420,8 +420,12 @@ require('codecompanion').setup({
     },
   },
   adapters = {
-    opts = {
-      show_presets = false,
+    acp = {
+      claude_code = function()
+        return require('codecompanion.adapters').extend('claude_code', {
+          env = {},
+        })
+      end,
     },
     http = {
       ollama = function()
