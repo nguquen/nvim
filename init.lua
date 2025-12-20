@@ -68,6 +68,11 @@ require('nvim-web-devicons').setup({})
 require('lualine').setup({
   options = {
     theme = 'auto',
+    refresh = {
+      statusline = 100,
+      tabline = 100,
+      winbar = 100,
+    },
   },
   sections = {
     lualine_c = {
@@ -513,6 +518,7 @@ require('codecompanion').setup({
     -- send_code = false,
   },
   extensions = {
+    spinner = {},
     mcphub = {
       callback = 'mcphub.extensions.codecompanion',
       opts = {
