@@ -251,10 +251,31 @@ require('render-markdown').setup({
 require('nvim-autopairs').setup({})
 
 -- gitsigns
-require('gitsigns').setup({})
+require('gitsigns').setup({
+  sign_priority = 6,
+})
 
 -- mini.diff
-require('mini.diff').setup()
+require('mini.diff').setup({
+  view = {
+    style = 'sign',
+    signs = { add = '+', change = '~', delete = '-' },
+    priority = 5, -- less than gitsigns
+  },
+  -- we only use mini.diff for CodeCompanion diff viewer
+  source = require('mini.diff').gen_source.none(),
+})
+
+vim.api.nvim_create_autocmd({ 'User' }, {
+  pattern = 'CodeCompanionDiff*',
+  callback = function(request)
+    if request.match == 'CodeCompanionDiffAttached' then
+      require('gitsigns').toggle_signs(false)
+    elseif request.match == 'CodeCompanionDiffDetached' then
+      require('gitsigns').toggle_signs(true)
+    end
+  end,
+})
 
 -- inlay-hint
 require('inlay-hint').setup()
@@ -507,6 +528,9 @@ require('codecompanion').setup({
       show_settings = false,
       show_token_count = true,
       start_in_insert_mode = false,
+    },
+    diff = {
+      provider = 'mini_diff',
     },
   },
   prompt_library = {
