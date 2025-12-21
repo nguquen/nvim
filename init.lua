@@ -742,6 +742,9 @@ vim.lsp.config('taplo', {
 })
 vim.lsp.enable({ 'taplo' })
 
+-- jsonls
+vim.lsp.enable({ 'jsonls' })
+
 -- Completion Plugin Setup
 local has_words_before = function()
   unpack = unpack or table.unpack
