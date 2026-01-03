@@ -1,4 +1,4 @@
-local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
+local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason')
 local jdtls_path = mason_path .. '/packages/jdtls'
 local lombok_path = jdtls_path .. '/lombok.jar'
 local java_debug_path = mason_path .. '/packages/java-debug-adapter'
@@ -33,10 +33,7 @@ local config = {
   settings = {
     java = {
       format = {
-        settings = {
-          url = 'https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml',
-          profile = 'GoogleStyle',
-        },
+        enabled = false, -- disable to use prettier-java
       },
     },
   },

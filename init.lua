@@ -945,19 +945,25 @@ null_ls.setup({
     require('none-ls.formatting.trim_newlines'),
     require('none-ls.formatting.trim_whitespace'),
     null_ls.builtins.formatting.stylua,
-    null_ls.builtins.formatting.prettierd,
+    null_ls.builtins.formatting.prettierd.with({
+      extra_filetypes = { 'java' },
+    }),
     require('none-ls.formatting.eslint_d'),
     null_ls.builtins.formatting.black,
     null_ls.builtins.formatting.buf,
     require('none-ls.diagnostics.eslint_d'),
     null_ls.builtins.diagnostics.checkstyle.with({
-      extra_args = { '-c', '/google_checks.xml' }, -- or "/sun_checks.xml" or path to self written rules
+      extra_args = { '-c', '$ROOT/checkstyle.xml' }, -- or "/google_checks.xml" or "/sun_checks.xml" or path to self written rules
     }),
+    -- null_ls.builtins.formatting.google_java_format,
     require('none-ls.diagnostics.flake8'),
     null_ls.builtins.diagnostics.buf,
     -- null_ls.builtins.formatting.taplo,
     null_ls.builtins.formatting.sqlfluff.with({
       extra_args = { '--dialect', 'postgres' }, -- change to your dialect
+    }),
+    null_ls.builtins.formatting.npm_groovy_lint.with({
+      filetypes = { 'groovy' },
     }),
   },
   temp_dir = '/tmp',
