@@ -350,13 +350,21 @@ require('copilot').setup({
   panel = { enabled = false },
   nes = { enabled = false },
   filetypes = {
-    yaml = true,
+    yaml = function()
+      local filename = vim.fs.basename(vim.api.nvim_buf_get_name(0))
+      if string.match(filename, 'secrets') then
+        -- disable for secrets.yaml files
+        return false
+      end
+      return true
+    end,
     markdown = true,
     codecompanion = true,
     gitcommit = true,
     gitrebase = true,
     sh = function()
-      if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '^%.env.*') then
+      local filename = vim.fs.basename(vim.api.nvim_buf_get_name(0))
+      if string.match(filename, 'env') then
         -- disable for .env files
         return false
       end
@@ -452,6 +460,20 @@ require('codecompanion').setup({
           env = {},
         })
       end,
+      opencode = function()
+        return require('codecompanion.adapters').extend('opencode', {
+          commands = {
+            default = {
+              'opencode',
+              'acp',
+            },
+            dev = {
+              'opencode-dev',
+              'acp',
+            },
+          },
+        })
+      end,
     },
     http = {
       ollama = function()
@@ -540,6 +562,7 @@ require('codecompanion').setup({
   },
   opts = {
     -- send_code = false,
+    -- log_level = 'DEBUG', -- or "TRACE"
   },
   extensions = {
     spinner = {},

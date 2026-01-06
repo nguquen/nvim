@@ -26,6 +26,16 @@ vim.api.nvim_create_autocmd('BufEnter', {
     vim.opt.formatoptions = vim.opt.formatoptions - { 'c', 'r', 'o' }
   end,
 })
+opt.autoread = true
+vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'CursorHoldI', 'FocusGained', 'TermLeave', 'WinEnter' }, {
+  group = vim.api.nvim_create_augroup('CheckForExternalChanges', { clear = true }),
+  callback = function()
+    -- Check for file changes, but only if not in command mode
+    if vim.fn.mode() ~= 'c' then
+      vim.cmd('checktime')
+    end
+  end,
+})
 
 -- [[ filetypes ]]
 opt.encoding = 'utf8'
