@@ -344,6 +344,11 @@ require('mason-tool-installer').setup({
 local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
 
 -- ai
+local function should_disable_copilot(bufname)
+  -- Check if buffer name contains secrets.yaml or .env
+  return bufname:match('secrets%.yaml') or bufname:match('%.env')
+end
+
 require('copilot').setup({
   copilot_model = '',
   suggestion = { enabled = false },
@@ -351,26 +356,21 @@ require('copilot').setup({
   nes = { enabled = false },
   filetypes = {
     yaml = function()
-      local filename = vim.fs.basename(vim.api.nvim_buf_get_name(0))
-      if string.match(filename, 'secrets') then
-        -- disable for secrets.yaml files
-        return false
-      end
-      return true
+      local bufname = vim.api.nvim_buf_get_name(0)
+      return not should_disable_copilot(bufname)
     end,
     markdown = true,
     codecompanion = true,
     gitcommit = true,
     gitrebase = true,
     sh = function()
-      local filename = vim.fs.basename(vim.api.nvim_buf_get_name(0))
-      if string.match(filename, 'env') then
-        -- disable for .env files
-        return false
-      end
-      return true
+      local bufname = vim.api.nvim_buf_get_name(0)
+      return not should_disable_copilot(bufname)
     end,
   },
+  should_attach = function(_, bufname)
+    return not should_disable_copilot(bufname)
+  end,
 })
 
 require('vectorcode').setup({
