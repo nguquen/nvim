@@ -746,7 +746,7 @@ vim.lsp.enable({ 'yamlls' })
 
 -- bufls
 vim.lsp.config('buf_ls', {
-  root_dir = require('lspconfig.util').root_pattern('buf.work.yaml', '.git'),
+  on_attach = on_attach_lsp_format,
 })
 vim.lsp.enable({ 'buf_ls' })
 
@@ -973,14 +973,14 @@ null_ls.setup({
     }),
     require('none-ls.formatting.eslint_d'),
     null_ls.builtins.formatting.black,
-    null_ls.builtins.formatting.buf,
+    -- null_ls.builtins.formatting.buf,
     require('none-ls.diagnostics.eslint_d'),
     null_ls.builtins.diagnostics.checkstyle.with({
       extra_args = { '-c', '$ROOT/checkstyle.xml' }, -- or "/google_checks.xml" or "/sun_checks.xml" or path to self written rules
     }),
     -- null_ls.builtins.formatting.google_java_format,
     require('none-ls.diagnostics.flake8'),
-    null_ls.builtins.diagnostics.buf,
+    -- null_ls.builtins.diagnostics.buf,
     -- null_ls.builtins.formatting.taplo,
     null_ls.builtins.formatting.sqlfluff.with({
       extra_args = { '--dialect', 'postgres' }, -- change to your dialect
