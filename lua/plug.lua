@@ -89,7 +89,7 @@ return require('packer').startup(function(use)
   use('kristijanhusak/vim-dadbod-completion')
   -- ai
   use('zbirenbaum/copilot.lua')
-  use({ 'hendrikpetertje/copilot-cmp', branch = 'fix-deprecated-errors' })
+  use('zbirenbaum/copilot-cmp')
   use('AndreM222/copilot-lualine')
   use('franco-ruggeri/codecompanion-spinner.nvim')
   use('olimorris/codecompanion.nvim')
