@@ -729,20 +729,49 @@ vim.lsp.enable({ 'pyright' })
 require('dap-python').setup(debugpy_path)
 
 -- yamlls
--- set YAML syntax for *.yaml.gotmpl
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-  pattern = '*.yaml.gotmpl',
-  command = 'set filetype=yaml',
-})
-
 vim.lsp.config('yamlls', {
+  on_attach = on_attach_lsp_format,
   settings = {
     yaml = {
+      format = {
+        enable = true,
+        singleQuote = false,
+        bracketSpacing = false,
+      },
       keyOrdering = false,
     },
   },
 })
 vim.lsp.enable({ 'yamlls' })
+
+-- helmls
+require('helm-ls').setup({
+  conceal_templates = {
+    enabled = false,
+  },
+  indent_hints = {
+    enabled = true,
+    only_for_current_line = true,
+  },
+  action_highlight = {
+    enabled = true,
+  },
+})
+vim.lsp.config('helm_ls', {
+  on_attach = on_attach_lsp_format,
+  settings = {
+    ['helm-ls'] = {
+      yamlls = {
+        enabled = true,
+        path = 'yaml-language-server',
+        config = {
+          keyOrdering = false,
+        },
+      },
+    },
+  },
+})
+vim.lsp.enable('helm_ls')
 
 -- bufls
 vim.lsp.config('buf_ls', {
@@ -915,7 +944,7 @@ cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 -- treesitter
 require('nvim-treesitter.configs').setup({
-  ensure_installed = { 'lua', 'rust', 'javascript', 'typescript' },
+  ensure_installed = { 'lua', 'rust', 'javascript', 'typescript', 'yaml', 'helm' },
   sync_install = false,
   auto_install = true,
   ignore_install = {},
@@ -970,6 +999,7 @@ null_ls.setup({
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.formatting.prettierd.with({
       extra_filetypes = { 'java' },
+      disabled_filetypes = { 'yaml' },
     }),
     require('none-ls.formatting.eslint_d'),
     null_ls.builtins.formatting.black,

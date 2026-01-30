@@ -32,6 +32,8 @@ return require('packer').startup(function(use)
   use('navarasu/onedark.nvim')
   use({ 'briones-gabriel/darcula-solid.nvim', requires = 'rktjmp/lush.nvim' })
   use('MeanderingProgrammer/render-markdown.nvim')
+  -- use({ 'towolf/vim-helm', ft = 'helm' })
+  use({ 'qvalentin/helm-ls.nvim' })
   -- status
   use('nvim-lualine/lualine.nvim')
   use('arkav/lualine-lsp-progress')
