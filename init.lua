@@ -320,6 +320,7 @@ require('mason-lspconfig').setup({
     'prismals',
     'denols',
     'sqlls',
+    'efm',
   },
 })
 
@@ -758,7 +759,6 @@ require('helm-ls').setup({
   },
 })
 vim.lsp.config('helm_ls', {
-  on_attach = on_attach_lsp_format,
   settings = {
     ['helm-ls'] = {
       yamlls = {
@@ -772,6 +772,23 @@ vim.lsp.config('helm_ls', {
   },
 })
 vim.lsp.enable('helm_ls')
+
+-- efm
+local helmfmt = {
+  formatCommand = [[helmfmt --files ${INPUT} --stdout]],
+  formatStdin = true,
+}
+vim.lsp.config('efm', {
+  on_attach = on_attach_lsp_format,
+  filetypes = { 'helm' },
+  init_options = { documentFormatting = true },
+  settings = {
+    languages = {
+      helm = { helmfmt },
+    },
+  },
+})
+vim.lsp.enable('efm')
 
 -- bufls
 vim.lsp.config('buf_ls', {
