@@ -11,10 +11,7 @@ return require('packer').startup(function(use)
   use('BurntSushi/ripgrep')
   use({
     'nvim-treesitter/nvim-treesitter',
-    run = function()
-      local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-      ts_update()
-    end,
+    build = ':TSUpdate',
   })
   -- navigation
   use('christoomey/vim-tmux-navigator')

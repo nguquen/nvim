@@ -932,16 +932,13 @@ require('cmp').setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
 cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 -- treesitter
-require('nvim-treesitter.configs').setup({
-  ensure_installed = { 'lua', 'rust', 'javascript', 'typescript', 'yaml', 'helm' },
-  sync_install = false,
-  auto_install = true,
-  ignore_install = {},
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-  ident = { enable = true },
+local ts_files = { 'lua', 'rust', 'javascript', 'typescript', 'yaml', 'helm', 'go', 'java', 'markdown', 'json' }
+require('nvim-treesitter').install(ts_files)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = ts_files,
+  callback = function()
+    vim.treesitter.start()
+  end,
 })
 
 -- todo
