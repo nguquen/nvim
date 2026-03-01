@@ -374,11 +374,6 @@ require('copilot').setup({
   end,
 })
 
-require('vectorcode').setup({
-  n_query = 1,
-  timeout_ms = 15000,
-})
-
 vim.api.nvim_create_autocmd({ 'FileType' }, {
   pattern = { 'codecompanion' },
   callback = function()
@@ -390,12 +385,6 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
 })
 
 require('copilot_cmp').setup()
-
-require('mcphub').setup({
-  port = 3333,
-  config = vim.fn.expand(vim.fn.stdpath('config') .. '/mcpservers.json'),
-  auto_approve = true,
-})
 
 require('minuet').setup({
   provider = 'openai_fim_compatible',
@@ -567,23 +556,6 @@ require('codecompanion').setup({
   },
   extensions = {
     spinner = {},
-    mcphub = {
-      callback = 'mcphub.extensions.codecompanion',
-      opts = {
-        make_vars = true,
-        make_slash_commands = true,
-        show_result_in_chat = false,
-      },
-    },
-    -- vectorcode = {
-    --   opts = {
-    --     add_tool = true,
-    --     add_slash_command = true,
-    --     tool_opts = {
-    --       default_num = 5,
-    --     },
-    --   },
-    -- },
   },
 })
 
