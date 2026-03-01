@@ -879,8 +879,8 @@ cmp.setup({
     fetching_timeout = 10000,
   },
   window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
+    -- completion = cmp.config.window.bordered(),
+    -- documentation = cmp.config.window.bordered(),
   },
   formatting = {
     fields = { 'abbr', 'kind', 'menu' },
@@ -932,7 +932,21 @@ require('cmp').setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
 cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
 -- treesitter
-local ts_files = { 'lua', 'rust', 'javascript', 'typescript', 'yaml', 'helm', 'go', 'java', 'markdown', 'json' }
+local ts_files = {
+  'lua',
+  'rust',
+  'javascript',
+  'typescript',
+  'yaml',
+  'helm',
+  'go',
+  'java',
+  'markdown',
+  'json',
+  'jsonc',
+  'gitignore',
+  'gitcommit',
+}
 require('nvim-treesitter').install(ts_files)
 vim.api.nvim_create_autocmd('FileType', {
   pattern = ts_files,
