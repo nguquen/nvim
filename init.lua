@@ -86,9 +86,7 @@ require('lualine').setup({
       'encoding',
       'fileformat',
       'filetype',
-      require('minuet.lualine'),
       require('plugins/codecompanion/lualine'),
-      'copilot',
     },
   },
   extensions = { 'nvim-tree', 'nvim-dap-ui' },
@@ -345,69 +343,6 @@ require('mason-tool-installer').setup({
 local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
 
 -- ai
-local function should_disable_copilot(bufname)
-  -- Check if buffer name contains secrets.yaml or .env
-  return bufname:match('secrets%.yaml') or bufname:match('%.env')
-end
-
-require('copilot').setup({
-  copilot_model = '',
-  suggestion = { enabled = false },
-  panel = { enabled = false },
-  nes = { enabled = false },
-  filetypes = {
-    yaml = function()
-      local bufname = vim.api.nvim_buf_get_name(0)
-      return not should_disable_copilot(bufname)
-    end,
-    markdown = true,
-    codecompanion = true,
-    gitcommit = true,
-    gitrebase = true,
-    sh = function()
-      local bufname = vim.api.nvim_buf_get_name(0)
-      return not should_disable_copilot(bufname)
-    end,
-  },
-  should_attach = function(_, bufname)
-    return not should_disable_copilot(bufname)
-  end,
-})
-
-vim.api.nvim_create_autocmd({ 'FileType' }, {
-  pattern = { 'codecompanion' },
-  callback = function()
-    if not vim.b.copilot_attached then
-      vim.api.nvim_command('Copilot! attach')
-      vim.b.copilot_attached = true
-    end
-  end,
-})
-
-require('copilot_cmp').setup()
-
-require('minuet').setup({
-  provider = 'openai_fim_compatible',
-  n_completions = 3,
-  context_window = 16000,
-  provider_options = {
-    openai_fim_compatible = {
-      api_key = 'TERM',
-      name = 'Ollama',
-      end_point = 'http://localhost:11434/v1/completions',
-      model = 'qwen2.5-coder:14b-base-q4_K_M',
-      optional = {
-        max_tokens = 512,
-        top_p = 0.9,
-      },
-    },
-  },
-  request_timeout = 10,
-  cmp = {
-    enable_auto_complete = true,
-  },
-})
-
 require('codecompanion').setup({
   interactions = {
     chat = {
@@ -852,12 +787,9 @@ cmp.setup({
       end,
       s = cmp.mapping.confirm({ select = true }),
     }),
-    ['<M-y>'] = require('minuet').make_cmp_map(),
   },
   -- Installed sources:
   sources = {
-    { name = 'copilot', priority = 100 },
-    -- { name = 'minuet', priority = 100 },
     { name = 'path' },
     { name = 'nvim_lsp', priority = 100 },
     { name = 'nvim_lsp_signature_help' },
@@ -904,9 +836,6 @@ cmp.setup({
   sorting = {
     priority_weight = 2,
     comparators = {
-      require('copilot_cmp.comparators').prioritize,
-      require('copilot_cmp.comparators').score,
-
       cmp.config.compare.score,
       cmp.config.compare.recently_used,
       cmp.config.compare.offset,
