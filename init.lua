@@ -86,7 +86,6 @@ require('lualine').setup({
       'encoding',
       'fileformat',
       'filetype',
-      require('plugins/codecompanion/lualine'),
     },
   },
   extensions = { 'nvim-tree', 'nvim-dap-ui' },
@@ -242,7 +241,7 @@ require('telescope').load_extension('dap')
 
 -- markdown
 require('render-markdown').setup({
-  file_types = { 'markdown', 'codecompanion' },
+  file_types = { 'markdown' },
 })
 
 -- autopairs
@@ -341,158 +340,6 @@ require('mason-tool-installer').setup({
 })
 
 local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
-
--- ai
-require('codecompanion').setup({
-  interactions = {
-    chat = {
-      adapter = 'copilot',
-      -- adapter = 'ollama',
-      tools = {
-        opts = {
-          auto_submit_success = true,
-          auto_submit_errors = true,
-        },
-      },
-      roles = {
-        llm = function(adapter)
-          return string.format(
-            '  %s%s',
-            adapter.formatted_name,
-            adapter.parameters.model and ' (' .. adapter.parameters.model .. ')' or ''
-          )
-        end,
-        user = '  ' .. vim.env.USER:gsub('^%l', string.upper),
-      },
-    },
-    inline = {
-      adapter = 'copilot',
-      -- adapter = 'ollama',
-    },
-    cmd = {
-      adapter = 'copilot',
-      -- adapter = 'ollama',
-    },
-    background = {
-      adapter = 'copilot',
-      -- adapter = 'ollama',
-    },
-  },
-  adapters = {
-    acp = {
-      claude_code = function()
-        return require('codecompanion.adapters').extend('claude_code', {
-          env = {},
-        })
-      end,
-      opencode = function()
-        return require('codecompanion.adapters').extend('opencode', {
-          commands = {
-            default = {
-              'opencode',
-              'acp',
-            },
-            dev = {
-              'opencode-dev',
-              'acp',
-            },
-          },
-        })
-      end,
-    },
-    http = {
-      ollama = function()
-        return require('codecompanion.adapters').extend('ollama', {
-          name = 'ollama',
-          formatted_name = 'Ollama',
-          env = {
-            url = 'http://127.0.0.1:11434',
-          },
-          headers = {
-            ['Content-Type'] = 'application/json',
-          },
-          schema = {
-            model = {
-              -- default = 'deepseek-r1:14b-qwen-distill-q4_K_M',
-              default = 'qwen2.5-coder:14b-instruct-q4_K_M',
-            },
-          },
-          handlers = {
-            chat_output = function(self, data)
-              local output = {}
-
-              if data and data ~= '' then
-                if not self.opts.stream then
-                  data = data.body
-                end
-                local ok, json = pcall(vim.json.decode, data, { luanil = { object = true } })
-
-                if not ok then
-                  return { status = 'error' }
-                end
-
-                local message = json.message
-
-                if message.content then
-                  if message.content:sub(1, 7) == '<think>' then
-                    output.content = '### Reasoning\n' .. message.content:sub(8)
-                  elseif message.content:sub(-8) == '</think>' then
-                    output.content = message.content:sub(1, -9) .. '\n### Response'
-                  else
-                    output.content = message.content
-                  end
-                  output.role = message.role or nil
-                end
-
-                return {
-                  status = 'success',
-                  output = output,
-                }
-              end
-
-              return nil
-            end,
-          },
-        })
-      end,
-      copilot = function()
-        return require('codecompanion.adapters').extend('copilot', {
-          schema = {
-            model = {
-              default = 'claude-haiku-4.5',
-            },
-          },
-        })
-      end,
-    },
-  },
-  display = {
-    chat = {
-      intro_message = 'Welcome to CodeCompanion ✨! Press ? for options',
-      show_header_separator = false,
-      separator = '─',
-      show_references = true,
-      show_settings = false,
-      show_token_count = true,
-      start_in_insert_mode = false,
-    },
-    diff = {
-      provider = 'mini_diff',
-    },
-  },
-  prompt_library = {
-    ['Unit Tests'] = {
-      strategy = 'chat',
-    },
-  },
-  opts = {
-    -- send_code = false,
-    -- log_level = 'DEBUG', -- or "TRACE"
-  },
-  extensions = {
-    spinner = {},
-  },
-})
 
 -- lsp-format
 require('lsp-format').setup({})
