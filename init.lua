@@ -312,6 +312,7 @@ require('mason-lspconfig').setup({
     'gradle_ls',
     'gopls',
     'pyright',
+    'ruff',
     'yamlls',
     'buf_ls',
     'prismals',
@@ -329,8 +330,6 @@ require('mason-tool-installer').setup({
     'eslint_d',
     'java-debug-adapter',
     'java-test',
-    'flake8',
-    'black',
     'debugpy',
     'delve',
     'js-debug-adapter',
@@ -462,9 +461,6 @@ for _, language in ipairs({ 'typescript', 'javascript' }) do
 end
 
 -- deno
-vim.lsp.config('denols', {
-  root_dir = require('lspconfig.util').root_pattern('deno.json', 'deno.jsonc'),
-})
 vim.lsp.enable({ 'denols' })
 
 -- gradle
@@ -482,6 +478,11 @@ local debugpy_path = mason_path .. '/packages/debugpy/venv/bin/python'
 
 vim.lsp.enable({ 'pyright' })
 require('dap-python').setup(debugpy_path)
+
+vim.lsp.config('ruff', {
+  on_attach = on_attach_lsp_format,
+})
+vim.lsp.enable({ 'ruff' })
 
 -- yamlls
 vim.lsp.config('yamlls', {
@@ -565,8 +566,19 @@ vim.lsp.config('taplo', {
 })
 vim.lsp.enable({ 'taplo' })
 
--- jsonls
-vim.lsp.enable({ 'jsonls' })
+-- biome
+vim.lsp.config('biome', {
+  on_attach = on_attach_lsp_format,
+  root_dir = function(bufnr, on_dir)
+    -- This repo has nested gitignored lockfiles (config/, config/opencode/)
+    -- that shadow the real root. Trust the biome config file instead.
+    local root = vim.fs.root(bufnr, { 'biome.json', 'biome.jsonc' })
+    if root then
+      on_dir(root)
+    end
+  end,
+})
+vim.lsp.enable({ 'biome' })
 
 -- Completion Plugin Setup
 local has_words_before = function()
@@ -719,7 +731,6 @@ local ts_files = {
   'java',
   'markdown',
   'json',
-  'jsonc',
   'gitignore',
   'gitcommit',
 }
@@ -769,23 +780,39 @@ null_ls.setup({
   sources = {
     null_ls.builtins.code_actions.refactoring,
     -- require('typescript.extensions.null-ls.code-actions'),
-    require('none-ls.code_actions.eslint_d'),
+    -- require('none-ls.code_actions.eslint_d'),
     require('none-ls.formatting.trim_newlines'),
     require('none-ls.formatting.trim_whitespace'),
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.formatting.prettierd.with({
       extra_filetypes = { 'java' },
-      disabled_filetypes = { 'yaml' },
+      disabled_filetypes = {
+        'yaml',
+        -- biome: start
+        'astro',
+        'css',
+        'graphql',
+        'html',
+        'javascript',
+        'javascriptreact',
+        'json',
+        'jsonc',
+        'svelte',
+        'typescript',
+        'typescriptreact',
+        'vue',
+        -- biome: end
+      },
     }),
-    require('none-ls.formatting.eslint_d'),
-    null_ls.builtins.formatting.black,
+    -- require('none-ls.formatting.eslint_d'),
+    -- null_ls.builtins.formatting.black,
     -- null_ls.builtins.formatting.buf,
-    require('none-ls.diagnostics.eslint_d'),
+    -- require('none-ls.diagnostics.eslint_d'),
     null_ls.builtins.diagnostics.checkstyle.with({
       extra_args = { '-c', '$ROOT/checkstyle.xml' }, -- or "/google_checks.xml" or "/sun_checks.xml" or path to self written rules
     }),
     -- null_ls.builtins.formatting.google_java_format,
-    require('none-ls.diagnostics.flake8'),
+    -- require('none-ls.diagnostics.flake8'),
     -- null_ls.builtins.diagnostics.buf,
     -- null_ls.builtins.formatting.taplo,
     null_ls.builtins.formatting.sqlfluff.with({
