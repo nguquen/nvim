@@ -495,6 +495,13 @@ vim.lsp.config('yamlls', {
         bracketSpacing = false,
       },
       keyOrdering = false,
+      customTags = {
+        '!override sequence',
+        '!override mapping',
+        '!reset sequence',
+        '!reset mapping',
+        '!reset scalar',
+      },
     },
   },
 })
@@ -565,6 +572,20 @@ vim.lsp.config('taplo', {
   on_attach = on_attach_lsp_format,
 })
 vim.lsp.enable({ 'taplo' })
+
+-- json
+vim.lsp.config('jsonls', {
+  settings = {
+    jsonc = {
+      validate = {
+        enable = true,
+        -- try these (support varies by server version)
+        trailingCommas = 'ignore', -- "error" | "warning" | "ignore"
+      },
+    },
+  },
+})
+vim.lsp.enable({ 'jsonls' })
 
 -- biome
 vim.lsp.config('biome', {

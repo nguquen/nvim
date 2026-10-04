@@ -49,6 +49,7 @@ return require('packer').startup(function(use)
   use('maxmellon/vim-jsx-pretty')
   use('echasnovski/mini.diff')
   use('felpafel/inlay-hint.nvim')
+  use('wakatime/vim-wakatime')
   -- completion
   use('hrsh7th/nvim-cmp')
   use('hrsh7th/cmp-nvim-lsp')
