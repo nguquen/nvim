@@ -258,7 +258,6 @@ require('mason').setup({
 require('mason-lspconfig').setup({
   automatic_enable = false,
   ensure_installed = {
-    'rust_analyzer',
     'lua_ls',
     'ts_ls',
     'jdtls',
@@ -361,14 +360,14 @@ vim.g.rustaceanvim = {
           attributes = {
             enable = true,
           },
-          ignored = {
-            ['async-trait'] = { 'async_trait' },
-          },
+          -- ignored = {
+          --   ['async-trait'] = { 'async_trait' },
+          -- },
         },
         diagnostics = {
           enable = true,
           -- disabled = { 'macro-error', 'proc-macro-disabled' },
-          disabled = { 'proc-macro-disabled' },
+          disabled = { 'proc-macro-disabled', 'inactive_code' },
           experimental = {
             enable = false,
           },
