@@ -32,34 +32,9 @@ if packer_bootstrap then
   return
 end
 
--- colorscheme
--- require('onedark').setup({
---   style = 'dark',
---   transparent = false,
---   term_colors = true,
---   code_style = {
---     comments = 'none',
---     keywords = 'none',
---     functions = 'none',
---     strings = 'none',
---     variables = 'none',
---   },
---   colors = {
---     special_grey = '#3b4048',
---   },
---   highlights = {
---     Whitespace = { fg = '$special_grey' },
---     NvimTreeNormal = { bg = '$bg0' },
---     NvimTreeEndOfBuffer = { bg = '$bg0' },
---     debugPC = { fg = '$fg', bg = '$bg1' },
---   },
---   lualine = {
---     transparent = false,
---   },
--- })
--- require('onedark').load()
-
-vim.cmd('colorscheme darcula-solid-ex')
+-- colors
+vim.opt.termguicolors = true
+vim.cmd.colorscheme('darcula-solid-ex')
 
 -- devicons
 require('nvim-web-devicons').setup({})
@@ -250,28 +225,6 @@ require('nvim-autopairs').setup({})
 -- gitsigns
 require('gitsigns').setup({
   sign_priority = 6,
-})
-
--- mini.diff
-require('mini.diff').setup({
-  view = {
-    style = 'sign',
-    signs = { add = '+', change = '~', delete = '-' },
-    priority = 5, -- less than gitsigns
-  },
-  -- we only use mini.diff for CodeCompanion diff viewer
-  source = require('mini.diff').gen_source.none(),
-})
-
-vim.api.nvim_create_autocmd({ 'User' }, {
-  pattern = 'CodeCompanionDiff*',
-  callback = function(request)
-    if request.match == 'CodeCompanionDiffAttached' then
-      require('gitsigns').toggle_signs(false)
-    elseif request.match == 'CodeCompanionDiffDetached' then
-      require('gitsigns').toggle_signs(true)
-    end
-  end,
 })
 
 -- inlay-hint
@@ -889,3 +842,31 @@ require('crates').setup({
 vim.g.db_ui_use_nerd_fonts = 1
 vim.g.db_ui_win_position = 'right'
 vim.g.db_ui_save_location = './queries'
+
+-- github
+require('octo').setup({
+  picker = 'telescope', -- "fzf-lua" | "snacks" | "default"
+  enable_builtin = true, -- bare :Octo opens a command picker
+})
+
+require('diffview').setup({ enhanced_diff_hl = true })
+vim.opt.fillchars:append({ diff = '╱' })
+vim.opt.diffopt:append({ 'algorithm:histogram', 'indent-heuristic', 'linematch:60' })
+
+vim.api.nvim_create_user_command('PRDiff', function()
+  local base = vim.fn.trim(vim.fn.system({
+    'gh',
+    'pr',
+    'view',
+    '--json',
+    'baseRefName',
+    '-q',
+    '.baseRefName',
+  }))
+  if vim.v.shell_error ~= 0 or base == '' then
+    vim.notify('No PR found for the current branch', vim.log.levels.ERROR)
+    return
+  end
+  vim.fn.system({ 'git', 'fetch', 'origin', base })
+  vim.cmd('DiffviewOpen origin/' .. base .. '...HEAD --imply-local')
+end, { desc = 'Diffview of current PR against its base' })

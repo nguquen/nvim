@@ -95,3 +95,12 @@ vim.keymap.set('v', 'ga', '<cmd>CodeCompanionChat Add<cr>', { noremap = true, si
 
 -- Expand 'cc' into 'CodeCompanion' in the command line
 vim.cmd([[cab cc CodeCompanion]])
+
+-- github
+vim.keymap.set('n', '<leader>op', '<cmd>Octo pr list<cr>', { desc = 'List PRs' })
+vim.keymap.set('n', '<leader>od', '<cmd>PRDiff<cr>', { desc = 'Diffview PR' })
+vim.keymap.set('n', '<leader>or', '<cmd>Octo review start<cr>', { desc = 'Start review' })
+vim.keymap.set('n', '<leader>oR', '<cmd>Octo review resume<cr>', { desc = 'Resume review' })
+vim.keymap.set('n', '<leader>os', '<cmd>Octo review submit<cr>', { desc = 'Submit review' })
+vim.keymap.set('n', '<leader>dc', '<cmd>DiffviewClose<cr>', { desc = 'Close Diffview' })
+vim.keymap.set('n', '<leader>dh', '<cmd>DiffviewFileHistory %<cr>', { desc = 'File history' })
