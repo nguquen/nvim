@@ -37,7 +37,7 @@ return require('packer').startup(function(use)
   -- editing
   use('windwp/nvim-autopairs')
   use('folke/todo-comments.nvim')
-  use('numToStr/Comment.nvim')
+  use({ 'faergeek/Comment.nvim', branch = 'nvim-0.12-compatibility' })
   use('JoosepAlviste/nvim-ts-context-commentstring')
   use('jinh0/eyeliner.nvim')
   use('kylechui/nvim-surround')
