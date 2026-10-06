@@ -19,24 +19,17 @@ My Neovim config, written in Lua and managed with [packer.nvim](https://github.c
 git clone https://github.com/nguquen/nvim.git ~/.config/nvim
 ```
 
-`init.lua` loads plugins before packer runs its own bootstrap, so the first start fails with
-`module 'impatient' not found`. Install packer and the plugins by hand once:
-
-```sh
-git clone --depth 1 https://github.com/wbthomason/packer.nvim \
-  ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-
-nvim --headless -u NONE \
-  -c 'packadd packer.nvim' \
-  -c "lua require('plug')" \
-  -c 'autocmd User PackerComplete quitall' \
-  -c 'PackerSync'
-```
-
-Then start `nvim` normally. On that start:
+Start `nvim`. The first start installs packer and all plugins, then asks you to restart.
+On the next start:
 
 - Treesitter parsers are compiled.
 - Mason installs the language servers listed in `init.lua` and the extra tools (formatters, linters, debug adapters).
+
+To install the plugins without a UI (e.g. in a script), run:
+
+```sh
+nvim --headless -c 'autocmd User PackerComplete quitall'
+```
 
 Check the setup with `:checkhealth`.
 

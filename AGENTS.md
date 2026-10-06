@@ -8,15 +8,15 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 ## Layout and load order
 
 - `init.lua` bootstraps **packer.nvim** (not lazy.nvim), then requires `vars` → `opts` →
-  `keys` → `plug`, then sets the colorscheme. Packer's own first-run bootstrap never
-  runs: line 4 (`require('impatient')`) and `keys.lua` load plugins before it, so a fresh
-  install needs the manual packer install described in README.md.
+  `plug`. On the first run it starts `PackerSync` and returns there; `keys` and every
+  plugin `require`/`setup()` must stay **below** that `if packer_bootstrap` early return,
+  or a fresh install fails before plugins exist.
 - **Almost all plugin `setup()` calls, LSP, cmp, DAP, treesitter and none-ls config live
   inline in `init.lua`**, not in separate modules.
 - `lua/plug.lua` — plugin list (`use(...)`). Adding a plugin = `use()` here + setup in
-  `init.lua`; the user installs with `:PackerSync`. Packer runs a plugin's post-install
-  step from `run`, not `build` (that's the lazy.nvim key). The existing `build = ':TSUpdate'`
-  is silently ignored.
+  `init.lua`; the user installs with `:PackerSync`. Packer's post-install key is `run`,
+  not lazy.nvim's `build` (which packer silently ignores). Prefer a Lua function over an
+  `':Command'` string: on a fresh install the plugin's commands aren't defined yet.
 - `lua/keys.lua` — all keymaps. It `require`s telescope/dap at load time. LSP buffer-local
   maps are set in its `LspAttach` autocmd.
 - `ftplugin/java.lua` — the entire Java/jdtls + Java DAP setup (nvim-jdtls), not `init.lua`.
@@ -56,6 +56,7 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 
 - To load the full config, use an isolated sandbox. Symlink the repo to
   `$XDG_CONFIG_HOME/nvim`, and point `XDG_CONFIG_HOME`/`XDG_DATA_HOME`/`XDG_STATE_HOME`/
-  `XDG_CACHE_HOME` at directories under `/tmp/opencode/`. Then run the README's
-  packer + `PackerSync` steps and `nvim --headless +'sleep 3' +messages +qa`. The
+  `XDG_CACHE_HOME` at directories under `/tmp/opencode/`. Install with
+  `nvim --headless -c 'autocmd User PackerComplete quitall'`, then check with
+  `nvim --headless +'sleep 3' +messages +qa`. The
   devcontainer has no `tree-sitter` CLI, so parser-compile errors there are expected.

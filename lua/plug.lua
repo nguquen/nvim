@@ -3,15 +3,16 @@
 return require('packer').startup(function(use)
   -- packer can manage itself
   use('wbthomason/packer.nvim')
-  -- makes neovim faster
-  use('lewis6991/impatient.nvim')
   -- common
   use('nvim-tree/nvim-web-devicons')
   use('nvim-lua/plenary.nvim')
   use('BurntSushi/ripgrep')
   use({
     'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
+    -- a function, not ':TSUpdate': on a fresh install the command isn't defined yet
+    run = function()
+      require('nvim-treesitter').update()
+    end,
   })
   -- navigation
   use('christoomey/vim-tmux-navigator')

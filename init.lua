@@ -1,7 +1,7 @@
 -- [[ init.lua ]]
 
--- impatient for faster loading
-require('impatient')
+-- cache compiled lua modules for faster loading
+vim.loader.enable()
 
 -- leader; works across all nvim files
 vim.g.mapleader = ' '
@@ -23,14 +23,22 @@ local packer_bootstrap = ensure_packer()
 -- imports
 require('vars') -- variables
 require('opts') -- options
-require('keys') -- keymaps
 require('plug') -- plugins
 
--- the first run will install packer and our plugins
+-- the first run will install packer and our plugins; everything below needs them
 if packer_bootstrap then
+  vim.api.nvim_create_autocmd('User', {
+    pattern = 'PackerComplete',
+    once = true,
+    callback = function()
+      vim.notify('Plugins installed. Restart Neovim to load the config.')
+    end,
+  })
   require('packer').sync()
   return
 end
+
+require('keys') -- keymaps
 
 -- colors
 vim.opt.termguicolors = true
