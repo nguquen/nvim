@@ -5,7 +5,7 @@ local M = {}
 
 require('lsp-format').setup({})
 
--- format on save through lsp-format; also used by none-ls and after/lsp/rust-analyzer.lua
+-- format on save through lsp-format; also used by none-ls
 M.format_on_attach = function(client)
   require('lsp-format').on_attach(client)
 end
@@ -14,32 +14,37 @@ vim.lsp.config('*', {
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
 })
 
--- servers to run (lspconfig names); plugins/mason.lua installs each one that's missing.
--- Rust and Java start their own servers: see after/lsp/rust-analyzer.lua and ftplugin/java.lua.
+-- language servers (lspconfig names). enable: start with vim.lsp.enable(); plugins/mason.lua
+-- installs every enabled one that's missing. format_on_save: attach lsp-format.
+-- Java starts its own server with its own on_attach: see ftplugin/java.lua.
 M.servers = {
-  { name = 'biome', format_on_save = true },
-  { name = 'buf_ls', format_on_save = true },
-  { name = 'denols', format_on_save = false },
-  { name = 'efm', format_on_save = true },
-  { name = 'gopls', format_on_save = true },
-  { name = 'gradle_ls', format_on_save = false },
-  { name = 'helm_ls', format_on_save = false },
-  { name = 'jsonls', format_on_save = false },
-  { name = 'lua_ls', format_on_save = false }, -- stylua (none-ls) formats Lua
-  { name = 'prismals', format_on_save = true },
-  { name = 'pyright', format_on_save = false },
-  { name = 'ruff', format_on_save = true },
-  { name = 'sqlls', format_on_save = false }, -- sqlfluff (none-ls) formats SQL
-  { name = 'taplo', format_on_save = true },
-  { name = 'ts_ls', format_on_save = false }, -- consider https://github.com/pmizio/typescript-tools.nvim
-  { name = 'yamlls', format_on_save = true },
+  { name = 'biome', enable = true, format_on_save = true },
+  { name = 'buf_ls', enable = true, format_on_save = true },
+  { name = 'denols', enable = true, format_on_save = false },
+  { name = 'efm', enable = true, format_on_save = true },
+  { name = 'gopls', enable = true, format_on_save = true },
+  { name = 'gradle_ls', enable = true, format_on_save = false },
+  { name = 'helm_ls', enable = true, format_on_save = false },
+  { name = 'jsonls', enable = true, format_on_save = false },
+  { name = 'lua_ls', enable = true, format_on_save = false }, -- stylua (none-ls) formats Lua
+  { name = 'prismals', enable = true, format_on_save = true },
+  { name = 'pyright', enable = true, format_on_save = false },
+  { name = 'ruff', enable = true, format_on_save = true },
+  -- started by rustaceanvim, using rust-analyzer from PATH (rustup)
+  { name = 'rust-analyzer', enable = false, format_on_save = true },
+  { name = 'sqlls', enable = true, format_on_save = false }, -- sqlfluff (none-ls) formats SQL
+  { name = 'taplo', enable = true, format_on_save = true },
+  { name = 'ts_ls', enable = true, format_on_save = false }, -- consider https://github.com/pmizio/typescript-tools.nvim
+  { name = 'yamlls', enable = true, format_on_save = true },
 }
 
 for _, server in ipairs(M.servers) do
   if server.format_on_save then
     vim.lsp.config(server.name, { on_attach = M.format_on_attach })
   end
-  vim.lsp.enable(server.name)
+  if server.enable then
+    vim.lsp.enable(server.name)
+  end
 end
 
 -- inlay hints for servers that support them

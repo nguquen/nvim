@@ -1,8 +1,6 @@
--- rust-analyzer is started by rustaceanvim, not vim.lsp.enable(), so it isn't in config/lsp.lua's
--- server list. rustaceanvim merges this config (looked up by its client name, 'rust-analyzer')
--- into its own when it starts the client; on_attach here turns on format on save.
+-- rust-analyzer is started by rustaceanvim, not vim.lsp.enable(). rustaceanvim merges this
+-- config (looked up by its client name, 'rust-analyzer') into its own when it starts the client.
 return {
-  on_attach = require('config.lsp').format_on_attach,
   settings = {
     ['rust-analyzer'] = {
       imports = {
