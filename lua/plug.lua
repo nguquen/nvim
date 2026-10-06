@@ -1,0 +1,90 @@
+-- [[ plug.lua ]]
+
+return require('packer').startup(function(use)
+  -- packer can manage itself
+  use('wbthomason/packer.nvim')
+  -- makes neovim faster
+  use('lewis6991/impatient.nvim')
+  -- common
+  use('nvim-tree/nvim-web-devicons')
+  use('nvim-lua/plenary.nvim')
+  use('BurntSushi/ripgrep')
+  use({
+    'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate',
+  })
+  -- navigation
+  use('christoomey/vim-tmux-navigator')
+  use('nvim-tree/nvim-tree.lua')
+  use('nvim-telescope/telescope.nvim')
+  use('nvim-telescope/telescope-ui-select.nvim')
+  use('natecraddock/telescope-zf-native.nvim')
+  use('nvim-telescope/telescope-dap.nvim')
+  -- mason
+  use('williamboman/mason.nvim')
+  use('williamboman/mason-lspconfig.nvim')
+  use('WhoIsSethDaniel/mason-tool-installer.nvim')
+  -- colorscheme
+  use('rebelot/kanagawa.nvim')
+  use('navarasu/onedark.nvim')
+  use({ 'briones-gabriel/darcula-solid.nvim', requires = 'rktjmp/lush.nvim' })
+  use('MeanderingProgrammer/render-markdown.nvim')
+  -- use({ 'towolf/vim-helm', ft = 'helm' })
+  use({ 'qvalentin/helm-ls.nvim' })
+  -- status
+  use('nvim-lualine/lualine.nvim')
+  use('arkav/lualine-lsp-progress')
+  -- editing
+  use('windwp/nvim-autopairs')
+  use('folke/todo-comments.nvim')
+  use({ 'faergeek/Comment.nvim', branch = 'nvim-0.12-compatibility' })
+  use('JoosepAlviste/nvim-ts-context-commentstring')
+  use('jinh0/eyeliner.nvim')
+  use('kylechui/nvim-surround')
+  use('catgoose/nvim-colorizer.lua')
+  use('uarun/vim-protobuf')
+  use('lewis6991/gitsigns.nvim')
+  use('kdheepak/lazygit.nvim')
+  use({ 'f-person/git-blame.nvim', branch = 'main' })
+  use('maxmellon/vim-jsx-pretty')
+  -- use('echasnovski/mini.diff')
+  use('felpafel/inlay-hint.nvim')
+  use('wakatime/vim-wakatime')
+  -- completion
+  use('hrsh7th/nvim-cmp')
+  use('hrsh7th/cmp-nvim-lsp')
+  use('hrsh7th/cmp-nvim-lua')
+  use('hrsh7th/cmp-nvim-lsp-signature-help')
+  use('hrsh7th/cmp-path')
+  use('hrsh7th/cmp-buffer')
+  use('hrsh7th/cmp-vsnip')
+  use('hrsh7th/vim-vsnip')
+  use('rcarriga/cmp-dap')
+  use('rafamadriz/friendly-snippets')
+  use('lukas-reineke/lsp-format.nvim')
+  use('saecki/crates.nvim')
+  -- lsp
+  use('neovim/nvim-lspconfig')
+  use('onsails/lspkind.nvim')
+  use('mrcjkb/rustaceanvim')
+  use('nvimtools/none-ls.nvim')
+  use('nvimtools/none-ls-extras.nvim')
+  use('mfussenegger/nvim-jdtls')
+  use('ThePrimeagen/refactoring.nvim')
+  -- dap
+  use('nvim-neotest/nvim-nio')
+  use('mfussenegger/nvim-dap')
+  use('rcarriga/nvim-dap-ui')
+  use('theHamsta/nvim-dap-virtual-text')
+  use('mfussenegger/nvim-dap-python')
+  use('leoluz/nvim-dap-go')
+  -- use('mxsdev/nvim-dap-vscode-js')
+  -- dadbod
+  use('tpope/vim-dotenv')
+  use('tpope/vim-dadbod')
+  use('kristijanhusak/vim-dadbod-ui')
+  use('kristijanhusak/vim-dadbod-completion')
+  -- github
+  use('pwntester/octo.nvim')
+  use('sindrets/diffview.nvim')
+end)
