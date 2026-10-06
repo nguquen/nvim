@@ -33,7 +33,7 @@ require('mason-tool-installer').setup({
     'java-debug-adapter',
     'java-test',
     'debugpy',
-    'delve',
+    -- not delve: nvim-dap-go runs dlv from PATH (go install), like gopls in config/lsp.lua
     'js-debug-adapter',
     'sqlfluff',
     'npm-groovy-lint',
