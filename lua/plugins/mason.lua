@@ -1,4 +1,4 @@
--- [[ mason.lua ]] installs language servers and tools; enabling servers is config/lsp.lua's job
+-- [[ mason.lua ]] installs language servers and tools
 
 require('mason').setup({
   ui = {
@@ -12,21 +12,8 @@ require('mason').setup({
 
 require('mason-lspconfig').setup({
   automatic_enable = false,
-  ensure_installed = {
-    'lua_ls',
-    'ts_ls',
-    'jdtls',
-    'gradle_ls',
-    'gopls',
-    'pyright',
-    'ruff',
-    'yamlls',
-    'buf_ls',
-    'prismals',
-    'denols',
-    'sqlls',
-    'efm',
-  },
+  -- every server enabled in config/lsp.lua, plus jdtls (started by ftplugin/java.lua)
+  ensure_installed = vim.list_extend({ 'jdtls' }, require('config.lsp').servers),
 })
 
 require('mason-tool-installer').setup({
@@ -40,7 +27,6 @@ require('mason-tool-installer').setup({
     'debugpy',
     'delve',
     'js-debug-adapter',
-    'taplo',
     'sqlfluff',
   },
 })

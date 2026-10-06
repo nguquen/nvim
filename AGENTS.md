@@ -9,8 +9,9 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 
 - `init.lua` only sets the leader and `require`s modules in order: `config.options` →
   `config.pack` → `config.keymaps` → `plugins.*` / `config.lsp`. Order matters:
-  `config.lsp` must load before `plugins.lang` and `plugins.formatting`, which use its
-  `format_on_attach`. A new `lua/plugins/<area>.lua` does nothing until `init.lua` requires it.
+  `config.lsp` must load before `plugins.mason` (reads its `servers` list) and before
+  `plugins.lang` and `plugins.formatting` (use its `format_on_attach`). A new
+  `lua/plugins/<area>.lua` does nothing until `init.lua` requires it.
 - `lua/plugins/<area>.lua` — plain `setup()` calls grouped by area (ui, navigation, editing,
   git, mason, lang, dap, completion, treesitter, formatting, db). These are not lazy.nvim
   plugin specs; there is no lazy loading.
@@ -36,10 +37,12 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 ## LSP / formatting gotchas
 
 - Servers use the native `vim.lsp.config()` + `vim.lsp.enable()` API. `mason-lspconfig` has
-  `automatic_enable = false`, so a server only runs if it's in the `vim.lsp.enable({...})`
-  list in `lua/config/lsp.lua`. Mason installs servers through
-  `mason-lspconfig.ensure_installed` and other tools (formatters, debug adapters) through
-  `mason-tool-installer.ensure_installed` (both in `lua/plugins/mason.lua`).
+  `automatic_enable = false`, so a server only runs if it's in the `servers` list in
+  `lua/config/lsp.lua`. That same list is `mason-lspconfig.ensure_installed` (plus
+  `jdtls`), so adding a server there also makes Mason install it. Names are lspconfig
+  names; the server must have a Mason package. Other tools (formatters, debug adapters)
+  go in `mason-tool-installer.ensure_installed` in `lua/plugins/mason.lua`. rust-analyzer
+  isn't installed by Mason; rustaceanvim uses the one on PATH (rustup).
 - Per-server settings go in `after/lsp/<server>.lua`, returning a config table. It must be
   `after/lsp/`, not `lsp/`: a plain `lsp/` file is overridden by nvim-lspconfig's own
   `lsp/<server>.lua`. Don't set `on_attach` there: for servers in the format list,

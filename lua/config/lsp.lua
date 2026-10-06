@@ -19,8 +19,9 @@ for _, name in ipairs({ 'gopls', 'ruff', 'yamlls', 'efm', 'buf_ls', 'prismals', 
   vim.lsp.config(name, { on_attach = M.format_on_attach })
 end
 
--- Rust (rustaceanvim) and Java (ftplugin/java.lua) start their own servers
-vim.lsp.enable({
+-- servers to run; plugins/mason.lua installs each one that's missing.
+-- Rust (rustaceanvim) and Java (ftplugin/java.lua) start their own servers.
+M.servers = {
   'biome',
   'buf_ls',
   'denols',
@@ -37,7 +38,8 @@ vim.lsp.enable({
   'taplo',
   'ts_ls', -- consider https://github.com/pmizio/typescript-tools.nvim
   'yamlls',
-})
+}
+vim.lsp.enable(M.servers)
 
 -- inlay hints for servers that support them
 require('inlay-hint').setup()

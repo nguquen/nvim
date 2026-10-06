@@ -25,7 +25,7 @@ revisions pinned in `nvim-pack-lock.json`, and the rest of the config loads stra
 On that start:
 
 - Treesitter parsers are compiled.
-- Mason installs the language servers listed in `lua/plugins/mason.lua` and the extra tools (formatters, linters, debug adapters).
+- Mason installs every language server turned on in `lua/config/lsp.lua` (plus `jdtls`) and the extra tools listed in `lua/plugins/mason.lua` (formatters, linters, debug adapters).
 
 To install the plugins without a UI (e.g. in a script), run:
 
@@ -34,13 +34,6 @@ nvim --headless +qa
 ```
 
 Check the setup with `:checkhealth`.
-
-`jsonls`, `biome` and `helm_ls` are turned on in `lua/config/lsp.lua`, but Mason doesn't install them.
-Install them yourself if you need them:
-
-```vim
-:MasonInstall json-lsp biome helm-ls
-```
 
 ## Updating plugins
 
