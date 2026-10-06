@@ -75,8 +75,9 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   `Cargo.toml` buffer.
 - none-ls (`lua/plugins/formatting.lua`) formats Lua with stylua, SQL with sqlfluff
   (`--dialect postgres`), and everything else with prettierd. prettierd is turned off for
-  yaml and for the filetypes biome handles, and turned on for `java` (jdtls formatting is
-  disabled so prettier-java is used).
+  yaml, skipped in any buffer a `biome` client is attached to (projects with a
+  `biome.json(c)`, see `after/lsp/biome.lua`), and turned on for `java` (jdtls formatting
+  is disabled so prettier-java is used).
 - Treesitter uses the main-branch API (`require('nvim-treesitter').install(...)`) plus a
   `FileType` autocmd that calls `vim.treesitter.start()`. A new language must be added
   to the `ts_files` list in `lua/plugins/treesitter.lua` or it gets no treesitter highlighting.

@@ -12,23 +12,11 @@ null_ls.setup({
     null_ls.builtins.formatting.stylua,
     null_ls.builtins.formatting.prettierd.with({
       extra_filetypes = { 'java' },
-      disabled_filetypes = {
-        'yaml',
-        -- biome: start
-        'astro',
-        'css',
-        'graphql',
-        'html',
-        'javascript',
-        'javascriptreact',
-        'json',
-        'jsonc',
-        'svelte',
-        'typescript',
-        'typescriptreact',
-        'vue',
-        -- biome: end
-      },
+      disabled_filetypes = { 'yaml' },
+      -- in projects with a biome.json, biome formats instead
+      runtime_condition = function(params)
+        return #vim.lsp.get_clients({ bufnr = params.bufnr, name = 'biome' }) == 0
+      end,
     }),
     -- require('none-ls.formatting.eslint_d'),
     -- null_ls.builtins.formatting.black,
