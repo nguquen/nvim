@@ -61,7 +61,6 @@ vim.pack.add({
   -- completion
   gh('hrsh7th/nvim-cmp'),
   gh('hrsh7th/cmp-nvim-lsp'),
-  gh('hrsh7th/cmp-nvim-lua'),
   gh('hrsh7th/cmp-nvim-lsp-signature-help'),
   gh('hrsh7th/cmp-path'),
   gh('hrsh7th/cmp-buffer'),
@@ -73,6 +72,7 @@ vim.pack.add({
   gh('saecki/crates.nvim'),
   -- lsp
   gh('neovim/nvim-lspconfig'),
+  gh('folke/lazydev.nvim'),
   gh('onsails/lspkind.nvim'),
   gh('mrcjkb/rustaceanvim'),
   gh('nvimtools/none-ls.nvim'),

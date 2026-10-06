@@ -69,10 +69,10 @@ cmp.setup({
   },
   -- Installed sources:
   sources = {
+    { name = 'lazydev' }, -- module names inside require('...') in Lua files
     { name = 'path' },
     { name = 'nvim_lsp', priority = 100 },
     { name = 'nvim_lsp_signature_help' },
-    { name = 'nvim_lua' },
     { name = 'crates' },
     { name = 'vsnip' },
     {

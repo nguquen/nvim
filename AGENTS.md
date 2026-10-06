@@ -34,6 +34,8 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   - `java.lua` — the entire Java/jdtls + Java DAP setup (nvim-jdtls).
   - `toml.lua` — crates.nvim, for `Cargo.toml` only.
   - `helm.lua` — helm-ls.nvim (template highlights/hints; the server is `helm_ls`).
+  - `lua.lua` — lazydev.nvim, which gives lua_ls the Neovim runtime plus the plugins a
+    file `require()`s (off in projects with their own `.luarc.json(c)`).
 - `ftplugin/sql.lua`, `ftplugin/dbout.lua` — dadbod-ui buffer maps (`dbout` overrides `gd`).
 - `ftdetect/filetype.lua` — `*.yaml.gotmpl` / `*.yml.gotmpl` → `helm`.
 - `colors/darcula-solid-ex.lua` — wraps `darcula-solid`; put highlight overrides here.
@@ -58,6 +60,10 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 - Per-server settings go in `after/lsp/<server>.lua`, returning a config table. It must be
   `after/lsp/`, not `lsp/`: a plain `lsp/` file is overridden by nvim-lspconfig's own
   `lsp/<server>.lua`.
+- Don't put `workspace.library`, `runtime` or `diagnostics.globals` in
+  `after/lsp/lua_ls.lua`: lazydev.nvim sets them per workspace. Listing the whole
+  runtimepath there (the old setup) made lua_ls take ~20 s and ~2.4 GB, and resolved
+  `require('cmp')` to the wrong module.
 - Completion capabilities are set once for every server with `vim.lsp.config('*', ...)`.
   nvim-jdtls doesn't read `vim.lsp.config`, so jdtls doesn't get them (nor any `after/lsp/`
   file); configure jdtls in `ftplugin/java.lua`.
