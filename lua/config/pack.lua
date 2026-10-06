@@ -1,4 +1,4 @@
--- [[ plug.lua ]]
+-- [[ pack.lua ]]
 
 local gh = function(repo)
   return 'https://github.com/' .. repo

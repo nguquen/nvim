@@ -1,4 +1,4 @@
--- [[ keys.lua ]]
+-- [[ keymaps.lua ]]
 local map = vim.api.nvim_set_keymap
 
 -- disable arrow keys

@@ -1,4 +1,14 @@
--- [[ opts.lua ]]
+-- [[ options.lua ]]
+
+-- vim.g: maps to vim.api.nvim_set_var; sets global variables
+local g = vim.g
+g.t_co = 256
+g.background = 'dark'
+
+-- to appropriately highlight codefences returned from denols
+g.markdown_fenced_languages = {
+  'ts=typescript',
+}
 
 -- with vim.opt we can set global, window and buffer settings, acting like :set in vimscript
 local opt = vim.opt

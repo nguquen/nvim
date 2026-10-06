@@ -25,7 +25,7 @@ revisions pinned in `nvim-pack-lock.json`, and the rest of the config loads stra
 On that start:
 
 - Treesitter parsers are compiled.
-- Mason installs the language servers listed in `init.lua` and the extra tools (formatters, linters, debug adapters).
+- Mason installs the language servers listed in `lua/plugins/mason.lua` and the extra tools (formatters, linters, debug adapters).
 
 To install the plugins without a UI (e.g. in a script), run:
 
@@ -35,7 +35,7 @@ nvim --headless +qa
 
 Check the setup with `:checkhealth`.
 
-`jsonls`, `biome` and `helm_ls` are turned on in `init.lua`, but Mason doesn't install them.
+`jsonls`, `biome` and `helm_ls` are turned on in `lua/config/lsp.lua`, but Mason doesn't install them.
 Install them yourself if you need them:
 
 ```vim
@@ -58,7 +58,7 @@ then bring the existing ones to the locked revisions:
 :lua vim.pack.update(nil, { target = 'lockfile' })
 ```
 
-To remove a plugin, delete it from `lua/plug.lua`, restart, then run
+To remove a plugin, delete it from `lua/config/pack.lua`, restart, then run
 `:lua vim.pack.del({ 'plugin-name' })`.
 
 ## Migrating from packer.nvim
@@ -74,10 +74,14 @@ rm -rf ~/.local/share/nvim/site/pack/packer ~/.config/nvim/plugin/packer_compile
 
 | Path | Contents |
 | --- | --- |
-| `init.lua` | Bootstrap, plus almost all plugin setup (LSP, completion, DAP, treesitter, none-ls, …) |
-| `lua/plug.lua` | Plugin list |
-| `lua/keys.lua` | Keymaps |
-| `lua/opts.lua`, `lua/vars.lua` | Options and globals |
+| `init.lua` | Leader, then loads the modules below in order |
+| `lua/config/options.lua` | Options and globals |
+| `lua/config/pack.lua` | Plugin list (`vim.pack.add`) and build hooks |
+| `nvim-pack-lock.json` | Plugin lockfile, written by `vim.pack` |
+| `lua/config/keymaps.lua` | Keymaps |
+| `lua/config/lsp.lua` | Language servers to enable, format-on-save list, shared LSP setup |
+| `after/lsp/<server>.lua` | Settings for one language server |
+| `lua/plugins/*.lua` | Plugin setup, one file per area (ui, navigation, editing, git, completion, dap, …) |
 | `ftplugin/java.lua` | Java (jdtls) LSP + debugger |
 | `colors/darcula-solid-ex.lua` | Colorscheme: `darcula-solid` with personal overrides |
 
