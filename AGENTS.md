@@ -32,8 +32,6 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   opens (config dir comes first on the runtimepath, so these run before the plugins' own
   ftplugins). Global one-time `setup()` calls here need a `vim.g` guard.
   - `java.lua` — the entire Java/jdtls + Java DAP setup (nvim-jdtls).
-  - `rust.lua` — rust-analyzer settings via `vim.lsp.config('rust-analyzer', ...)`, which
-    rustaceanvim merges into its server config when it starts the client.
   - `toml.lua` — crates.nvim, for `Cargo.toml` only.
   - `helm.lua` — helm-ls.nvim (template highlights/hints; the server is `helm_ls`).
 - `ftplugin/sql.lua`, `ftplugin/dbout.lua` — dadbod-ui buffer maps (`dbout` overrides `gd`).
@@ -44,25 +42,28 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 ## LSP / formatting gotchas
 
 - Servers use the native `vim.lsp.config()` + `vim.lsp.enable()` API. `mason-lspconfig` has
-  `automatic_enable = false`, so a server only runs if it's in the `servers` list in
-  `lua/config/lsp.lua`. That same list is `mason-lspconfig.ensure_installed` (plus
-  `jdtls`), so adding a server there also makes Mason install it. Names are lspconfig
-  names; the server must have a Mason package. Other tools (formatters, debug adapters)
-  go in `mason-tool-installer.ensure_installed` in `lua/plugins/mason.lua`. rust-analyzer
-  isn't installed by Mason; rustaceanvim uses the one on PATH (rustup).
+  `automatic_enable = false`, so a server only runs if it's in the `servers` table in
+  `lua/config/lsp.lua`: one `{ name = ..., format_on_save = bool }` entry per server. The
+  same names (plus `jdtls`) are `mason-lspconfig.ensure_installed`, so adding a server
+  there also makes Mason install it. Names are lspconfig names; the server must have a
+  Mason package. Other tools (formatters, debug adapters) go in
+  `mason-tool-installer.ensure_installed` in `lua/plugins/mason.lua`. rust-analyzer isn't
+  installed by Mason; rustaceanvim uses the one on PATH (rustup).
 - Per-server settings go in `after/lsp/<server>.lua`, returning a config table. It must be
   `after/lsp/`, not `lsp/`: a plain `lsp/` file is overridden by nvim-lspconfig's own
-  `lsp/<server>.lua`. Don't set `on_attach` there: for servers in the format list,
-  `config/lsp.lua` sets it with higher priority and the file's value is ignored.
+  `lsp/<server>.lua`. Don't set `on_attach` there for servers in the `servers` table:
+  for `format_on_save = true`, `config/lsp.lua` sets it with higher priority and the file's
+  value is ignored.
 - Completion capabilities are set once for every server with `vim.lsp.config('*', ...)`.
-- Format-on-save only happens for servers in the format list in `lua/config/lsp.lua`, which
-  attaches lsp-format.nvim. A server missing from that list never formats. Rust and Java
-  attach it themselves in their ftplugin.
+- Format-on-save (lsp-format.nvim) only happens for `format_on_save = true` entries. Rust
+  and Java aren't in the table and attach it themselves (`after/lsp/rust-analyzer.lua`,
+  `ftplugin/java.lua`).
 - Rust's server is started by rustaceanvim, not `vim.lsp.enable()`. Configure it in
-  `ftplugin/rust.lua` with `vim.lsp.config('rust-analyzer', ...)` (hyphen: rustaceanvim's
-  client name), not lspconfig's `rust_analyzer`, and don't enable `rust_analyzer`.
-  `vim.g.rustaceanvim` is unset; only add it for `tools`/`dap` options, and set it in
-  `init.lua`, since rustaceanvim reads it once, possibly from a `Cargo.toml` buffer.
+  `after/lsp/rust-analyzer.lua` (hyphen: rustaceanvim's client name, which it looks up in
+  `vim.lsp.config` when starting the client), not lspconfig's `rust_analyzer`, and don't
+  enable `rust_analyzer`. `vim.g.rustaceanvim` is unset; only add it for `tools`/`dap`
+  options, and set it in `init.lua`, since rustaceanvim reads it once, possibly from a
+  `Cargo.toml` buffer.
 - none-ls (`lua/plugins/formatting.lua`) formats Lua with stylua, SQL with sqlfluff
   (`--dialect postgres`), and everything else with prettierd. prettierd is turned off for
   yaml and for the filetypes biome handles, and turned on for `java` (jdtls formatting is

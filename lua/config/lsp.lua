@@ -5,7 +5,7 @@ local M = {}
 
 require('lsp-format').setup({})
 
--- format on save through lsp-format; also used by none-ls and ftplugin/rust.lua
+-- format on save through lsp-format; also used by none-ls and after/lsp/rust-analyzer.lua
 M.format_on_attach = function(client)
   require('lsp-format').on_attach(client)
 end
@@ -14,32 +14,33 @@ vim.lsp.config('*', {
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
 })
 
--- servers that format on save
-for _, name in ipairs({ 'gopls', 'ruff', 'yamlls', 'efm', 'buf_ls', 'prismals', 'taplo', 'biome' }) do
-  vim.lsp.config(name, { on_attach = M.format_on_attach })
-end
-
--- servers to run; plugins/mason.lua installs each one that's missing.
--- Rust and Java start their own servers: see ftplugin/rust.lua and ftplugin/java.lua.
+-- servers to run (lspconfig names); plugins/mason.lua installs each one that's missing.
+-- Rust and Java start their own servers: see after/lsp/rust-analyzer.lua and ftplugin/java.lua.
 M.servers = {
-  'biome',
-  'buf_ls',
-  'denols',
-  'efm',
-  'gopls',
-  'gradle_ls',
-  'helm_ls',
-  'jsonls',
-  'lua_ls',
-  'prismals',
-  'pyright',
-  'ruff',
-  'sqlls',
-  'taplo',
-  'ts_ls', -- consider https://github.com/pmizio/typescript-tools.nvim
-  'yamlls',
+  { name = 'biome', format_on_save = true },
+  { name = 'buf_ls', format_on_save = true },
+  { name = 'denols', format_on_save = false },
+  { name = 'efm', format_on_save = true },
+  { name = 'gopls', format_on_save = true },
+  { name = 'gradle_ls', format_on_save = false },
+  { name = 'helm_ls', format_on_save = false },
+  { name = 'jsonls', format_on_save = false },
+  { name = 'lua_ls', format_on_save = false }, -- stylua (none-ls) formats Lua
+  { name = 'prismals', format_on_save = true },
+  { name = 'pyright', format_on_save = false },
+  { name = 'ruff', format_on_save = true },
+  { name = 'sqlls', format_on_save = false }, -- sqlfluff (none-ls) formats SQL
+  { name = 'taplo', format_on_save = true },
+  { name = 'ts_ls', format_on_save = false }, -- consider https://github.com/pmizio/typescript-tools.nvim
+  { name = 'yamlls', format_on_save = true },
 }
-vim.lsp.enable(M.servers)
+
+for _, server in ipairs(M.servers) do
+  if server.format_on_save then
+    vim.lsp.config(server.name, { on_attach = M.format_on_attach })
+  end
+  vim.lsp.enable(server.name)
+end
 
 -- inlay hints for servers that support them
 require('inlay-hint').setup()

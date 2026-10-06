@@ -75,7 +75,7 @@ rm -rf ~/.local/share/nvim/site/pack/packer ~/.config/nvim/plugin/packer_compile
 | `lua/config/lsp.lua` | Language servers to enable, format-on-save list, shared LSP setup |
 | `after/lsp/<server>.lua` | Settings for one language server |
 | `lua/plugins/*.lua` | Plugin setup, one file per area (ui, navigation, editing, git, completion, dap, …) |
-| `ftplugin/<filetype>.lua` | Per-language setup: Java (jdtls + debugger), Rust (rust-analyzer), `Cargo.toml` (crates), Helm |
+| `ftplugin/<filetype>.lua` | Per-language setup: Java (jdtls + debugger), `Cargo.toml` (crates), Helm |
 | `colors/darcula-solid-ex.lua` | Colorscheme: `darcula-solid` with personal overrides |
 
 # 3. Key mapping

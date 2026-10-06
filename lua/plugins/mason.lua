@@ -13,7 +13,12 @@ require('mason').setup({
 require('mason-lspconfig').setup({
   automatic_enable = false,
   -- every server enabled in config/lsp.lua, plus jdtls (started by ftplugin/java.lua)
-  ensure_installed = vim.list_extend({ 'jdtls' }, require('config.lsp').servers),
+  ensure_installed = vim.list_extend(
+    { 'jdtls' },
+    vim.tbl_map(function(server)
+      return server.name
+    end, require('config.lsp').servers)
+  ),
 })
 
 require('mason-tool-installer').setup({
