@@ -1,22 +1,39 @@
--- [[ opts.lua ]]
+-- [[ options.lua ]]
+
+-- vim.g: maps to vim.api.nvim_set_var; sets global variables
+local g = vim.g
+
+-- to appropriately highlight codefences returned from denols
+g.markdown_fenced_languages = {
+  'ts=typescript',
+}
 
 -- with vim.opt we can set global, window and buffer settings, acting like :set in vimscript
 local opt = vim.opt
 
 -- [[ clipboard ]]
 opt.clipboard = 'unnamedplus'
--- opt.pastetoggle = '<F2>'
----@diagnostic disable-next-line: inject-field
+-- Copy to the system clipboard with OSC 52, but don't read it back: many terminals (and tmux)
+-- don't answer OSC 52 reads, so every `p` would wait up to 10 s. `p` pastes what Neovim last
+-- copied; paste from other apps with the terminal's paste shortcut, or `<leader>y`.
+local osc52 = require('vim.ui.clipboard.osc52')
+local last_copy = {}
+local function copy(reg)
+  local send = osc52.copy(reg)
+  return function(lines, regtype)
+    last_copy[reg] = { lines, regtype }
+    send(lines)
+  end
+end
+local function paste(reg)
+  return function()
+    return last_copy[reg] or { {}, 'v' }
+  end
+end
 vim.g.clipboard = {
-  name = 'OSC 52',
-  copy = {
-    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
-  },
-  paste = {
-    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
-  },
+  name = 'OSC 52 (copy only)',
+  copy = { ['+'] = copy('+'), ['*'] = copy('*') },
+  paste = { ['+'] = paste('+'), ['*'] = paste('*') },
 }
 
 -- [[ editor ]]
@@ -42,8 +59,8 @@ opt.autoread = true
 vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'CursorHoldI', 'FocusGained', 'TermLeave', 'WinEnter' }, {
   group = vim.api.nvim_create_augroup('CheckForExternalChanges', { clear = true }),
   callback = function()
-    -- Check for file changes, but only if not in command mode
-    if vim.fn.mode() ~= 'c' then
+    -- Check for file changes; :checktime isn't allowed in command mode or the q: window
+    if vim.fn.mode() ~= 'c' and vim.fn.getcmdwintype() == '' then
       vim.cmd('checktime')
     end
   end,
@@ -54,7 +71,6 @@ opt.encoding = 'utf8'
 opt.fileencoding = 'utf8'
 
 -- [[ theme ]]
-opt.syntax = 'ON'
 opt.termguicolors = true
 
 -- [[ lsp diagnostic ]]

@@ -1,4 +1,4 @@
--- [[ keys.lua ]]
+-- [[ keymaps.lua ]]
 local map = vim.api.nvim_set_keymap
 
 -- disable arrow keys
@@ -25,7 +25,19 @@ map('n', '<leader>l', '<c-w><c-l>', { noremap = true, silent = true })
 -- misc
 map('n', '<leader>ch', ':noh<cr>', { noremap = true, silent = true })
 map('n', '<leader>p', '"0p', { noremap = true, silent = true })
-map('n', '<leader>y', ':let @0=@*<cr>', { noremap = true, silent = true })
+-- read the system clipboard into register 0 (for <leader>p); needs a terminal that answers
+-- OSC 52 reads, otherwise times out after 10 s (<C-c> cancels)
+vim.keymap.set('n', '<leader>y', function()
+  local lines = require('vim.ui.clipboard.osc52').paste('+')()
+  if type(lines) == 'table' then
+    vim.fn.setreg('0', lines)
+  end
+end, { silent = true })
+
+-- refactoring.nvim: pick extract/inline variable or function; in normal mode, follow with a motion
+vim.keymap.set({ 'n', 'x' }, '<leader>rs', function()
+  require('refactoring').select_refactor()
+end, { desc = 'Select refactor' })
 
 -- nvim-tree
 map('n', '<C-n>', ':NvimTreeToggle<cr>', { noremap = true, silent = true })
@@ -62,6 +74,18 @@ local function show_documentation()
   end
 end
 
+-- jump to the previous/next diagnostic and show it in a float
+local jump_diagnostic = function(count)
+  return function()
+    vim.diagnostic.jump({
+      count = count,
+      on_jump = function(_, bufnr)
+        vim.diagnostic.open_float({ bufnr = bufnr, scope = 'cursor', focus = false })
+      end,
+    })
+  end
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
   callback = function(ev)
@@ -69,8 +93,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', show_documentation, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<a-enter>', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+    vim.keymap.set('n', '[d', jump_diagnostic(-1), opts)
+    vim.keymap.set('n', ']d', jump_diagnostic(1), opts)
   end,
 })
 

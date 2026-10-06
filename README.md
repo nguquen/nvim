@@ -1,6 +1,7 @@
 # nvim
 
-My Neovim config, written in Lua and managed with [packer.nvim](https://github.com/wbthomason/packer.nvim).
+My Neovim config, written in Lua. Plugins are managed with Neovim's built-in
+[`vim.pack`](https://neovim.io/doc/user/pack.html#vim.pack).
 
 # 1. Installation
 
@@ -19,47 +20,71 @@ My Neovim config, written in Lua and managed with [packer.nvim](https://github.c
 git clone https://github.com/nguquen/nvim.git ~/.config/nvim
 ```
 
-Start `nvim`. The first start installs packer and all plugins, then asks you to restart.
-On the next start:
+Start `nvim` and confirm the prompt to install the plugins. They are installed at the
+revisions pinned in `nvim-pack-lock.json`, and the rest of the config loads straight after.
+On that start:
 
 - Treesitter parsers are compiled.
-- Mason installs the language servers listed in `init.lua` and the extra tools (formatters, linters, debug adapters).
+- Mason installs every language server turned on in `lua/config/lsp.lua` (plus `jdtls`) and the extra tools listed in `lua/plugins/mason.lua` (formatters, linters, debug adapters).
 
 To install the plugins without a UI (e.g. in a script), run:
 
 ```sh
-nvim --headless -c 'autocmd User PackerComplete quitall'
+nvim --headless +qa
 ```
 
 Check the setup with `:checkhealth`.
 
-`jsonls`, `biome` and `helm_ls` are turned on in `init.lua`, but Mason doesn't install them.
-Install them yourself if you need them:
-
-```vim
-:MasonInstall json-lsp biome helm-ls
-```
-
 ## Updating plugins
 
 ```vim
-:PackerSync
+:lua vim.pack.update()
+```
+
+This opens a buffer listing the pending changes. `:write` applies them, `:quit` cancels.
+Then `:restart` and commit the updated `nvim-pack-lock.json`.
+
+After pulling a lockfile change from another machine, restart Neovim to install new plugins,
+then bring the existing ones to the locked revisions:
+
+```vim
+:lua vim.pack.update(nil, { target = 'lockfile' })
+```
+
+To remove a plugin, delete it from `lua/config/pack.lua`, restart, then run
+`:lua vim.pack.del({ 'plugin-name' })`.
+
+## Migrating from packer.nvim
+
+This config used packer.nvim before. On a machine set up back then, remove packer's copies,
+or they keep loading alongside the new ones:
+
+```sh
+rm -rf ~/.local/share/nvim/site/pack/packer ~/.config/nvim/plugin/packer_compiled.lua
 ```
 
 # 2. Layout
 
 | Path | Contents |
 | --- | --- |
-| `init.lua` | Bootstrap, plus almost all plugin setup (LSP, completion, DAP, treesitter, none-ls, …) |
-| `lua/plug.lua` | Plugin list |
-| `lua/keys.lua` | Keymaps |
-| `lua/opts.lua`, `lua/vars.lua` | Options and globals |
-| `ftplugin/java.lua` | Java (jdtls) LSP + debugger |
+| `init.lua` | Leader, then loads the modules below in order |
+| `lua/config/options.lua` | Options and globals |
+| `lua/config/pack.lua` | Plugin list (`vim.pack.add`) and build hooks |
+| `nvim-pack-lock.json` | Plugin lockfile, written by `vim.pack` |
+| `lua/config/keymaps.lua` | Keymaps |
+| `lua/config/lsp.lua` | Language servers to enable, format-on-save list, shared LSP setup, none-ls (formatters, linters) |
+| `after/lsp/<server>.lua` | Settings for one language server |
+| `lua/plugins/*.lua` | Plugin setup, one file per area (ui, navigation, editing, git, completion, dap, …) |
+| `ftplugin/<filetype>.lua` | Per-language setup: Java (jdtls + debugger), `Cargo.toml` (crates), Helm, Lua (lazydev) |
 | `colors/darcula-solid-ex.lua` | Colorscheme: `darcula-solid` with personal overrides |
 
 # 3. Key mapping
 
 Leader is `space`. Arrow keys are turned off. List every mapping with `space km`.
+
+Yanks go to the system clipboard through the terminal (OSC 52), which also works over
+SSH. `p` pastes what Neovim last yanked; to paste from other apps, use the terminal's
+paste shortcut (Cmd-V / Ctrl-Shift-V) or `space y`.
 
 ## General
 
@@ -69,6 +94,7 @@ space h/j/k/l               : move to left/down/up/right window
 ctrl-h/j/k/l                : move between windows and tmux panes (vim-tmux-navigator)
 space ch                    : clear search highlight
 space p                     : paste last yank ("0)
+space y                     : put the system clipboard in "0 (terminal must allow OSC 52 reads)
 ctrl-n                      : toggle file tree (nvim-tree)
 gcc / gc{motion}            : toggle line comment
 gbc / gb{motion}            : toggle block comment
@@ -98,6 +124,7 @@ gd / gD   : definition / type definition
 gr / gi   : references / implementations
 K         : hover docs (crate features in Cargo.toml)
 space rn  : rename
+space rs  : refactor: extract/inline variable or function (visual selection, or a motion)
 alt-enter : code action
 [d / ]d   : previous / next diagnostic
 ```
