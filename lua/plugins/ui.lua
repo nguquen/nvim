@@ -19,7 +19,8 @@ require('lualine').setup({
         'filename',
         path = 3,
       },
-      'lsp_progress',
+      -- attached language servers, with a spinner while one is busy
+      'lsp_status',
     },
     lualine_x = {
       'encoding',

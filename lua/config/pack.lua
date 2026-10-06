@@ -42,7 +42,6 @@ vim.pack.add({
   gh('qvalentin/helm-ls.nvim'),
   -- status
   gh('nvim-lualine/lualine.nvim'),
-  gh('arkav/lualine-lsp-progress'),
   -- editing
   gh('windwp/nvim-autopairs'),
   gh('folke/todo-comments.nvim'),
