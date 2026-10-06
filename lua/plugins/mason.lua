@@ -36,5 +36,6 @@ require('mason-tool-installer').setup({
     'delve',
     'js-debug-adapter',
     'sqlfluff',
+    'npm-groovy-lint',
   },
 })
