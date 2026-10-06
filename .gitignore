@@ -1,3 +1,3 @@
-plugged
-plugin
 .luarc.json
+# left behind by packer.nvim on machines set up before vim.pack
+plugin/packer_compiled.lua

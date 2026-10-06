@@ -1,6 +1,7 @@
 # nvim
 
-My Neovim config, written in Lua and managed with [packer.nvim](https://github.com/wbthomason/packer.nvim).
+My Neovim config, written in Lua. Plugins are managed with Neovim's built-in
+[`vim.pack`](https://neovim.io/doc/user/pack.html#vim.pack).
 
 # 1. Installation
 
@@ -19,8 +20,9 @@ My Neovim config, written in Lua and managed with [packer.nvim](https://github.c
 git clone https://github.com/nguquen/nvim.git ~/.config/nvim
 ```
 
-Start `nvim`. The first start installs packer and all plugins, then asks you to restart.
-On the next start:
+Start `nvim` and confirm the prompt to install the plugins. They are installed at the
+revisions pinned in `nvim-pack-lock.json`, and the rest of the config loads straight after.
+On that start:
 
 - Treesitter parsers are compiled.
 - Mason installs the language servers listed in `init.lua` and the extra tools (formatters, linters, debug adapters).
@@ -28,7 +30,7 @@ On the next start:
 To install the plugins without a UI (e.g. in a script), run:
 
 ```sh
-nvim --headless -c 'autocmd User PackerComplete quitall'
+nvim --headless +qa
 ```
 
 Check the setup with `:checkhealth`.
@@ -43,7 +45,29 @@ Install them yourself if you need them:
 ## Updating plugins
 
 ```vim
-:PackerSync
+:lua vim.pack.update()
+```
+
+This opens a buffer listing the pending changes. `:write` applies them, `:quit` cancels.
+Then `:restart` and commit the updated `nvim-pack-lock.json`.
+
+After pulling a lockfile change from another machine, restart Neovim to install new plugins,
+then bring the existing ones to the locked revisions:
+
+```vim
+:lua vim.pack.update(nil, { target = 'lockfile' })
+```
+
+To remove a plugin, delete it from `lua/plug.lua`, restart, then run
+`:lua vim.pack.del({ 'plugin-name' })`.
+
+## Migrating from packer.nvim
+
+This config used packer.nvim before. On a machine set up back then, remove packer's copies,
+or they keep loading alongside the new ones:
+
+```sh
+rm -rf ~/.local/share/nvim/site/pack/packer ~/.config/nvim/plugin/packer_compiled.lua
 ```
 
 # 2. Layout

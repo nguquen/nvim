@@ -1,91 +1,97 @@
 -- [[ plug.lua ]]
 
-return require('packer').startup(function(use)
-  -- packer can manage itself
-  use('wbthomason/packer.nvim')
-  -- common
-  use('nvim-tree/nvim-web-devicons')
-  use('nvim-lua/plenary.nvim')
-  use('BurntSushi/ripgrep')
-  use({
-    'nvim-treesitter/nvim-treesitter',
-    -- a function, not ':TSUpdate': on a fresh install the command isn't defined yet
-    run = function()
+local gh = function(repo)
+  return 'https://github.com/' .. repo
+end
+
+-- post-install/update hooks; must be registered before vim.pack.add() to see installs
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if name == 'nvim-treesitter' and kind == 'update' then
+      if not ev.data.active then
+        vim.cmd.packadd('nvim-treesitter')
+      end
       require('nvim-treesitter').update()
-    end,
-  })
+    end
+  end,
+})
+
+vim.pack.add({
+  -- common
+  gh('nvim-tree/nvim-web-devicons'),
+  gh('nvim-lua/plenary.nvim'),
+  gh('nvim-treesitter/nvim-treesitter'),
   -- navigation
-  use('christoomey/vim-tmux-navigator')
-  use('nvim-tree/nvim-tree.lua')
-  use('nvim-telescope/telescope.nvim')
-  use('nvim-telescope/telescope-ui-select.nvim')
-  use('natecraddock/telescope-zf-native.nvim')
-  use('nvim-telescope/telescope-dap.nvim')
+  gh('christoomey/vim-tmux-navigator'),
+  gh('nvim-tree/nvim-tree.lua'),
+  gh('nvim-telescope/telescope.nvim'),
+  gh('nvim-telescope/telescope-ui-select.nvim'),
+  gh('natecraddock/telescope-zf-native.nvim'),
+  gh('nvim-telescope/telescope-dap.nvim'),
   -- mason
-  use('williamboman/mason.nvim')
-  use('williamboman/mason-lspconfig.nvim')
-  use('WhoIsSethDaniel/mason-tool-installer.nvim')
+  gh('williamboman/mason.nvim'),
+  gh('williamboman/mason-lspconfig.nvim'),
+  gh('WhoIsSethDaniel/mason-tool-installer.nvim'),
   -- colorscheme
-  use('rebelot/kanagawa.nvim')
-  use('navarasu/onedark.nvim')
-  use({ 'briones-gabriel/darcula-solid.nvim', requires = 'rktjmp/lush.nvim' })
-  use('MeanderingProgrammer/render-markdown.nvim')
-  -- use({ 'towolf/vim-helm', ft = 'helm' })
-  use({ 'qvalentin/helm-ls.nvim' })
+  gh('rebelot/kanagawa.nvim'),
+  gh('navarasu/onedark.nvim'),
+  gh('rktjmp/lush.nvim'),
+  gh('briones-gabriel/darcula-solid.nvim'),
+  gh('MeanderingProgrammer/render-markdown.nvim'),
+  gh('qvalentin/helm-ls.nvim'),
   -- status
-  use('nvim-lualine/lualine.nvim')
-  use('arkav/lualine-lsp-progress')
+  gh('nvim-lualine/lualine.nvim'),
+  gh('arkav/lualine-lsp-progress'),
   -- editing
-  use('windwp/nvim-autopairs')
-  use('folke/todo-comments.nvim')
-  use({ 'faergeek/Comment.nvim', branch = 'nvim-0.12-compatibility' })
-  use('JoosepAlviste/nvim-ts-context-commentstring')
-  use('jinh0/eyeliner.nvim')
-  use('kylechui/nvim-surround')
-  use('catgoose/nvim-colorizer.lua')
-  use('uarun/vim-protobuf')
-  use('lewis6991/gitsigns.nvim')
-  use('kdheepak/lazygit.nvim')
-  use({ 'f-person/git-blame.nvim', branch = 'main' })
-  use('maxmellon/vim-jsx-pretty')
-  -- use('echasnovski/mini.diff')
-  use('felpafel/inlay-hint.nvim')
-  use('wakatime/vim-wakatime')
+  gh('windwp/nvim-autopairs'),
+  gh('folke/todo-comments.nvim'),
+  { src = gh('faergeek/Comment.nvim'), version = 'nvim-0.12-compatibility' },
+  gh('JoosepAlviste/nvim-ts-context-commentstring'),
+  gh('jinh0/eyeliner.nvim'),
+  gh('kylechui/nvim-surround'),
+  gh('catgoose/nvim-colorizer.lua'),
+  gh('uarun/vim-protobuf'),
+  gh('lewis6991/gitsigns.nvim'),
+  gh('kdheepak/lazygit.nvim'),
+  { src = gh('f-person/git-blame.nvim'), version = 'main' },
+  gh('maxmellon/vim-jsx-pretty'),
+  gh('felpafel/inlay-hint.nvim'),
+  gh('wakatime/vim-wakatime'),
   -- completion
-  use('hrsh7th/nvim-cmp')
-  use('hrsh7th/cmp-nvim-lsp')
-  use('hrsh7th/cmp-nvim-lua')
-  use('hrsh7th/cmp-nvim-lsp-signature-help')
-  use('hrsh7th/cmp-path')
-  use('hrsh7th/cmp-buffer')
-  use('hrsh7th/cmp-vsnip')
-  use('hrsh7th/vim-vsnip')
-  use('rcarriga/cmp-dap')
-  use('rafamadriz/friendly-snippets')
-  use('lukas-reineke/lsp-format.nvim')
-  use('saecki/crates.nvim')
+  gh('hrsh7th/nvim-cmp'),
+  gh('hrsh7th/cmp-nvim-lsp'),
+  gh('hrsh7th/cmp-nvim-lua'),
+  gh('hrsh7th/cmp-nvim-lsp-signature-help'),
+  gh('hrsh7th/cmp-path'),
+  gh('hrsh7th/cmp-buffer'),
+  gh('hrsh7th/cmp-vsnip'),
+  gh('hrsh7th/vim-vsnip'),
+  gh('rcarriga/cmp-dap'),
+  gh('rafamadriz/friendly-snippets'),
+  gh('lukas-reineke/lsp-format.nvim'),
+  gh('saecki/crates.nvim'),
   -- lsp
-  use('neovim/nvim-lspconfig')
-  use('onsails/lspkind.nvim')
-  use('mrcjkb/rustaceanvim')
-  use('nvimtools/none-ls.nvim')
-  use('nvimtools/none-ls-extras.nvim')
-  use('mfussenegger/nvim-jdtls')
-  use('ThePrimeagen/refactoring.nvim')
+  gh('neovim/nvim-lspconfig'),
+  gh('onsails/lspkind.nvim'),
+  gh('mrcjkb/rustaceanvim'),
+  gh('nvimtools/none-ls.nvim'),
+  gh('nvimtools/none-ls-extras.nvim'),
+  gh('mfussenegger/nvim-jdtls'),
+  gh('ThePrimeagen/refactoring.nvim'),
   -- dap
-  use('nvim-neotest/nvim-nio')
-  use('mfussenegger/nvim-dap')
-  use('rcarriga/nvim-dap-ui')
-  use('theHamsta/nvim-dap-virtual-text')
-  use('mfussenegger/nvim-dap-python')
-  use('leoluz/nvim-dap-go')
-  -- use('mxsdev/nvim-dap-vscode-js')
+  gh('nvim-neotest/nvim-nio'),
+  gh('mfussenegger/nvim-dap'),
+  gh('rcarriga/nvim-dap-ui'),
+  gh('theHamsta/nvim-dap-virtual-text'),
+  gh('mfussenegger/nvim-dap-python'),
+  gh('leoluz/nvim-dap-go'),
   -- dadbod
-  use('tpope/vim-dotenv')
-  use('tpope/vim-dadbod')
-  use('kristijanhusak/vim-dadbod-ui')
-  use('kristijanhusak/vim-dadbod-completion')
+  gh('tpope/vim-dotenv'),
+  gh('tpope/vim-dadbod'),
+  gh('kristijanhusak/vim-dadbod-ui'),
+  gh('kristijanhusak/vim-dadbod-completion'),
   -- github
-  use('pwntester/octo.nvim')
-  use('sindrets/diffview.nvim')
-end)
+  gh('pwntester/octo.nvim'),
+  gh('sindrets/diffview.nvim'),
+})

@@ -7,16 +7,20 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 
 ## Layout and load order
 
-- `init.lua` bootstraps **packer.nvim** (not lazy.nvim), then requires `vars` → `opts` →
-  `plug`. On the first run it starts `PackerSync` and returns there; `keys` and every
-  plugin `require`/`setup()` must stay **below** that `if packer_bootstrap` early return,
-  or a fresh install fails before plugins exist.
+- Plugins are managed by Neovim's built-in **`vim.pack`** (not packer, not lazy.nvim).
+  `init.lua` requires `vars` → `opts` → `plug` → `keys`, then does plugin setup.
+  `vim.pack.add()` in `lua/plug.lua` installs missing plugins synchronously, so everything
+  after it can `require` plugins.
 - **Almost all plugin `setup()` calls, LSP, cmp, DAP, treesitter and none-ls config live
   inline in `init.lua`**, not in separate modules.
-- `lua/plug.lua` — plugin list (`use(...)`). Adding a plugin = `use()` here + setup in
-  `init.lua`; the user installs with `:PackerSync`. Packer's post-install key is `run`,
-  not lazy.nvim's `build` (which packer silently ignores). Prefer a Lua function over an
-  `':Command'` string: on a fresh install the plugin's commands aren't defined yet.
+- `lua/plug.lua` — the `vim.pack.add({...})` list, in load order (no dependency field:
+  list a dependency before its dependents). Branch pins use `version = '<branch>'`.
+  Build steps are `PackChanged` autocmd hooks registered **before** `vim.pack.add()`;
+  call the plugin's Lua API there (`packadd` it first if `ev.data.active` is false).
+  During `init.lua`, `vim.pack.add()` doesn't source `plugin/` files yet, so plugin
+  commands don't exist until startup finishes.
+- `nvim-pack-lock.json` is the lockfile written by `vim.pack`. Commit it with any plugin
+  change; never edit it by hand.
 - `lua/keys.lua` — all keymaps. It `require`s telescope/dap at load time. LSP buffer-local
   maps are set in its `LspAttach` autocmd.
 - `ftplugin/java.lua` — the entire Java/jdtls + Java DAP setup (nvim-jdtls), not `init.lua`.
@@ -57,6 +61,6 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 - To load the full config, use an isolated sandbox. Symlink the repo to
   `$XDG_CONFIG_HOME/nvim`, and point `XDG_CONFIG_HOME`/`XDG_DATA_HOME`/`XDG_STATE_HOME`/
   `XDG_CACHE_HOME` at directories under `/tmp/opencode/`. Install with
-  `nvim --headless -c 'autocmd User PackerComplete quitall'`, then check with
+  `nvim --headless +qa`, then check with
   `nvim --headless +'sleep 3' +messages +qa`. The
   devcontainer has no `tree-sitter` CLI, so parser-compile errors there are expected.
