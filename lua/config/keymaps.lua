@@ -34,6 +34,11 @@ vim.keymap.set('n', '<leader>y', function()
   end
 end, { silent = true })
 
+-- refactoring.nvim: pick extract/inline variable or function; in normal mode, follow with a motion
+vim.keymap.set({ 'n', 'x' }, '<leader>rs', function()
+  require('refactoring').select_refactor()
+end, { desc = 'Select refactor' })
+
 -- nvim-tree
 map('n', '<C-n>', ':NvimTreeToggle<cr>', { noremap = true, silent = true })
 

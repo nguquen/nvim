@@ -124,6 +124,7 @@ gd / gD   : definition / type definition
 gr / gi   : references / implementations
 K         : hover docs (crate features in Cargo.toml)
 space rn  : rename
+space rs  : refactor: extract/inline variable or function (visual selection, or a motion)
 alt-enter : code action
 [d / ]d   : previous / next diagnostic
 ```

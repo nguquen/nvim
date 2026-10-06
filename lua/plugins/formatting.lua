@@ -5,7 +5,6 @@ local null_ls = require('null-ls')
 null_ls.setup({
   on_attach = require('config.lsp').format_on_attach,
   sources = {
-    null_ls.builtins.code_actions.refactoring,
     -- require('typescript.extensions.null-ls.code-actions'),
     -- require('none-ls.code_actions.eslint_d'),
     require('none-ls.formatting.trim_newlines'),

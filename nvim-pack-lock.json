@@ -5,6 +5,10 @@
       "src": "https://github.com/faergeek/Comment.nvim",
       "version": "'nvim-0.12-compatibility'"
     },
+    "async.nvim": {
+      "rev": "15f28ec323a75f34f317336831c00c2d1b0a7192",
+      "src": "https://github.com/lewis6991/async.nvim"
+    },
     "cmp-buffer": {
       "rev": "b74fab3656eea9de20a9b8116afa3cfc4ec09657",
       "src": "https://github.com/hrsh7th/cmp-buffer"

@@ -78,6 +78,7 @@ vim.pack.add({
   gh('nvimtools/none-ls.nvim'),
   gh('nvimtools/none-ls-extras.nvim'),
   gh('mfussenegger/nvim-jdtls'),
+  gh('lewis6991/async.nvim'), -- needed by refactoring.nvim on Neovim 0.12 (built in from 0.13)
   gh('ThePrimeagen/refactoring.nvim'),
   -- dap
   gh('nvim-neotest/nvim-nio'),
