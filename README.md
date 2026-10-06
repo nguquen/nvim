@@ -1,200 +1,157 @@
+# nvim
+
+My Neovim config, written in Lua and managed with [packer.nvim](https://github.com/wbthomason/packer.nvim).
+
 # 1. Installation
 
-## Install iTerm2
+## Requirements
 
-```
-https://www.iterm2.com/downloads.html
-```
+- Neovim **0.12+**
+- `git`, [ripgrep](https://github.com/BurntSushi/ripgrep) (Telescope grep)
+- [`tree-sitter` CLI](https://github.com/tree-sitter/tree-sitter) and a C compiler. nvim-treesitter compiles its parsers locally.
+- A [Nerd Font](https://www.nerdfonts.com/) set in your terminal, for the icons
+- Language toolchains for the languages you use (`node`/`npm`, `go`, `python3`, `java`, `cargo`). Mason needs them to install servers and tools.
+- Optional: [`gh`](https://cli.github.com/) (Octo, `:PRDiff`), [`lazygit`](https://github.com/jesseduffield/lazygit), [`helmfmt`](https://github.com/digitalis-io/helmfmt) (Helm formatting)
 
-## Install neovim:
-```
-$ brew install neovim
-```
+## Install
 
-## Create symlink:
-
-```
-$ ln -s /usr/local/bin/nvim /usr/local/bin/vi
+```sh
+git clone https://github.com/nguquen/nvim.git ~/.config/nvim
 ```
 
-## Install python:
+Start `nvim`. The first start installs packer and all plugins, then asks you to restart.
+On the next start:
 
-```
-$ brew install python
-$ brew install python3
-```
+- Treesitter parsers are compiled.
+- Mason installs the language servers listed in `init.lua` and the extra tools (formatters, linters, debug adapters).
 
-## Install python providers:
+To install the plugins without a UI (e.g. in a script), run:
 
-```
-$ pip install pynvim
-$ pip3 install pynvim
+```sh
+nvim --headless -c 'autocmd User PackerComplete quitall'
 ```
 
-## Open neovim & check health:
+Check the setup with `:checkhealth`.
 
-```
-$ vi
-```
+`jsonls`, `biome` and `helm_ls` are turned on in `init.lua`, but Mason doesn't install them.
+Install them yourself if you need them:
 
-Inside vim, type this command:
-
-```
-:checkhealth
+```vim
+:MasonInstall json-lsp biome helm-ls
 ```
 
-## Checkout pre-config:
+## Updating plugins
 
-```
-$ mkdir ~/.config
-$ cd ~/.config
-$ git clone https://github.com/nguquen/nvim.git
+```vim
+:PackerSync
 ```
 
-The detail config inside this file: `~/.config/nvim/init.vim`
+# 2. Layout
 
-## Install vim plugins:
+| Path | Contents |
+| --- | --- |
+| `init.lua` | Bootstrap, plus almost all plugin setup (LSP, completion, DAP, treesitter, none-ls, …) |
+| `lua/plug.lua` | Plugin list |
+| `lua/keys.lua` | Keymaps |
+| `lua/opts.lua`, `lua/vars.lua` | Options and globals |
+| `ftplugin/java.lua` | Java (jdtls) LSP + debugger |
+| `colors/darcula-solid-ex.lua` | Colorscheme: `darcula-solid` with personal overrides |
 
-```
-$ vi
-```
+# 3. Key mapping
 
-Inside vim:
+Leader is `space`. Arrow keys are turned off. List every mapping with `space km`.
 
-```
-:PlugInstall
-```
-
-## Install powerline fonts:
-
-`vim-airline` use powerline fonts for display some special characters like arrow, install it here:
-[https://github.com/powerline/fonts](https://github.com/powerline/fonts). Choose a font that you like and install it for iTerm2.
-
-## Install RipGrep:
-```
-brew install ripgrep
-```
-
-# 2. Key mapping
-Some basic key mapping of the plugins. For more detail, check the document of each plugin.
-
-## NERD Tree
-
-Use `ctrl-n` to toggle file explorer
-
-Inside nerdtree window, type `?` for help
-
-## Ctrl-P
-
-Use `ctrl-p` to open fuzzy finder
-
-## NERD Commenter
-
-Comment: `space-cc`
-
-Uncomment: `space-cu`
-
-## Working with ctags
-
-> Ctags generates an index (or tag) file of language objects found in source files that allows these items to be quickly and easily located by a text editor or other utility.
-
-It's not work well with javascript, that's why we should use flow :D. But it's still helpful if we're working with Ruby or other languages.
-
-Install ctags
+## General
 
 ```
-$ brew install ctags
+space w / space q / space x : write / quit / write+quit
+space h/j/k/l               : move to left/down/up/right window
+ctrl-h/j/k/l                : move between windows and tmux panes (vim-tmux-navigator)
+space ch                    : clear search highlight
+space p                     : paste last yank ("0)
+ctrl-n                      : toggle file tree (nvim-tree)
+gcc / gc{motion}            : toggle line comment
+gbc / gb{motion}            : toggle block comment
 ```
 
-Add ctags rule for Rails
+## Telescope
 
 ```
-$ vi ~/.ctags
-
---regex-ruby=/(^|;)[ \t]*(class|module)[ \t]+([A-Z][[:alnum:]_]+(::[A-Z][[:alnum:]_]+)+)/\3/c,class,constant/
---regex-ruby=/(^|[:;])[ \t]*([A-Z][[:alnum:]_]+) *=/\2/c,class,constant/
---regex-ruby=/(^|;)[ \t]*(has_many|belongs_to|has_one|has_and_belongs_to_many)\(? *:([[:alnum:]_]+)/\3/f,function,association/
---regex-ruby=/(^|;)[ \t]*(named_)?scope\(? *:([[:alnum:]_]+)/\3/f,function,named_scope/
---regex-ruby=/(^|;)[ \t]*expose\(? *:([[:alnum:]_]+)/\2/f,function,exposure/
---regex-ruby=/(^|;)[ \t]*event\(? *:([[:alnum:]_]+)/\2/f,function,aasm_event/
---regex-ruby=/(^|;)[ \t]*event\(? *:([[:alnum:]_]+)/\2!/f,function,aasm_event/
---regex-ruby=/(^|;)[ \t]*event\(? *:([[:alnum:]_]+)/\2?/f,function,aasm_event/
+ctrl-p    : find files
+space g   : live grep
+space s   : grep word under cursor
+space b   : fuzzy find in current buffer
+space o   : document symbols
+space d   : diagnostics
+space [   : location list
+space ]   : quickfix list
+space \   : git commits for current buffer
+space rl  : resume previous picker
 ```
 
-By default, vim don't generate tags by default. You should add a file name `.withtags` at your project root to enable it.
+Inside a picker, `ctrl-j` and `ctrl-k` move the selection and `esc` closes it.
 
-After that, you can jump to definition with `ctrl-]`. It provides auto-completion as well. Just use `ctrl-space` to trigger deoplete, it'll show some auto-completion items with `[T]` at the end.
-
-## Switch windows
-
-If you're working with multi windows, you can quickly jump between them with `space-1` -> `space-9` for window 1->9. Or `space-h`, `space-j`, `space-k`, `space-l` to jump right, down, up, left.
-
-## Working with tmux
-
-If you're using tmux like me. There's one more step to quicky jump between tmux panes & vim windows :D. If you don't use tmux, just skip it.
-
-Edit tmux conf
+## LSP
 
 ```
-$ vi ~/.tmux.conf
+gd / gD   : definition / type definition
+gr / gi   : references / implementations
+K         : hover docs (crate features in Cargo.toml)
+space rn  : rename
+alt-enter : code action
+[d / ]d   : previous / next diagnostic
+```
 
+Files are formatted on save by the language server or none-ls.
+
+## Completion
+
+```
+tab        : confirm (select the first item if none is selected) / expand or jump snippet
+enter      : confirm the selected item
+ctrl-j/k   : next / previous item
+ctrl-space : trigger completion
+ctrl-e     : close menu
+```
+
+## Debugging (nvim-dap)
+
+```
+F5 / shift-F5 : continue / terminate
+F9            : toggle breakpoint
+F10 / F11 / F12 : step over / into / out
+F2            : close DAP UI
+```
+
+## Git / GitHub
+
+```
+space op : list PRs (Octo)
+space od : diff current PR against its base (:PRDiff)
+space or : start review       space oR : resume review
+space os : submit review
+space dh : file history (Diffview)
+space dc : close Diffview
+```
+
+## Database (vim-dadbod-ui)
+
+```
+space dw : save query (sql buffers)
+gd       : jump to foreign key (result buffers)
+```
+
+# 4. tmux
+
+[vim-tmux-navigator](https://github.com/christoomey/vim-tmux-navigator) lets `ctrl-h/j/k/l`
+move between Neovim windows and tmux panes. Add this to `~/.tmux.conf`:
+
+```
 is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
     | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
 bind -n C-h if-shell "$is_vim" "send-keys C-h"  "select-pane -L"
 bind -n C-j if-shell "$is_vim" "send-keys C-j"  "select-pane -D"
 bind -n C-k if-shell "$is_vim" "send-keys C-k"  "select-pane -U"
 bind -n C-l if-shell "$is_vim" "send-keys C-l"  "select-pane -R"
-bind -n C-\ if-shell "$is_vim" "send-keys C-\\" "select-pane -l"
+bind -n 'C-\' if-shell "$is_vim" 'send-keys C-\\' 'select-pane -l'
 ```
-
-Now we can use these key mapping to jump around tmux panes & vim windows seamlessly:
-
-```
-<ctrl-h> => Left
-<ctrl-j> => Down
-<ctrl-k> => Up
-<ctrl-l> => Right
-<ctrl-\> => Previous split
-```
-
-## Multiple cursors
-
-```
-multi_cursor_next_key: 'ctrl-s'
-multi_cursor_prev_key: 'ctrl-p'
-multi_cursor_skip_key: 'ctrl-x'
-multi_cursor_quit_key: 'esc'
-```
-
-## EasyMotion
-
-```
-easymotion-s: 'space-f'
-easymotion-overwin-f2: 'space-s'
-easymotion-sn: 'space-/'
-easymotion-next: 'space-n'
-easymotion-prev: 'space-N'
-```
-
-## Search word under cursor in hole project
-
-Use `K` (shift + k). It'll show the result in Quickfix window at bottom.
-
-## Improve iTerm2 performance:
-Settings -> Terminal -> Scrollback Buffer
-- `Scrollback lines: 4096`
-- Disable `Save lines to scrollback when an app status bar is present`
-- Disable `Save lines to scrollback in alternate screen mode`
-
-## Coc Lists mapping
-
-```
-ctrl + p: fuzzy search files
-space + b: list buffers
-space + o: list outline
-space + g: search content in all files
-space + ]: list quicklist
-space + [: list locationlist
-space + rl: resume previous list
-```
-
