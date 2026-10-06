@@ -5,7 +5,7 @@ local M = {}
 
 require('lsp-format').setup({})
 
--- format on save through lsp-format; also used by none-ls and rustaceanvim
+-- format on save through lsp-format; also used by none-ls and ftplugin/rust.lua
 M.format_on_attach = function(client)
   require('lsp-format').on_attach(client)
 end
@@ -20,7 +20,7 @@ for _, name in ipairs({ 'gopls', 'ruff', 'yamlls', 'efm', 'buf_ls', 'prismals', 
 end
 
 -- servers to run; plugins/mason.lua installs each one that's missing.
--- Rust (rustaceanvim) and Java (ftplugin/java.lua) start their own servers.
+-- Rust and Java start their own servers: see ftplugin/rust.lua and ftplugin/java.lua.
 M.servers = {
   'biome',
   'buf_ls',
