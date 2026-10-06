@@ -1,3 +1,1 @@
-local map = vim.api.nvim_set_keymap
-
-map('n', '<leader>dw', '<Plug>(DBUI_SaveQuery)', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>dw', '<Plug>(DBUI_SaveQuery)', { buffer = true, silent = true })
