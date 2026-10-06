@@ -62,6 +62,18 @@ local function show_documentation()
   end
 end
 
+-- jump to the previous/next diagnostic and show it in a float
+local jump_diagnostic = function(count)
+  return function()
+    vim.diagnostic.jump({
+      count = count,
+      on_jump = function(_, bufnr)
+        vim.diagnostic.open_float({ bufnr = bufnr, scope = 'cursor', focus = false })
+      end,
+    })
+  end
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
   callback = function(ev)
@@ -69,8 +81,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', show_documentation, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<a-enter>', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+    vim.keymap.set('n', '[d', jump_diagnostic(-1), opts)
+    vim.keymap.set('n', ']d', jump_diagnostic(1), opts)
   end,
 })
 

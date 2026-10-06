@@ -1,14 +1,21 @@
-local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason')
+local mason_path = vim.fn.stdpath('data') .. '/mason'
 local jdtls_path = mason_path .. '/packages/jdtls'
 local lombok_path = jdtls_path .. '/lombok.jar'
 local java_debug_path = mason_path .. '/packages/java-debug-adapter'
 local java_test_path = mason_path .. '/packages/java-test'
 
-local bundles = {
-  vim.fn.glob(java_debug_path .. '/extension/server/com.microsoft.java.debug.plugin-*.jar', 1),
+-- jdtls extensions for debugging and running tests; skipped until Mason installs them.
+-- The java-test runner and jacoco agent jars aren't extensions (see nvim-jdtls README).
+local not_bundles = {
+  ['com.microsoft.java.test.runner-jar-with-dependencies.jar'] = true,
+  ['jacocoagent.jar'] = true,
 }
-
-vim.list_extend(bundles, vim.split(vim.fn.glob(java_test_path .. '/extension/server/*.jar', 1), '\n'))
+local bundles = vim.fn.glob(java_debug_path .. '/extension/server/com.microsoft.java.debug.plugin-*.jar', true, true)
+for _, jar in ipairs(vim.fn.glob(java_test_path .. '/extension/server/*.jar', true, true)) do
+  if not not_bundles[vim.fs.basename(jar)] then
+    table.insert(bundles, jar)
+  end
+end
 
 local config = {
   cmd = { 'jdtls', '--jvm-arg=-javaagent:' .. lombok_path },
@@ -28,7 +35,6 @@ local config = {
         port = 5005,
       },
     }
-    require('jdtls.setup').add_commands()
   end,
   settings = {
     java = {

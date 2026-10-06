@@ -1,7 +1,7 @@
 -- [[ dap.lua ]] debuggers (Java's is in ftplugin/java.lua, Rust's comes with rustaceanvim)
 
 local dap, dapui = require('dap'), require('dapui')
-local mason_path = vim.fn.glob(vim.fn.stdpath('data') .. '/mason/')
+local mason_path = vim.fn.stdpath('data') .. '/mason'
 
 -- javascript / typescript
 dap.adapters['pwa-node'] = {

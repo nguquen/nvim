@@ -52,8 +52,8 @@ opt.autoread = true
 vim.api.nvim_create_autocmd({ 'BufEnter', 'CursorHold', 'CursorHoldI', 'FocusGained', 'TermLeave', 'WinEnter' }, {
   group = vim.api.nvim_create_augroup('CheckForExternalChanges', { clear = true }),
   callback = function()
-    -- Check for file changes, but only if not in command mode
-    if vim.fn.mode() ~= 'c' then
+    -- Check for file changes; :checktime isn't allowed in command mode or the q: window
+    if vim.fn.mode() ~= 'c' and vim.fn.getcmdwintype() == '' then
       vim.cmd('checktime')
     end
   end,

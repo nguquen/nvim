@@ -35,8 +35,12 @@ null_ls.setup({
     -- null_ls.builtins.formatting.black,
     -- null_ls.builtins.formatting.buf,
     -- require('none-ls.diagnostics.eslint_d'),
+    -- only for projects with their own checkstyle.xml, and only when checkstyle is installed
     null_ls.builtins.diagnostics.checkstyle.with({
       extra_args = { '-c', '$ROOT/checkstyle.xml' }, -- or "/google_checks.xml" or "/sun_checks.xml" or path to self written rules
+      condition = function(utils)
+        return vim.fn.executable('checkstyle') == 1 and utils.root_has_file({ 'checkstyle.xml' })
+      end,
     }),
     -- null_ls.builtins.formatting.google_java_format,
     -- require('none-ls.diagnostics.flake8'),
