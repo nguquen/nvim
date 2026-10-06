@@ -1,7 +1,6 @@
 -- [[ completion.lua ]] nvim-cmp
 
 local has_words_before = function()
-  unpack = unpack or table.unpack
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
 end
@@ -37,7 +36,7 @@ cmp.setup({
     ['<C-j>'] = cmp.mapping.select_next_item(),
     -- Add tab support
     ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.core.view:visible() then
+      if cmp.visible() then
         local entry = cmp.get_selected_entry()
         if not entry then
           cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
@@ -57,7 +56,7 @@ cmp.setup({
     ['<C-e>'] = cmp.mapping.close(),
     ['<CR>'] = cmp.mapping({
       i = function(fallback)
-        if cmp.core.view:visible() and cmp.core.view:get_active_entry() then
+        if cmp.visible() and cmp.get_active_entry() then
           cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = false })
         else
           fallback()
@@ -126,11 +125,11 @@ cmp.setup({
     },
   },
   enabled = function()
-    return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt' or require('cmp_dap').is_dap_buffer()
+    return vim.bo.buftype ~= 'prompt' or require('cmp_dap').is_dap_buffer()
   end,
 })
 
-require('cmp').setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
+cmp.setup.filetype({ 'dap-repl', 'dapui_watches', 'dapui_hover' }, {
   sources = {
     { name = 'dap' },
   },
