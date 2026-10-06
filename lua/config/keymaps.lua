@@ -25,14 +25,7 @@ map('n', '<leader>l', '<c-w><c-l>', { noremap = true, silent = true })
 -- misc
 map('n', '<leader>ch', ':noh<cr>', { noremap = true, silent = true })
 map('n', '<leader>p', '"0p', { noremap = true, silent = true })
--- read the system clipboard into register 0 (for <leader>p); needs a terminal that answers
--- OSC 52 reads, otherwise times out after 10 s (<C-c> cancels)
-vim.keymap.set('n', '<leader>y', function()
-  local lines = require('vim.ui.clipboard.osc52').paste('+')()
-  if type(lines) == 'table' then
-    vim.fn.setreg('0', lines)
-  end
-end, { silent = true })
+map('n', '<leader>y', ':let @0=@*<cr>', { noremap = true, silent = true })
 
 -- nvim-tree
 map('n', '<C-n>', ':NvimTreeToggle<cr>', { noremap = true, silent = true })

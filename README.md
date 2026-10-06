@@ -82,10 +82,6 @@ rm -rf ~/.local/share/nvim/site/pack/packer ~/.config/nvim/plugin/packer_compile
 
 Leader is `space`. Arrow keys are turned off. List every mapping with `space km`.
 
-Yanks go to the system clipboard through the terminal (OSC 52), which also works over
-SSH. `p` pastes what Neovim last yanked; to paste from other apps, use the terminal's
-paste shortcut (Cmd-V / Ctrl-Shift-V) or `space y`.
-
 ## General
 
 ```
@@ -94,7 +90,6 @@ space h/j/k/l               : move to left/down/up/right window
 ctrl-h/j/k/l                : move between windows and tmux panes (vim-tmux-navigator)
 space ch                    : clear search highlight
 space p                     : paste last yank ("0)
-space y                     : put the system clipboard in "0 (terminal must allow OSC 52 reads)
 ctrl-n                      : toggle file tree (nvim-tree)
 gcc / gc{motion}            : toggle line comment
 gbc / gb{motion}            : toggle block comment

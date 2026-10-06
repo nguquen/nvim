@@ -15,27 +15,18 @@ local opt = vim.opt
 
 -- [[ clipboard ]]
 opt.clipboard = 'unnamedplus'
--- Copy to the system clipboard with OSC 52, but don't read it back: many terminals (and tmux)
--- don't answer OSC 52 reads, so every `p` would wait up to 10 s. `p` pastes what Neovim last
--- copied; paste from other apps with the terminal's paste shortcut, or `<leader>y`.
-local osc52 = require('vim.ui.clipboard.osc52')
-local last_copy = {}
-local function copy(reg)
-  local send = osc52.copy(reg)
-  return function(lines, regtype)
-    last_copy[reg] = { lines, regtype }
-    send(lines)
-  end
-end
-local function paste(reg)
-  return function()
-    return last_copy[reg] or { {}, 'v' }
-  end
-end
+-- opt.pastetoggle = '<F2>'
+---@diagnostic disable-next-line: inject-field
 vim.g.clipboard = {
-  name = 'OSC 52 (copy only)',
-  copy = { ['+'] = copy('+'), ['*'] = copy('*') },
-  paste = { ['+'] = paste('+'), ['*'] = paste('*') },
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
 }
 
 -- [[ editor ]]
