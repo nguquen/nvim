@@ -59,6 +59,8 @@ cmp.setup({
         if cmp.visible() and cmp.get_active_entry() then
           cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = false })
         else
+          -- close the menu first: left open, its next confirm would replace from the old line
+          cmp.close()
           fallback()
         end
       end,
