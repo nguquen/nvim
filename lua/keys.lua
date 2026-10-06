@@ -88,14 +88,6 @@ vim.keymap.set('n', '<f2>', dapui.close, {})
 -- lazygit
 -- map('n', '<leader>\\', ':LazyGit<cr>', {})
 
--- codecompanion
-vim.keymap.set({ 'n', 'v' }, '<C-a>', '<cmd>CodeCompanionActions<cr>', { noremap = true, silent = true })
-vim.keymap.set({ 'n', 'v' }, '<leader>a', '<cmd>CodeCompanionChat Toggle<cr>', { noremap = true, silent = true })
-vim.keymap.set('v', 'ga', '<cmd>CodeCompanionChat Add<cr>', { noremap = true, silent = true })
-
--- Expand 'cc' into 'CodeCompanion' in the command line
-vim.cmd([[cab cc CodeCompanion]])
-
 -- github
 vim.keymap.set('n', '<leader>op', '<cmd>Octo pr list<cr>', { desc = 'List PRs' })
 vim.keymap.set('n', '<leader>od', '<cmd>PRDiff<cr>', { desc = 'Diffview PR' })
