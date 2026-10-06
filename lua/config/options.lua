@@ -2,8 +2,6 @@
 
 -- vim.g: maps to vim.api.nvim_set_var; sets global variables
 local g = vim.g
-g.t_co = 256
-g.background = 'dark'
 
 -- to appropriately highlight codefences returned from denols
 g.markdown_fenced_languages = {
@@ -73,7 +71,6 @@ opt.encoding = 'utf8'
 opt.fileencoding = 'utf8'
 
 -- [[ theme ]]
-opt.syntax = 'ON'
 opt.termguicolors = true
 
 -- [[ lsp diagnostic ]]
