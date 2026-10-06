@@ -80,10 +80,11 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 - Treesitter uses the main-branch API (`require('nvim-treesitter').install(...)`) plus a
   `FileType` autocmd that calls `vim.treesitter.start()`. A new language must be added
   to the `ts_files` list in `lua/plugins/treesitter.lua` or it gets no treesitter highlighting.
-- The clipboard (`lua/config/options.lua`) is OSC 52 for both copy and paste, on purpose:
-  with `unnamedplus`, `p` pastes from the system clipboard (other apps too). Don't replace
-  the paste side. On a terminal that doesn't answer OSC 52 reads, `p` waits up to 10 s;
-  the fix is allowing clipboard reads in the terminal/tmux.
+- The clipboard (`lua/config/options.lua`) copies with OSC 52 but never reads it back: `p`
+  pastes from a cache of the last copy. Don't switch `paste` to
+  `vim.ui.clipboard.osc52.paste`: on terminals that don't answer OSC 52 reads every `p`
+  hangs for 10 s. The owner accepted the tradeoff: `p` doesn't paste text copied in other
+  apps (use the terminal's paste shortcut). Only `<leader>y` reads the system clipboard.
 - `Comment.nvim` is pinned to the fork `faergeek/Comment.nvim` on branch
   `nvim-0.12-compatibility`. Don't switch it back to upstream.
 
