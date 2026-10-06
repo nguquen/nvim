@@ -9,11 +9,10 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 
 - `init.lua` only sets the leader and `require`s modules in order: `config.options` →
   `config.pack` → `config.keymaps` → `plugins.*` / `config.lsp`. Order matters:
-  `config.lsp` must load before `plugins.mason` (reads its `servers` list) and
-  `plugins.formatting` (uses its `format_on_attach`). A new
+  `config.lsp` must load before `plugins.mason` (reads its `servers` list). A new
   `lua/plugins/<area>.lua` does nothing until `init.lua` requires it.
 - `lua/plugins/<area>.lua` — plain `setup()` calls grouped by area (ui, navigation, editing,
-  git, mason, dap, completion, treesitter, formatting, db). These are not lazy.nvim
+  git, mason, dap, completion, treesitter, db). These are not lazy.nvim
   plugin specs; there is no lazy loading.
 - Plugins are managed by Neovim's built-in **`vim.pack`** (not packer, not lazy.nvim).
   `vim.pack.add()` in `lua/config/pack.lua` installs missing plugins synchronously, so
@@ -54,7 +53,7 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
     `false`: rustaceanvim uses the one on PATH (rustup).
   - `format_on_save = true` attaches lsp-format.nvim from an `LspAttach` autocmd matched
     by client name, so it works however the client was started. A server not marked
-    never formats on save.
+    never formats on save. none-ls is the `null-ls` entry (`enable`/`install = false`).
   Other tools (formatters, debug adapters) go in `mason-tool-installer.ensure_installed` in
   `lua/plugins/mason.lua`.
 - Per-server settings go in `after/lsp/<server>.lua`, returning a config table. It must be
@@ -73,7 +72,7 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   enable it or `rust_analyzer`. `vim.g.rustaceanvim` is unset; only add it for `tools`/`dap`
   options, and set it in `init.lua`, since rustaceanvim reads it once, possibly from a
   `Cargo.toml` buffer.
-- none-ls (`lua/plugins/formatting.lua`) formats Lua with stylua, SQL with sqlfluff
+- none-ls (end of `lua/config/lsp.lua`) formats Lua with stylua, SQL with sqlfluff
   (`--dialect postgres`), and everything else with prettierd. prettierd is turned off for
   yaml, skipped in any buffer a `biome` client is attached to (projects with a
   `biome.json(c)`, see `after/lsp/biome.lua`), and turned on for `java` (jdtls formatting

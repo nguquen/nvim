@@ -72,7 +72,7 @@ rm -rf ~/.local/share/nvim/site/pack/packer ~/.config/nvim/plugin/packer_compile
 | `lua/config/pack.lua` | Plugin list (`vim.pack.add`) and build hooks |
 | `nvim-pack-lock.json` | Plugin lockfile, written by `vim.pack` |
 | `lua/config/keymaps.lua` | Keymaps |
-| `lua/config/lsp.lua` | Language servers to enable, format-on-save list, shared LSP setup |
+| `lua/config/lsp.lua` | Language servers to enable, format-on-save list, shared LSP setup, none-ls (formatters, linters) |
 | `after/lsp/<server>.lua` | Settings for one language server |
 | `lua/plugins/*.lua` | Plugin setup, one file per area (ui, navigation, editing, git, completion, dap, …) |
 | `ftplugin/<filetype>.lua` | Per-language setup: Java (jdtls + debugger), `Cargo.toml` (crates), Helm, Lua (lazydev) |
