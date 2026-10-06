@@ -3,6 +3,12 @@
 -- vim.g: maps to vim.api.nvim_set_var; sets global variables
 local g = vim.g
 
+-- no remote plugins are used, so skip loading (and health-checking) their providers
+g.loaded_node_provider = 0
+g.loaded_perl_provider = 0
+g.loaded_python3_provider = 0
+g.loaded_ruby_provider = 0
+
 -- to appropriately highlight codefences returned from denols
 g.markdown_fenced_languages = {
   'ts=typescript',

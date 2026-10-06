@@ -33,4 +33,6 @@ require('lualine').setup({
 
 require('render-markdown').setup({
   file_types = { 'markdown' },
+  -- needs a latex parser plus utftex or latex2text; no math rendering
+  latex = { enabled = false },
 })
