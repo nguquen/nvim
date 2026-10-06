@@ -77,7 +77,8 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   (`--dialect postgres`), and everything else with prettierd. prettierd is turned off for
   yaml, skipped in any buffer a `biome` client is attached to (projects with a
   `biome.json(c)`, see `after/lsp/biome.lua`), and turned on for `java` (jdtls formatting
-  is disabled so prettier-java is used).
+  is disabled so prettier-java is used). eslint_d (diagnostics, code actions, and `--fix`
+  on save after prettierd) only runs in projects with an eslint config.
 - Treesitter uses the main-branch API (`require('nvim-treesitter').install(...)`) plus a
   `FileType` autocmd that calls `vim.treesitter.start()`. A new language must be added
   to the `ts_files` list in `lua/plugins/treesitter.lua` or it gets no treesitter highlighting.
