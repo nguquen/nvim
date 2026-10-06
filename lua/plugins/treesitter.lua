@@ -11,6 +11,7 @@ local ts_files = {
   'go',
   'java',
   'markdown',
+  'html', -- also used by render-markdown for HTML inside markdown
   'json',
   'gitignore',
   'gitcommit',

@@ -19,7 +19,8 @@ M.servers = {
   { name = 'buf_ls', enable = true, install = true, format_on_save = true },
   { name = 'denols', enable = true, install = true, format_on_save = false },
   { name = 'efm', enable = true, install = true, format_on_save = true },
-  { name = 'gopls', enable = true, install = true, format_on_save = true },
+  -- from PATH (go install); Mason's go installs fail when a go shim overrides GOBIN
+  { name = 'gopls', enable = true, install = false, format_on_save = true },
   { name = 'gradle_ls', enable = true, install = true, format_on_save = false },
   { name = 'helm_ls', enable = true, install = true, format_on_save = false },
   -- started by nvim-jdtls in ftplugin/java.lua

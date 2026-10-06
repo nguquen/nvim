@@ -9,9 +9,14 @@ My Neovim config, written in Lua. Plugins are managed with Neovim's built-in
 
 - Neovim **0.12+**
 - `git`, [ripgrep](https://github.com/BurntSushi/ripgrep) (Telescope grep)
-- [`tree-sitter` CLI](https://github.com/tree-sitter/tree-sitter) and a C compiler. nvim-treesitter compiles its parsers locally.
+- [`tree-sitter` CLI](https://github.com/tree-sitter/tree-sitter) 0.26.1 or newer, and a C compiler. nvim-treesitter compiles its parsers locally.
 - A [Nerd Font](https://www.nerdfonts.com/) set in your terminal, for the icons
 - Language toolchains for the languages you use (`node`/`npm`, `go`, `python3`, `java`, `cargo`). Mason needs them to install servers and tools.
+- For Go, `gopls` and `dlv` on your `PATH`; Mason doesn't install them:
+  ```sh
+  go install golang.org/x/tools/gopls@latest
+  go install github.com/go-delve/delve/cmd/dlv@latest
+  ```
 - Optional: [`gh`](https://cli.github.com/) (Octo, `:PRDiff`), [`lazygit`](https://github.com/jesseduffield/lazygit), [`helmfmt`](https://github.com/digitalis-io/helmfmt) (Helm formatting)
 
 ## Install

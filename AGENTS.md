@@ -49,8 +49,11 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
     name (and `install` needs a Mason package).
   - `enable = true` runs `vim.lsp.enable()`. `false` is for servers a plugin starts itself:
     jdtls (nvim-jdtls, `ftplugin/java.lua`) and rust-analyzer (rustaceanvim).
-  - `install = true` puts it in `mason-lspconfig.ensure_installed`. rust-analyzer is
-    `false`: rustaceanvim uses the one on PATH (rustup).
+  - `install = true` puts it in `mason-lspconfig.ensure_installed`. `false` means it comes
+    from PATH: rust-analyzer (rustup) and gopls (`go install`). delve is likewise left out of
+    Mason's tool list; nvim-dap-go runs `dlv` from PATH. Mason's go installs fail on the
+    owner's machine ("Tried to link bin ... to non-existent target": a go shim overrides
+    Mason's `GOBIN`), so don't move them back to Mason.
   - `format_on_save = true` attaches lsp-format.nvim from an `LspAttach` autocmd matched
     by client name, so it works however the client was started. A server not marked
     never formats on save. none-ls is the `null-ls` entry (`enable`/`install = false`).
