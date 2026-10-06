@@ -42,27 +42,29 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 ## LSP / formatting gotchas
 
 - Servers use the native `vim.lsp.config()` + `vim.lsp.enable()` API. `mason-lspconfig` has
-  `automatic_enable = false`, so a server only runs if it's in the `servers` table in
-  `lua/config/lsp.lua` with `enable = true`: one
-  `{ name = ..., enable = bool, format_on_save = bool }` entry per server. The enabled
-  names (plus `jdtls`) are `mason-lspconfig.ensure_installed`, so adding a server there
-  also makes Mason install it. Names are lspconfig names; an enabled server must have a
-  Mason package. `enable = false` is for servers a plugin starts itself (rust-analyzer):
-  the entry then only sets up format on save. Other tools (formatters, debug adapters) go in
-  `mason-tool-installer.ensure_installed` in `lua/plugins/mason.lua`. rust-analyzer isn't
-  installed by Mason; rustaceanvim uses the one on PATH (rustup).
+  `automatic_enable = false`. Every server is one entry in the `servers` table in
+  `lua/config/lsp.lua`: `{ name = ..., enable = bool, install = bool, format_on_save = bool }`.
+  - `name` is the client name; for `enable`/`install` entries it must be the lspconfig
+    name (and `install` needs a Mason package).
+  - `enable = true` runs `vim.lsp.enable()`. `false` is for servers a plugin starts itself:
+    jdtls (nvim-jdtls, `ftplugin/java.lua`) and rust-analyzer (rustaceanvim).
+  - `install = true` puts it in `mason-lspconfig.ensure_installed`. rust-analyzer is
+    `false`: rustaceanvim uses the one on PATH (rustup).
+  - `format_on_save = true` attaches lsp-format.nvim from an `LspAttach` autocmd matched
+    by client name, so it works however the client was started. A server not marked
+    never formats on save.
+  Other tools (formatters, debug adapters) go in `mason-tool-installer.ensure_installed` in
+  `lua/plugins/mason.lua`.
 - Per-server settings go in `after/lsp/<server>.lua`, returning a config table. It must be
   `after/lsp/`, not `lsp/`: a plain `lsp/` file is overridden by nvim-lspconfig's own
-  `lsp/<server>.lua`. Don't set `on_attach` there: for `format_on_save = true` servers,
-  `config/lsp.lua` sets it with higher priority and the file's value is ignored.
+  `lsp/<server>.lua`.
 - Completion capabilities are set once for every server with `vim.lsp.config('*', ...)`.
-- Format-on-save (lsp-format.nvim) only happens for `format_on_save = true` entries. Java
-  isn't in the table and attaches it itself in `ftplugin/java.lua`.
+  nvim-jdtls doesn't read `vim.lsp.config`, so jdtls doesn't get them (nor any `after/lsp/`
+  file); configure jdtls in `ftplugin/java.lua`.
 - Rust's server is started by rustaceanvim, not `vim.lsp.enable()`. Configure it in
   `after/lsp/rust-analyzer.lua` (hyphen: rustaceanvim's client name, which it looks up in
-  `vim.lsp.config` when starting the client), not lspconfig's `rust_analyzer`. Its
-  `servers` entry is `{ name = 'rust-analyzer', enable = false, format_on_save = true }`;
-  never enable it or `rust_analyzer`. `vim.g.rustaceanvim` is unset; only add it for `tools`/`dap`
+  `vim.lsp.config` when starting the client), not lspconfig's `rust_analyzer`; never
+  enable it or `rust_analyzer`. `vim.g.rustaceanvim` is unset; only add it for `tools`/`dap`
   options, and set it in `init.lua`, since rustaceanvim reads it once, possibly from a
   `Cargo.toml` buffer.
 - none-ls (`lua/plugins/formatting.lua`) formats Lua with stylua, SQL with sqlfluff

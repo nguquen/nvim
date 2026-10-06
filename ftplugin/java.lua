@@ -16,7 +16,8 @@ local config = {
   init_options = {
     bundles = bundles,
   },
-  on_attach = function(client, _)
+  -- format on save: see jdtls in config/lsp.lua's servers table
+  on_attach = function()
     require('jdtls').setup_dap({ hotcodereplace = 'auto' })
     require('dap').configurations.java = {
       {
@@ -27,7 +28,6 @@ local config = {
         port = 5005,
       },
     }
-    require('lsp-format').on_attach(client)
     require('jdtls.setup').add_commands()
   end,
   settings = {
