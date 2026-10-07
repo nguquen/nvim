@@ -19,6 +19,8 @@ require('lualine').setup({
       {
         'tabs',
         mode = 2, -- tab number + name; {N}gt goes to tab N
+        -- Neovim's default tabline colours; the auto theme gives active and inactive tabs the same colours
+        tabs_color = { active = 'TabLineSel', inactive = 'TabLine' },
         max_length = function()
           return vim.o.columns
         end,
