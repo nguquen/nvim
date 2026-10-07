@@ -204,28 +204,54 @@ local function find_base(on_found)
   end)
 end
 
+-- PRDiff's progress in the message area (a progress-message, updated in place); safe from vim.system callbacks
+local function prdiff_progress(msg, status)
+  vim.schedule(function()
+    vim.api.nvim_echo({ { msg } }, status ~= 'running', {
+      id = 'config.prdiff',
+      kind = 'progress',
+      source = 'config.prdiff',
+      title = 'PRDiff',
+      status = status,
+      err = status == 'failed' or nil,
+    })
+  end)
+end
+
+-- set while :PRDiff is looking up the base and fetching, so a second :PRDiff doesn't start another run
+local prdiff_running = false
+
 -- Diffview of the current branch against its PR's base (or the default branch before there is a PR).
 -- While it's open, gitsigns also diffs every buffer against the merge base, so ]c / [c and
 -- :Gitsigns setqflist all walk the branch's changes.
 vim.api.nvim_create_user_command('PRDiff', function()
+  if prdiff_running then
+    vim.notify('PRDiff: already running', vim.log.levels.WARN)
+    return
+  end
+  prdiff_running = true
+  prdiff_progress('finding the PR base…', 'running')
   find_base(function(base, is_pr)
     if not base then
-      vim.schedule(function()
-        vim.notify('PRDiff: no PR for this branch and no default branch found', vim.log.levels.ERROR)
-      end)
+      prdiff_running = false
+      prdiff_progress('no PR for this branch and no default branch found', 'failed')
       return
     end
+    prdiff_progress('fetching origin/' .. base .. '…', 'running')
     vim.system({ 'git', 'fetch', 'origin', base }, {}, function()
+      prdiff_progress('finding the merge base…', 'running')
       run({ 'git', 'merge-base', 'origin/' .. base, 'HEAD' }, function(merge_base)
         vim.schedule(function()
-          if not is_pr then
-            vim.notify('PRDiff: no PR for this branch; diffing against origin/' .. base)
-          end
+          prdiff_running = false
           vim.cmd('DiffviewOpen origin/' .. base .. '...HEAD --imply-local')
           if merge_base then
             pr_base_set = true
             require('gitsigns').change_base(merge_base, true)
           end
+          prdiff_progress(
+            (is_pr and 'diffing against origin/' or 'no PR for this branch; diffing against origin/') .. base,
+            'success'
+          )
         end)
       end)
     end)
