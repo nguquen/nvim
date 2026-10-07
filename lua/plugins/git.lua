@@ -12,6 +12,10 @@ require('octo').setup({
   enable_builtin = true, -- bare :Octo opens a command picker
   default_merge_method = 'squash',
   use_local_fs = true, -- right side of a review is the real file (LSP, gitsigns); asks to check out the PR branch
+  mappings = {
+    -- octo's default <leader>qa makes <leader>q (quit) wait timeoutlen in PR buffers; review keys live under <leader>r
+    pull_request = { approve_pr = { lhs = '<leader>ra', desc = 'approve PR' } },
+  },
 })
 
 -- Octo bug with use_local_fs: showing a file fires BufEnter on the right-side real file, octo's BufEnter autocmd
