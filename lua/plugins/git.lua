@@ -37,27 +37,56 @@ vim.opt.fillchars:append({ diff = '╱' })
 vim.opt.diffopt:remove({ 'linematch:40', 'inline:char' })
 vim.opt.diffopt:append({ 'algorithm:histogram', 'linematch:60', 'inline:word' })
 
--- Diffview of the current PR against its base. While it's open, gitsigns also diffs every buffer
--- against the PR's merge base, so ]c / [c and :Gitsigns setqflist all walk the PR's changes.
+-- Runs cmd in the background; on_done gets its trimmed stdout, or nil if it failed or printed nothing
+local function run(cmd, on_done)
+  vim.system(cmd, { text = true }, function(r)
+    local out = vim.trim(r.stdout or '')
+    on_done(r.code == 0 and out ~= '' and out or nil)
+  end)
+end
+
+-- on_found(branch, is_pr): the PR's base branch, or with no PR the remote's default branch
+-- (origin/HEAD, else GitHub's), or nil
+local function find_base(on_found)
+  run({ 'gh', 'pr', 'view', '--json', 'baseRefName', '-q', '.baseRefName' }, function(pr_base)
+    if pr_base then
+      return on_found(pr_base, true)
+    end
+    run({ 'git', 'symbolic-ref', '--short', 'refs/remotes/origin/HEAD' }, function(head)
+      if head then
+        return on_found((head:gsub('^origin/', '')), false)
+      end
+      run({ 'gh', 'repo', 'view', '--json', 'defaultBranchRef', '-q', '.defaultBranchRef.name' }, function(default)
+        on_found(default, false)
+      end)
+    end)
+  end)
+end
+
+-- Diffview of the current branch against its PR's base (or the default branch before there is a PR).
+-- While it's open, gitsigns also diffs every buffer against the merge base, so ]c / [c and
+-- :Gitsigns setqflist all walk the branch's changes.
 vim.api.nvim_create_user_command('PRDiff', function()
-  vim.system({ 'gh', 'pr', 'view', '--json', 'baseRefName', '-q', '.baseRefName' }, { text = true }, function(pr)
-    local base = vim.trim(pr.stdout or '')
-    if pr.code ~= 0 or base == '' then
+  find_base(function(base, is_pr)
+    if not base then
       vim.schedule(function()
-        vim.notify('No PR found for the current branch', vim.log.levels.ERROR)
+        vim.notify('PRDiff: no PR for this branch and no default branch found', vim.log.levels.ERROR)
       end)
       return
     end
     vim.system({ 'git', 'fetch', 'origin', base }, {}, function()
-      vim.system({ 'git', 'merge-base', 'origin/' .. base, 'HEAD' }, { text = true }, function(mb)
+      run({ 'git', 'merge-base', 'origin/' .. base, 'HEAD' }, function(merge_base)
         vim.schedule(function()
+          if not is_pr then
+            vim.notify('PRDiff: no PR for this branch; diffing against origin/' .. base)
+          end
           vim.cmd('DiffviewOpen origin/' .. base .. '...HEAD --imply-local')
-          if mb.code == 0 then
+          if merge_base then
             pr_base_set = true
-            require('gitsigns').change_base(vim.trim(mb.stdout), true)
+            require('gitsigns').change_base(merge_base, true)
           end
         end)
       end)
     end)
   end)
-end, { desc = 'Diffview of current PR against its base' })
+end, { desc = 'Diffview of the current branch against its PR base or the default branch' })

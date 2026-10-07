@@ -159,7 +159,7 @@ F2            : close DAP UI
 
 ```
 space rp : list PRs (Octo)
-space rd : diff current PR against its base (:PRDiff)
+space rd : diff current branch against its PR's base, or the default branch if no PR yet (:PRDiff)
 space rr : start review       space rR : resume review
 space rs : submit review
 space rh : file history (Diffview)
@@ -167,8 +167,10 @@ space rc : close Diffview
 ]c / [c  : next / previous change (diff windows) or git hunk (other buffers)
 ```
 
-While `:PRDiff` is open, the git signs in every buffer compare against the PR's base, so `]c` / `[c`
-and `:Gitsigns setqflist all` walk the whole PR; closing Diffview switches them back to `HEAD`.
+While `:PRDiff` is open, the git signs in every buffer compare against the same base, so `]c` / `[c`
+and `:Gitsigns setqflist all` walk the whole branch; closing Diffview switches them back to `HEAD`.
+With no PR, the base is `origin/HEAD` (set by `git clone`; `git remote set-head origin -a` sets it
+later), else GitHub's default branch.
 Octo reviews show the real file on the right (LSP works there) and offer to check out the PR branch
 first. Octo merges squash by default.
 
