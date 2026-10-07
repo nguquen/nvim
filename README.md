@@ -130,7 +130,7 @@ gd / gD   : definition / type definition
 gr / gi   : references / implementations
 K         : hover docs (crate features in Cargo.toml)
 space rn  : rename
-space rs  : refactor: extract/inline variable or function (visual selection, or a motion)
+space rf  : refactor: extract/inline variable or function (visual selection, or a motion)
 alt-enter : code action
 [d / ]d   : previous / next diagnostic
 ```
@@ -159,13 +159,26 @@ F2            : close DAP UI
 ## Git / GitHub
 
 ```
-space op : list PRs (Octo)
-space od : diff current PR against its base (:PRDiff)
-space or : start review       space oR : resume review
-space os : submit review
-space dh : file history (Diffview)
-space dc : close Diffview
+space rp : list PRs (Octo)
+space rd : diff current branch against its PR's base, or the default branch if no PR yet (:PRDiff)
+space rr : start review       space rR : resume review
+space rs : submit review
+space rh : file history (Diffview)
+space rc : close Diffview
+]c / [c  : next / previous change (diff windows) or git hunk (other buffers)
+]q / [q  : next / previous file (Diffview and Octo review)
+[Q / ]Q  : first / last file (Diffview and Octo review)
 ```
+
+In the `:PRDiff` tab, the git signs on the real files compare against the same base, so `]c` / `[c`
+walk the branch's changes there; other tabs keep comparing against `HEAD`.
+With no PR, the base is `origin/HEAD` (set by `git clone`; `git remote set-head origin -a` sets it
+later), else GitHub's default branch. While it looks up the base and fetches, the message line shows
+which step it is on.
+Octo reviews show the real file on the right (LSP works there) and offer to check out the PR branch
+first; say yes, or the right side is a read-only copy. On the real file, the git signs compare against
+the PR's base (not `HEAD`, which is the PR itself), only in the review tab. Octo reviews use the same
+diff colours as Diffview and show the changed files on the left, like Diffview. Octo merges squash by default.
 
 WakaTime counts time in an Octo review, on an Octo PR page or in a Diffview tab as **Code Reviewing**,
 and Octo pages as the PR's GitHub page under the repo's project (wakatime-cli would otherwise drop them).
