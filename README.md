@@ -146,6 +146,7 @@ enter      : confirm the selected item
 ctrl-j/k   : next / previous item
 ctrl-space : trigger completion
 ctrl-e     : close menu
+ctrl-f/b   : scroll the documentation window down / up
 ```
 
 ## Debugging (nvim-dap)
