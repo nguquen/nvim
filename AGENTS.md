@@ -12,7 +12,7 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   `config.lsp` must load before `plugins.mason` (reads its `servers` list). A new
   `lua/plugins/<area>.lua` does nothing until `init.lua` requires it.
 - `lua/plugins/<area>.lua` — plain `setup()` calls grouped by area (ui, navigation, editing,
-  git, mason, dap, completion, treesitter, db). These are not lazy.nvim
+  git, mason, dap, completion, treesitter, db, wakatime). These are not lazy.nvim
   plugin specs; there is no lazy loading.
 - Plugins are managed by Neovim's built-in **`vim.pack`** (not packer, not lazy.nvim).
   `vim.pack.add()` in `lua/config/pack.lua` installs missing plugins synchronously, so
@@ -36,6 +36,21 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   - `lua.lua` — lazydev.nvim, which gives lua_ls the Neovim runtime plus the plugins a
     file `require()`s (off in projects with their own `.luarc.json(c)`).
 - `ftplugin/sql.lua`, `ftplugin/dbout.lua` — dadbod-ui buffer maps (`dbout` overrides `gd`).
+- `lua/plugins/wakatime.lua` + `scripts/wakatime-cli{,.lua}` — PR review time in WakaTime.
+  vim-wakatime's `cli_path` is the wrapper (`nvim -l` on `wakatime-cli.lua`), which runs
+  the real CLI (`$NVIM_WAKATIME_CLI`, found in vim-wakatime's own order; with none found
+  nothing is wrapped and vim-wakatime installs it). Neovim writes review periods (Octo
+  review tab, `octo://…/pull/N` buffer, Diffview tab) as whole seconds to
+  `stdpath('state')/wakatime/review-<pid>`; the wrapper gives heartbeats inside one the
+  category "code reviewing" (not over an existing one, i.e. debugging), turns `octo://`
+  entities into the PR/issue URL (`--entity-type url`, repo as alternate project), and adds
+  `--sync-ai-disabled` to such sends, because the CLI otherwise relabels heartbeats near
+  AI-agent activity as "ai coding". Heartbeat times are `localtime()` seconds, so periods
+  are `[start, stop)` in seconds. The autocmds must be created before
+  `require('wakatime').setup()` (here, not vim-wakatime's `plugin/`), so a period starts
+  before vim-wakatime's own BufEnter heartbeat; `setup()` only takes `cli_path` the first
+  time. Review files are left on exit (the last send runs after Neovim quits) and removed
+  after a day.
 - `ftdetect/filetype.lua` — `*.yaml.gotmpl` / `*.yml.gotmpl` → `helm`.
 - `colors/darcula-solid-ex.lua` — wraps `darcula-solid`; put highlight overrides here.
 - `.ideavimrc` is for JetBrains IdeaVim and has nothing to do with Neovim.

@@ -82,6 +82,7 @@ rm -rf ~/.local/share/nvim/site/pack/packer ~/.config/nvim/plugin/packer_compile
 | `lua/plugins/*.lua` | Plugin setup, one file per area (ui, navigation, editing, git, completion, dap, …) |
 | `ftplugin/<filetype>.lua` | Per-language setup: Java (jdtls + debugger), `Cargo.toml` (crates), Helm, Lua (lazydev) |
 | `colors/darcula-solid-ex.lua` | Colorscheme: `darcula-solid` with personal overrides |
+| `scripts/wakatime-cli` | Wrapper vim-wakatime runs instead of wakatime-cli (tags PR review time) |
 
 # 3. Key mapping
 
@@ -165,6 +166,9 @@ space os : submit review
 space dh : file history (Diffview)
 space dc : close Diffview
 ```
+
+WakaTime counts time in an Octo review, on an Octo PR page or in a Diffview tab as **Code Reviewing**,
+and Octo pages as the PR's GitHub page under the repo's project (wakatime-cli would otherwise drop them).
 
 ## Database (vim-dadbod-ui)
 
