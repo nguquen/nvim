@@ -23,6 +23,10 @@ require('lualine').setup({
         mode = 2,
         path = 1,
         tab_max_length = 0, -- lualine's own shortening runs before fmt and would mangle plugin buffer names
+        -- flat tabs like the default tabline: no arrow separators between tabs or after the last one
+        section_separators = { left = '', right = '' },
+        component_separators = { left = '', right = '' },
+        separator = { left = '', right = '' },
         fmt = function(name)
           -- plugin buffers (diffview://, octo://): just the last part, e.g. DiffviewFilePanel or the file name
           if name:match('^%a[%w+.-]*://') then
