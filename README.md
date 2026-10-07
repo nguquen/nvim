@@ -129,7 +129,7 @@ gd / gD   : definition / type definition
 gr / gi   : references / implementations
 K         : hover docs (crate features in Cargo.toml)
 space rn  : rename
-space rs  : refactor: extract/inline variable or function (visual selection, or a motion)
+space rf  : refactor: extract/inline variable or function (visual selection, or a motion)
 alt-enter : code action
 [d / ]d   : previous / next diagnostic
 ```
@@ -158,13 +158,19 @@ F2            : close DAP UI
 ## Git / GitHub
 
 ```
-space op : list PRs (Octo)
-space od : diff current PR against its base (:PRDiff)
-space or : start review       space oR : resume review
-space os : submit review
-space dh : file history (Diffview)
-space dc : close Diffview
+space rp : list PRs (Octo)
+space rd : diff current PR against its base (:PRDiff)
+space rr : start review       space rR : resume review
+space rs : submit review
+space rh : file history (Diffview)
+space rc : close Diffview
+]c / [c  : next / previous change (diff windows) or git hunk (other buffers)
 ```
+
+While `:PRDiff` is open, the git signs in every buffer compare against the PR's base, so `]c` / `[c`
+and `:Gitsigns setqflist all` walk the whole PR; closing Diffview switches them back to `HEAD`.
+Octo reviews show the real file on the right (LSP works there) and offer to check out the PR branch
+first. Octo merges squash by default.
 
 ## Database (vim-dadbod-ui)
 

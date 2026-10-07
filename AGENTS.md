@@ -26,7 +26,12 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 - `nvim-pack-lock.json` is the lockfile written by `vim.pack`. Commit it with any plugin
   change; never edit it by hand.
 - `lua/config/keymaps.lua` — all keymaps. It `require`s telescope/dap at load time. LSP
-  buffer-local maps are set in its `LspAttach` autocmd.
+  buffer-local maps are set in its `LspAttach` autocmd. Review keys (octo, diffview) live
+  under `<leader>r`. Don't map a bare `<leader>x` that is also the start of a longer map
+  (it waits `timeoutlen`); `<leader>o` and `<leader>d` are bare maps, so keep groups off them.
+- `lua/plugins/git.lua` — gitsigns, octo, diffview, `diffopt`, and `:PRDiff`. `:PRDiff`
+  sets gitsigns' base to the PR's merge base for all buffers; diffview's `view_closed`
+  hook resets it.
 - `ftplugin/<filetype>.lua` — setup for one language, run when a buffer of that filetype
   opens (config dir comes first on the runtimepath, so these run before the plugins' own
   ftplugins). Global one-time `setup()` calls here need a `vim.g` guard.
