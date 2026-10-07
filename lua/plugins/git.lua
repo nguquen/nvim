@@ -28,6 +28,35 @@ octo.update_layout_for_current_file = function()
   return update_layout_for_current_file()
 end
 
+-- Octo review windows get Diffview's colours (enhanced_diff_hl) instead of octo's own (left side all red, right side
+-- all green): removed lines red, added green, changed lines DiffChange with DiffText / DiffTextAdd for the changed
+-- text, filler ╱ dimmed. Octo sets its colours in per-window highlight namespaces each time a review opens.
+local octo_constants = require('octo.constants')
+local octo_review_hl = {
+  [octo_constants.OCTO_REVIEW_LEFT_HIGHLIGHT_NS] = {
+    DiffAdd = 'DiffviewDiffAddAsDelete',
+    DiffDelete = 'DiffviewDiffDeleteDim',
+    DiffChange = 'DiffviewDiffChange',
+    DiffText = 'DiffviewDiffText',
+  },
+  [octo_constants.OCTO_REVIEW_RIGHT_HIGHLIGHT_NS] = {
+    DiffAdd = 'DiffviewDiffAdd',
+    DiffDelete = 'DiffviewDiffDeleteDim',
+    DiffChange = 'DiffviewDiffChange',
+    DiffText = 'DiffviewDiffText',
+  },
+}
+local OctoLayout = require('octo.reviews.layout').Layout
+local init_layout = OctoLayout.init_layout
+OctoLayout.init_layout = function(self)
+  init_layout(self)
+  for ns, groups in pairs(octo_review_hl) do
+    for group, link in pairs(groups) do
+      vim.api.nvim_set_hl(ns, group, { link = link })
+    end
+  end
+end
+
 -- In an Octo review, gitsigns on the right-side file (the real file, with use_local_fs) diffs against the
 -- PR's merge base instead of HEAD, which is the PR head once it's checked out. Uses octo internals: Octo has
 -- no review events, but it marks review buffers with b:octo_diff_props.

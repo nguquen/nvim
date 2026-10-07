@@ -41,7 +41,9 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   `change_base` while gitsigns is still attaching is lost. The same file also wraps
   `require('octo').update_layout_for_current_file` to work around an octo `use_local_fs`
   BufEnter recursion (shows as "No matching autocommands: filetypedetect BufRead");
-  drop it once octo fixes that.
+  drop it once octo fixes that. It also wraps octo's `Layout.init_layout` to relink the
+  diff groups in octo's review highlight namespaces to Diffview's (`enhanced_diff_hl`), so
+  both views colour diffs the same.
 - `ftplugin/<filetype>.lua` — setup for one language, run when a buffer of that filetype
   opens (config dir comes first on the runtimepath, so these run before the plugins' own
   ftplugins). Global one-time `setup()` calls here need a `vim.g` guard.
