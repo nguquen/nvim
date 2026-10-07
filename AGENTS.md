@@ -12,7 +12,7 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   `config.lsp` must load before `plugins.mason` (reads its `servers` list). A new
   `lua/plugins/<area>.lua` does nothing until `init.lua` requires it.
 - `lua/plugins/<area>.lua` — plain `setup()` calls grouped by area (ui, navigation, editing,
-  git, mason, dap, completion, treesitter, db). These are not lazy.nvim
+  git, mason, dap, completion, treesitter, db, wakatime). These are not lazy.nvim
   plugin specs; there is no lazy loading.
 - Plugins are managed by Neovim's built-in **`vim.pack`** (not packer, not lazy.nvim).
   `vim.pack.add()` in `lua/config/pack.lua` installs missing plugins synchronously, so
@@ -58,6 +58,24 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   - `lua.lua` — lazydev.nvim, which gives lua_ls the Neovim runtime plus the plugins a
     file `require()`s (off in projects with their own `.luarc.json(c)`).
 - `ftplugin/sql.lua`, `ftplugin/dbout.lua` — dadbod-ui buffer maps (`dbout` overrides `gd`).
+- `lua/plugins/wakatime.lua` + `scripts/wakatime-cli{,.lua}` — PR review time in WakaTime.
+  vim-wakatime's `cli_path` is the wrapper (`nvim -l` on `wakatime-cli.lua`), which runs
+  the real CLI (`$NVIM_WAKATIME_CLI`, found in vim-wakatime's own order; with none found
+  nothing is wrapped and vim-wakatime installs it). Neovim writes review periods (Octo
+  review tab, `octo://…/pull/N` buffer, Diffview tab) as whole seconds to
+  `stdpath('state')/wakatime/review-<pid>`; the wrapper gives heartbeats inside one the
+  category "code reviewing" (not over an existing one, i.e. debugging), turns `octo://`
+  entities into the PR/issue URL (`--entity-type url`, repo as alternate project), and
+  `diffview://` ones (a file at a git revision) into the PR's URL when the period has one
+  (`:PRDiff` gets it with the base from `gh pr view` and sets `vim.t.pr_url` on its
+  Diffview tab; other Diffview tabs count as reviewing without a URL), and adds
+  `--sync-ai-disabled` to such sends, because the CLI otherwise relabels heartbeats near
+  AI-agent activity as "ai coding". Heartbeat times are `localtime()` seconds, so periods
+  are `[start, stop)` in seconds. The autocmds must be created before
+  `require('wakatime').setup()` (here, not vim-wakatime's `plugin/`), so a period starts
+  before vim-wakatime's own BufEnter heartbeat; `setup()` only takes `cli_path` the first
+  time. Review files are left on exit (the last send runs after Neovim quits) and removed
+  after a day.
 - `ftdetect/filetype.lua` — `*.yaml.gotmpl` / `*.yml.gotmpl` → `helm`.
 - `colors/darcula-solid-ex.lua` — wraps `darcula-solid`; put highlight overrides here.
 - `.ideavimrc` is for JetBrains IdeaVim and has nothing to do with Neovim.
@@ -113,6 +131,23 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   apps (use the terminal's paste shortcut). Only `<leader>y` reads the system clipboard.
 - `Comment.nvim` is pinned to the fork `faergeek/Comment.nvim` on branch
   `nvim-0.12-compatibility`. Don't switch it back to upstream.
+
+## Plugin internals the config relies on
+
+These customizations use plugin internals or undocumented behaviour, and were checked
+against the revisions below. When `nvim-pack-lock.json` moves one of these plugins past
+that revision, recheck the listed items (read the plugin's diff for them, then test in the
+sandbox) and update the revision here and in `checked_revs` in `lua/config/pack.lua` in
+the same commit. A `PackChanged` hook there warns when `vim.pack` installs or updates one
+of the Neovim plugins to a different revision (wakatime-cli isn't a `vim.pack` plugin;
+vim-wakatime updates it on its own).
+
+| Plugin | Checked at | What the config relies on |
+| --- | --- | --- |
+| octo.nvim | `af24116` (2026-08-28) | `lua/plugins/git.lua` replaces `require('octo').update_layout_for_current_file` (use_local_fs BufEnter loop), `Layout.init_layout` (Diffview colours) and `FilePanel.open` (panel on the left); reads `b:octo_diff_props` and `require('octo.reviews').get_current_review().pull_request.left.commit` (gitsigns base). `lua/plugins/wakatime.lua` reads `get_current_review().pull_request.repo` / `.number`, `require('octo.config').values.github_hostname`, and buffer names `octo://<owner>/<repo>/pull/<n>`; the wrapper parses `octo://[<host>/]<owner>/<repo>/{pull,issue,discussion}/<n>` and `octo://…/review/…` |
+| vim-wakatime | `9f8a1d3` (2026-08-10) | `setup({ cli_path })` takes `cli_path` only on the first call; heartbeats come from a `BufEnter` autocmd created by `setup()`; it runs the CLI with `--entity` / `--time` / optional `--category`, plus `--extra-heartbeats` with a JSON list (`entity`, `timestamp`, `category`, …) on stdin. The wrapper changes only those calls and passes others (`--today`, `--version`, …) through |
+| diffview.nvim | `4516612` (2024-06-13) | `require('diffview.lib').get_current_view()` (review tab check) and buffer names `diffview://<repo>/.git/<rev>/<path>` for files at a git revision |
+| wakatime-cli | 2.26.14 | `--category "code reviewing"`, `--entity-type url`, `--alternate-project`, `--sync-ai-disabled` (the wrapper retries without it if the CLI rejects it) |
 
 ## Style and verification
 

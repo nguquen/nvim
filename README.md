@@ -82,6 +82,7 @@ rm -rf ~/.local/share/nvim/site/pack/packer ~/.config/nvim/plugin/packer_compile
 | `lua/plugins/*.lua` | Plugin setup, one file per area (ui, navigation, editing, git, completion, dap, …) |
 | `ftplugin/<filetype>.lua` | Per-language setup: Java (jdtls + debugger), `Cargo.toml` (crates), Helm, Lua (lazydev) |
 | `colors/darcula-solid-ex.lua` | Colorscheme: `darcula-solid` with personal overrides |
+| `scripts/wakatime-cli` | Wrapper vim-wakatime runs instead of wakatime-cli (tags PR review time) |
 
 # 3. Key mapping
 
@@ -178,6 +179,10 @@ Octo reviews show the real file on the right (LSP works there) and offer to chec
 first; say yes, or the right side is a read-only copy. On the real file, the git signs compare against
 the PR's base (not `HEAD`, which is the PR itself), only in the review tab. Octo reviews use the same
 diff colours as Diffview and show the changed files on the left, like Diffview. Octo merges squash by default.
+
+WakaTime counts time in an Octo review, on an Octo PR page or in a Diffview tab as **Code Reviewing**,
+and Octo pages and the base side of a `:PRDiff` as the PR's GitHub page under the repo's project
+(wakatime-cli would otherwise drop them).
 
 ## Database (vim-dadbod-ui)
 

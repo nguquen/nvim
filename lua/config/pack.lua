@@ -4,10 +4,33 @@ local gh = function(repo)
   return 'https://github.com/' .. repo
 end
 
+-- Plugins whose internals the config relies on, and the revision it was checked against (AGENTS.md, "Plugin
+-- internals the config relies on"; update both together). Installing or updating to another revision warns.
+local checked_revs = {
+  ['octo.nvim'] = 'af2411604b51cb4a0f3e2de50b1b7cacc2581c48',
+  ['vim-wakatime'] = '9f8a1d3b9c6f3a948988a0896b3227c1e1f74a58',
+  ['diffview.nvim'] = '4516612fe98ff56ae0415a259ff6361a89419b0a',
+}
+
 -- post-install/update hooks; must be registered before vim.pack.add() to see installs
 vim.api.nvim_create_autocmd('PackChanged', {
   callback = function(ev)
     local name, kind = ev.data.spec.name, ev.data.kind
+    local checked = checked_revs[name]
+    if checked and (kind == 'install' or kind == 'update') then
+      vim.schedule(function()
+        local rev = vim.trim(vim.fn.system({ 'git', '-C', ev.data.path, 'rev-parse', 'HEAD' }))
+        if vim.v.shell_error == 0 and rev ~= checked then
+          vim.notify(
+            (
+              '%s is now at %s, but the config was checked against %s; recheck what it relies on (AGENTS.md, '
+              .. '"Plugin internals the config relies on") and update the revision there and in lua/config/pack.lua'
+            ):format(name, rev:sub(1, 7), checked:sub(1, 7)),
+            vim.log.levels.WARN
+          )
+        end
+      end)
+    end
     if name == 'nvim-treesitter' and kind == 'update' then
       if not ev.data.active then
         vim.cmd.packadd('nvim-treesitter')

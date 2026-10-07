@@ -185,19 +185,20 @@ local function run(cmd, on_done)
   end)
 end
 
--- on_found(branch, is_pr): the PR's base branch, or with no PR the remote's default branch
--- (origin/HEAD, else GitHub's), or nil
+-- on_found(branch, pr_url): the PR's base branch and URL, or with no PR the remote's default branch
+-- (origin/HEAD, else GitHub's) and nil, or nil
 local function find_base(on_found)
-  run({ 'gh', 'pr', 'view', '--json', 'baseRefName', '-q', '.baseRefName' }, function(pr_base)
+  run({ 'gh', 'pr', 'view', '--json', 'baseRefName,url', '-q', '.baseRefName + " " + .url' }, function(pr)
+    local pr_base, pr_url = (pr or ''):match('^(%S+) (%S+)$')
     if pr_base then
-      return on_found(pr_base, true)
+      return on_found(pr_base, pr_url)
     end
     run({ 'git', 'symbolic-ref', '--short', 'refs/remotes/origin/HEAD' }, function(head)
       if head then
-        return on_found((head:gsub('^origin/', '')), false)
+        return on_found((head:gsub('^origin/', '')))
       end
       run({ 'gh', 'repo', 'view', '--json', 'defaultBranchRef', '-q', '.defaultBranchRef.name' }, function(default)
-        on_found(default, false)
+        on_found(default)
       end)
     end)
   end)
@@ -229,7 +230,7 @@ vim.api.nvim_create_user_command('PRDiff', function()
   end
   prdiff_running = true
   prdiff_progress('finding the PR base…', 'running')
-  find_base(function(base, is_pr)
+  find_base(function(base, pr_url)
     if not base then
       prdiff_running = false
       prdiff_progress('no PR for this branch and no default branch found', 'failed')
@@ -242,12 +243,14 @@ vim.api.nvim_create_user_command('PRDiff', function()
         vim.schedule(function()
           prdiff_running = false
           vim.cmd('DiffviewOpen origin/' .. base .. '...HEAD --imply-local')
+          -- the Diffview tab's PR, for WakaTime (lua/plugins/wakatime.lua)
+          vim.t.pr_url = pr_url
           if merge_base then
             tab_base[vim.api.nvim_get_current_tabpage()] = merge_base
             sync_review_base()
           end
           prdiff_progress(
-            (is_pr and 'diffing against origin/' or 'no PR for this branch; diffing against origin/') .. base,
+            (pr_url and 'diffing against origin/' or 'no PR for this branch; diffing against origin/') .. base,
             'success'
           )
         end)

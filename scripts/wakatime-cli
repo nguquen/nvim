@@ -1,0 +1,3 @@
+#!/bin/sh
+# vim-wakatime's cli_path (set in lua/plugins/wakatime.lua); the work is in wakatime-cli.lua
+exec "${NVIM_WAKATIME_NVIM:-nvim}" -l "$(dirname "$0")/wakatime-cli.lua" "$@"
