@@ -12,6 +12,8 @@ local flat = {
   separator = { left = '', right = '' },
 }
 local tabline_colors = { active = 'TabLineSel', inactive = 'TabLine' }
+-- │ between two inactive buffers or tabs; none next to the current one, which stands out by its colour
+local between_inactive = { left = '│', right = '│' }
 
 require('lualine').setup({
   options = {
@@ -27,8 +29,7 @@ require('lualine').setup({
     lualine_a = {
       vim.tbl_extend('force', flat, {
         'buffers',
-        -- │ between two inactive buffers; none next to the current one, which stands out by its colour
-        component_separators = { left = '│', right = '│' },
+        component_separators = between_inactive,
         mode = 4,
         symbols = { modified = '+', alternate_file = '#', directory = '' },
         buffers_color = tabline_colors,
@@ -42,6 +43,7 @@ require('lualine').setup({
     lualine_z = {
       vim.tbl_extend('force', flat, {
         'tabs',
+        component_separators = between_inactive,
         cond = function()
           return vim.fn.tabpagenr('$') > 1
         end,
