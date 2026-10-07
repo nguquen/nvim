@@ -14,6 +14,67 @@ require('octo').setup({
   use_local_fs = true, -- right side of a review is the real file (LSP, gitsigns); asks to check out the PR branch
 })
 
+-- In an Octo review, gitsigns on the right-side file (the real file, with use_local_fs) diffs against the
+-- PR's merge base instead of HEAD, which is the PR head once it's checked out. Uses octo internals: Octo has
+-- no review events, but it marks review buffers with b:octo_diff_props.
+
+-- Applies b:review_base (nil = back to the default base) once gitsigns has finished its first update of the
+-- buffer; a change_base during gitsigns' attach is lost.
+local function apply_review_base(buf)
+  local b = vim.b[buf]
+  if b.review_base_applied == (b.review_base or false) or (b.gitsigns_status_dict or {}).added == nil then
+    return
+  end
+  b.review_base_applied = b.review_base or false
+  vim.api.nvim_buf_call(buf, function()
+    require('gitsigns').change_base(b.review_base)
+  end)
+end
+
+local review_group = vim.api.nvim_create_augroup('OctoReviewGitsigns', { clear = true })
+vim.api.nvim_create_autocmd('BufWinEnter', {
+  group = review_group,
+  callback = function(ev)
+    local props = vim.b[ev.buf].octo_diff_props
+    if not props or props.split ~= 'RIGHT' or vim.api.nvim_buf_get_name(ev.buf):match('^octo://') then
+      return
+    end
+    local review = require('octo.reviews').get_current_review()
+    local base = review and review.pull_request.left.commit
+    if base then
+      vim.b[ev.buf].review_base = base
+      vim.b[ev.buf].review_tab = vim.api.nvim_get_current_tabpage()
+      apply_review_base(ev.buf)
+    end
+  end,
+})
+vim.api.nvim_create_autocmd('User', {
+  group = review_group,
+  pattern = 'GitSignsUpdate',
+  callback = function(ev)
+    local buf = ev.data and ev.data.buffer
+    if buf and vim.b[buf].review_tab then
+      apply_review_base(buf)
+    end
+  end,
+})
+vim.api.nvim_create_autocmd('TabClosed', {
+  group = review_group,
+  callback = function()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      local tab = vim.b[buf].review_tab
+      if tab and not vim.api.nvim_tabpage_is_valid(tab) then
+        vim.b[buf].review_base = nil
+        vim.b[buf].review_tab = nil
+        if vim.api.nvim_buf_is_loaded(buf) then
+          apply_review_base(buf)
+        end
+        vim.b[buf].review_base_applied = nil
+      end
+    end
+  end,
+})
+
 -- set while :PRDiff has moved gitsigns' base to the PR's merge base
 local pr_base_set = false
 

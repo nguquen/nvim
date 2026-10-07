@@ -172,7 +172,9 @@ and `:Gitsigns setqflist all` walk the whole branch; closing Diffview switches t
 With no PR, the base is `origin/HEAD` (set by `git clone`; `git remote set-head origin -a` sets it
 later), else GitHub's default branch.
 Octo reviews show the real file on the right (LSP works there) and offer to check out the PR branch
-first. Octo merges squash by default.
+first; say yes, or the right side is a read-only copy. On the real file, the git signs compare against
+the PR's base (not `HEAD`, which is the PR itself) until the review tab closes. Octo merges squash by
+default.
 
 ## Database (vim-dadbod-ui)
 

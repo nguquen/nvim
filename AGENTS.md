@@ -33,7 +33,12 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   diffs against the PR's base branch, or with no PR `origin/HEAD`, else GitHub's default
   branch; it runs those lookups and `git fetch` with `vim.system` callbacks (never blocking).
   It sets gitsigns' base to the merge base for all buffers; diffview's `view_closed` hook
-  resets it.
+  resets it. In an Octo review, the right-side real file (`use_local_fs`) gets a per-buffer
+  gitsigns base = the PR's merge base (`b:review_base`), reset on `TabClosed`. Octo has no
+  review events, so this reads octo internals (`b:octo_diff_props`,
+  `require('octo.reviews').get_current_review().pull_request.left.commit`); recheck after
+  octo updates. The base is applied on gitsigns' `User GitSignsUpdate`, because a
+  `change_base` while gitsigns is still attaching is lost.
 - `ftplugin/<filetype>.lua` — setup for one language, run when a buffer of that filetype
   opens (config dir comes first on the runtimepath, so these run before the plugins' own
   ftplugins). Global one-time `setup()` calls here need a `vim.g` guard.
