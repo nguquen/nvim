@@ -176,7 +176,7 @@ later), else GitHub's default branch.
 Octo reviews show the real file on the right (LSP works there) and offer to check out the PR branch
 first; say yes, or the right side is a read-only copy. On the real file, the git signs compare against
 the PR's base (not `HEAD`, which is the PR itself) until the review tab closes. Octo reviews use the same
-diff colours as Diffview. Octo merges squash by default.
+diff colours as Diffview and show the changed files on the left, like Diffview. Octo merges squash by default.
 
 ## Database (vim-dadbod-ui)
 

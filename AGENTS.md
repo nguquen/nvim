@@ -43,7 +43,9 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   BufEnter recursion (shows as "No matching autocommands: filetypedetect BufRead");
   drop it once octo fixes that. It also wraps octo's `Layout.init_layout` to relink the
   diff groups in octo's review highlight namespaces to Diffview's (`enhanced_diff_hl`), so
-  both views colour diffs the same.
+  both views colour diffs the same, and replaces octo's `FilePanel.open` to put the changed-
+  files panel on the left (40 columns) instead of the bottom. Each override of an octo
+  function carries `---@diagnostic disable-next-line: duplicate-set-field`.
 - `ftplugin/<filetype>.lua` — setup for one language, run when a buffer of that filetype
   opens (config dir comes first on the runtimepath, so these run before the plugins' own
   ftplugins). Global one-time `setup()` calls here need a `vim.g` guard.

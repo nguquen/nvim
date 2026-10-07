@@ -19,6 +19,7 @@ require('octo').setup({
 -- ("No matching autocommands: filetypedetect BufRead"). Skip the reload when that buffer already is the right side.
 local octo = require('octo')
 local update_layout_for_current_file = octo.update_layout_for_current_file
+---@diagnostic disable-next-line: duplicate-set-field
 octo.update_layout_for_current_file = function()
   local review = require('octo.reviews').get_current_review()
   local file = review and review.layout and review.layout:get_current_file()
@@ -48,6 +49,7 @@ local octo_review_hl = {
 }
 local OctoLayout = require('octo.reviews.layout').Layout
 local init_layout = OctoLayout.init_layout
+---@diagnostic disable-next-line: duplicate-set-field
 OctoLayout.init_layout = function(self)
   init_layout(self)
   for ns, groups in pairs(octo_review_hl) do
@@ -55,6 +57,27 @@ OctoLayout.init_layout = function(self)
       vim.api.nvim_set_hl(ns, group, { link = link })
     end
   end
+end
+
+-- Octo review's changed-files panel on the left, full height, like Diffview's (octo puts it at the bottom and has
+-- no option for it). Same as octo's FilePanel:open otherwise.
+local OctoFilePanel = require('octo.reviews.file-panel').FilePanel
+---@diagnostic disable-next-line: duplicate-set-field
+OctoFilePanel.open = function(self)
+  if not self:buf_loaded() then
+    self:init_buffer()
+  end
+  if self:is_open() then
+    return
+  end
+  vim.cmd('topleft vsplit')
+  vim.cmd('vertical resize 40')
+  self.winid = vim.api.nvim_get_current_win()
+  vim.cmd('buffer ' .. self.bufid)
+  for k, v in pairs(OctoFilePanel.winopts) do
+    vim.api.nvim_set_option_value(k, v, { win = self.winid, scope = 'local' })
+  end
+  vim.cmd('wincmd =')
 end
 
 -- In an Octo review, gitsigns on the right-side file (the real file, with use_local_fs) diffs against the
