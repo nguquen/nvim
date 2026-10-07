@@ -14,6 +14,20 @@ require('octo').setup({
   use_local_fs = true, -- right side of a review is the real file (LSP, gitsigns); asks to check out the PR branch
 })
 
+-- Octo bug with use_local_fs: showing a file fires BufEnter on the right-side real file, octo's BufEnter autocmd
+-- reloads the layout for it, which fires BufEnter again, and so on until Neovim's autocmd nesting limit
+-- ("No matching autocommands: filetypedetect BufRead"). Skip the reload when that buffer already is the right side.
+local octo = require('octo')
+local update_layout_for_current_file = octo.update_layout_for_current_file
+octo.update_layout_for_current_file = function()
+  local review = require('octo.reviews').get_current_review()
+  local file = review and review.layout and review.layout:get_current_file()
+  if file and file.right_bufid == vim.api.nvim_get_current_buf() then
+    return
+  end
+  return update_layout_for_current_file()
+end
+
 -- In an Octo review, gitsigns on the right-side file (the real file, with use_local_fs) diffs against the
 -- PR's merge base instead of HEAD, which is the PR head once it's checked out. Uses octo internals: Octo has
 -- no review events, but it marks review buffers with b:octo_diff_props.
