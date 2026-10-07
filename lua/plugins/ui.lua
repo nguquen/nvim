@@ -12,6 +12,18 @@ require('lualine').setup({
       tabline = 100,
       winbar = 100,
     },
+    always_show_tabline = false, -- tabline only with 2+ tabs, like Neovim's default
+  },
+  tabline = {
+    lualine_a = {
+      {
+        'tabs',
+        mode = 2, -- tab number + name; {N}gt goes to tab N
+        max_length = function()
+          return vim.o.columns
+        end,
+      },
+    },
   },
   sections = {
     lualine_c = {
