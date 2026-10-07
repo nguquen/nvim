@@ -104,6 +104,7 @@ space y                     : put the system clipboard in "0 (terminal must allo
 ctrl-n                      : toggle file tree (nvim-tree)
 gcc / gc{motion}            : toggle line comment
 gbc / gb{motion}            : toggle block comment
+Q{reg} … Q                  : record a macro (q alone does nothing; Q: opens the command-line window)
 ```
 
 ## Telescope
