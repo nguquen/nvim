@@ -27,6 +27,8 @@ require('lualine').setup({
     lualine_a = {
       vim.tbl_extend('force', flat, {
         'buffers',
+        -- │ between two inactive buffers; none next to the current one, which stands out by its colour
+        component_separators = { left = '│', right = '│' },
         mode = 4,
         symbols = { modified = '+', alternate_file = '#', directory = '' },
         buffers_color = tabline_colors,
