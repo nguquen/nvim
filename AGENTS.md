@@ -137,7 +137,10 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 These customizations use plugin internals or undocumented behaviour, and were checked
 against the revisions below. When `nvim-pack-lock.json` moves one of these plugins past
 that revision, recheck the listed items (read the plugin's diff for them, then test in the
-sandbox) and update the revision here in the same commit.
+sandbox) and update the revision here and in `checked_revs` in `lua/config/pack.lua` in
+the same commit. A `PackChanged` hook there warns when `vim.pack` installs or updates one
+of the Neovim plugins to a different revision (wakatime-cli isn't a `vim.pack` plugin;
+vim-wakatime updates it on its own).
 
 | Plugin | Checked at | What the config relies on |
 | --- | --- | --- |
