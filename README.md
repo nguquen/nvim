@@ -165,6 +165,8 @@ space rs : submit review
 space rh : file history (Diffview)
 space rc : close Diffview
 ]c / [c  : next / previous change (diff windows) or git hunk (other buffers)
+]q / [q  : next / previous file (Diffview and Octo review)
+[Q / ]Q  : first / last file (Diffview and Octo review)
 ```
 
 While `:PRDiff` is open, the git signs in every buffer compare against the same base, so `]c` / `[c`

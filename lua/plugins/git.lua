@@ -92,8 +92,22 @@ vim.api.nvim_create_autocmd('TabClosed', {
 -- set while :PRDiff has moved gitsigns' base to the PR's merge base
 local pr_base_set = false
 
+-- same file keys as an octo review: ]q / [q next / previous, [Q / ]Q first / last (<tab> / <s-tab> still work)
+local diffview_actions = require('diffview.actions')
+local diffview_file_keys = {
+  { 'n', ']q', diffview_actions.select_next_entry, { desc = 'Open the diff for the next file' } },
+  { 'n', '[q', diffview_actions.select_prev_entry, { desc = 'Open the diff for the previous file' } },
+  { 'n', '[Q', diffview_actions.select_first_entry, { desc = 'Open the diff for the first file' } },
+  { 'n', ']Q', diffview_actions.select_last_entry, { desc = 'Open the diff for the last file' } },
+}
+
 require('diffview').setup({
   enhanced_diff_hl = true,
+  keymaps = {
+    view = diffview_file_keys,
+    file_panel = diffview_file_keys,
+    file_history_panel = diffview_file_keys,
+  },
   view = {
     default = { winbar_info = true },
     file_history = { winbar_info = true },
