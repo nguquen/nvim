@@ -27,10 +27,8 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   change; never edit it by hand.
 - `lua/config/keymaps.lua` — all keymaps. It `require`s telescope/dap at load time. LSP
   buffer-local maps are set in its `LspAttach` autocmd. Review keys (octo, diffview) live
-  under `<leader>r`. `<leader>ra` is `:PRApprove` (in `lua/plugins/git.lua`: approves the
-  current branch's PR with `gh pr review --approve` after a confirm); in an Octo PR buffer
-  octo's own approve map, moved to `<leader>ra` off octo's default `<leader>qa` (which made
-  `<leader>q` wait), is buffer-local and wins. Don't map a bare `<leader>x` that is also the start of a longer map
+  under `<leader>r`; octo's PR-buffer approve key is moved there too (`<leader>ra`, set in
+  `lua/plugins/git.lua`), off octo's default `<leader>qa`, which made `<leader>q` wait. Don't map a bare `<leader>x` that is also the start of a longer map
   (it waits `timeoutlen`); `<leader>o` and `<leader>d` are bare maps, so keep groups off them.
 - `lua/plugins/git.lua` — gitsigns, octo, diffview, `diffopt`, and `:PRDiff`. `:PRDiff`
   diffs against the PR's base branch, or with no PR `origin/HEAD`, else GitHub's default
