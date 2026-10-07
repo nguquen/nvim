@@ -262,3 +262,33 @@ vim.api.nvim_create_user_command('PRDiff', function()
     end)
   end)
 end, { desc = 'Diffview of the current branch against its PR base or the default branch' })
+
+-- Approve the current branch's PR (gh pr review --approve), after a confirmation. In an Octo PR buffer, octo's own
+-- <leader>ra (approve that buffer's PR) takes over.
+vim.api.nvim_create_user_command('PRApprove', function()
+  run(
+    { 'gh', 'pr', 'view', '--json', 'number,title,author', '-q', '[.number, .author.login, .title] | @tsv' },
+    function(pr)
+      local number, author, title = (pr or ''):match('^(%d+)\t([^\t]*)\t(.*)$')
+      vim.schedule(function()
+        if not number then
+          vim.notify('PRApprove: no PR for this branch', vim.log.levels.WARN)
+          return
+        end
+        local question = ('Approve PR #%s "%s" by @%s?'):format(number, title, author)
+        if vim.fn.confirm(question, '&Yes\n&No', 2) ~= 1 then
+          return
+        end
+        vim.system({ 'gh', 'pr', 'review', number, '--approve' }, { text = true }, function(r)
+          vim.schedule(function()
+            if r.code == 0 then
+              vim.notify(('PRApprove: approved PR #%s'):format(number))
+            else
+              vim.notify('PRApprove: ' .. vim.trim(r.stderr or ''), vim.log.levels.ERROR)
+            end
+          end)
+        end)
+      end)
+    end
+  )
+end, { desc = 'Approve the current branch\'s PR' })

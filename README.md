@@ -165,7 +165,7 @@ space rp : list PRs (Octo)
 space rd : diff current branch against its PR's base, or the default branch if no PR yet (:PRDiff)
 space rr : start review       space rR : resume review
 space rs : submit review
-space ra : approve PR (in an Octo PR buffer)
+space ra : approve PR: the current branch's (:PRApprove, asks first), or in an Octo PR buffer that PR
 space rh : file history (Diffview)
 space rc : close Diffview
 ]c / [c  : next / previous change (diff windows) or git hunk (other buffers)

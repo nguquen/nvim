@@ -123,6 +123,8 @@ vim.keymap.set('n', '<leader>rd', '<cmd>PRDiff<cr>', { desc = 'Diffview PR' })
 vim.keymap.set('n', '<leader>rr', '<cmd>Octo review start<cr>', { desc = 'Start review' })
 vim.keymap.set('n', '<leader>rR', '<cmd>Octo review resume<cr>', { desc = 'Resume review' })
 vim.keymap.set('n', '<leader>rs', '<cmd>Octo review submit<cr>', { desc = 'Submit review' })
+-- in an Octo PR buffer, octo's buffer-local <leader>ra (lua/plugins/git.lua) approves that buffer's PR instead
+vim.keymap.set('n', '<leader>ra', '<cmd>PRApprove<cr>', { desc = 'Approve the current branch\'s PR' })
 vim.keymap.set('n', '<leader>rc', '<cmd>DiffviewClose<cr>', { desc = 'Close Diffview' })
 vim.keymap.set('n', '<leader>rh', '<cmd>DiffviewFileHistory %<cr>', { desc = 'File history' })
 
