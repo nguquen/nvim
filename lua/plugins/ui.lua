@@ -18,7 +18,19 @@ require('lualine').setup({
     lualine_a = {
       {
         'tabs',
-        mode = 2, -- tab number + name; {N}gt goes to tab N
+        -- like Neovim's default label, but the tab number instead of the window count: `3+ ~/P/g/o/file.lua`
+        -- (+ = a buffer in the tab is modified); {N}gt goes to tab N
+        mode = 2,
+        path = 1,
+        tab_max_length = 0, -- lualine's own shortening runs before fmt and would mangle plugin buffer names
+        fmt = function(name)
+          -- plugin buffers (diffview://, octo://): just the last part, e.g. DiffviewFilePanel or the file name
+          if name:match('^%a[%w+.-]*://') then
+            return vim.fn.fnamemodify(name, ':t')
+          end
+          return vim.fn.pathshorten(name)
+        end,
+        symbols = { modified = '+' },
         -- Neovim's default tabline colours; the auto theme gives active and inactive tabs the same colours
         tabs_color = { active = 'TabLineSel', inactive = 'TabLine' },
         max_length = function()
