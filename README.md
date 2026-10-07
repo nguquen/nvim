@@ -169,14 +169,14 @@ space rc : close Diffview
 [Q / ]Q  : first / last file (Diffview and Octo review)
 ```
 
-While `:PRDiff` is open, the git signs in every buffer compare against the same base, so `]c` / `[c`
-and `:Gitsigns setqflist all` walk the whole branch; closing Diffview switches them back to `HEAD`.
+In the `:PRDiff` tab, the git signs on the real files compare against the same base, so `]c` / `[c`
+walk the branch's changes there; other tabs keep comparing against `HEAD`.
 With no PR, the base is `origin/HEAD` (set by `git clone`; `git remote set-head origin -a` sets it
 later), else GitHub's default branch. While it looks up the base and fetches, the message line shows
 which step it is on.
 Octo reviews show the real file on the right (LSP works there) and offer to check out the PR branch
 first; say yes, or the right side is a read-only copy. On the real file, the git signs compare against
-the PR's base (not `HEAD`, which is the PR itself) until the review tab closes. Octo reviews use the same
+the PR's base (not `HEAD`, which is the PR itself), only in the review tab. Octo reviews use the same
 diff colours as Diffview and show the changed files on the left, like Diffview. Octo merges squash by default.
 
 ## Database (vim-dadbod-ui)

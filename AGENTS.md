@@ -32,13 +32,16 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
 - `lua/plugins/git.lua` — gitsigns, octo, diffview, `diffopt`, and `:PRDiff`. `:PRDiff`
   diffs against the PR's base branch, or with no PR `origin/HEAD`, else GitHub's default
   branch; it runs those lookups and `git fetch` with `vim.system` callbacks (never blocking).
-  It sets gitsigns' base to the merge base for all buffers; diffview's `view_closed` hook
-  resets it. In an Octo review, the right-side real file (`use_local_fs`) gets a per-buffer
-  gitsigns base = the PR's merge base (`b:review_base`), reset on `TabClosed`. Octo has no
-  review events, so this reads octo internals (`b:octo_diff_props`,
-  `require('octo.reviews').get_current_review().pull_request.left.commit`); recheck after
-  octo updates. The base is applied on gitsigns' `User GitSignsUpdate`, because a
-  `change_base` while gitsigns is still attaching is lost. The same file also wraps
+  Review tabs (the `:PRDiff` Diffview tab, and an Octo review tab whose right side is the
+  real file via `use_local_fs`) give gitsigns the PR's merge base instead of `HEAD`, only
+  in that tab: `tab_base[tabpage]` holds the base, and `TabEnter` / `BufWinEnter` set each
+  shown buffer's base (`b:review_base`) to its tab's, so a file open in a normal tab too
+  shows `HEAD` signs there. Octo has no review events, so this reads octo internals
+  (`b:octo_diff_props`, `require('octo.reviews').get_current_review().pull_request.left.commit`,
+  per tabpage); recheck after octo updates. The base is applied on gitsigns'
+  `User GitSignsUpdate`, because a `change_base` while gitsigns is still attaching is lost;
+  hidden buffers are left alone (a `change_base` racing gitsigns' deferred update of a
+  hidden buffer is lost too). The same file also wraps
   `require('octo').update_layout_for_current_file` to work around an octo `use_local_fs`
   BufEnter recursion (shows as "No matching autocommands: filetypedetect BufRead");
   drop it once octo fixes that. It also wraps octo's `Layout.init_layout` to relink the

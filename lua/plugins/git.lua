@@ -80,15 +80,19 @@ OctoFilePanel.open = function(self)
   vim.cmd('wincmd =')
 end
 
--- In an Octo review, gitsigns on the right-side file (the real file, with use_local_fs) diffs against the
--- PR's merge base instead of HEAD, which is the PR head once it's checked out. Uses octo internals: Octo has
--- no review events, but it marks review buffers with b:octo_diff_props.
+-- In a review tab (an Octo review, or Diffview opened by :PRDiff), gitsigns diffs the tab's real files against
+-- the PR's merge base instead of HEAD, which is the PR head once it's checked out. Other tabs keep HEAD. The
+-- base is per buffer, so a file shown in both kinds of tab follows the tab you're in.
+-- Octo has no review events, so this uses octo internals: it marks review buffers with b:octo_diff_props.
 
--- Applies b:review_base (nil = back to the default base) once gitsigns has finished its first update of the
--- buffer; a change_base during gitsigns' attach is lost.
+-- tabpage -> merge base for the review tabs
+local tab_base = {}
+
+-- Gives buf the base of the tab it's shown in (nil = back to HEAD), once gitsigns has finished its first
+-- update of the buffer; a change_base during gitsigns' attach is lost (User GitSignsUpdate retries).
 local function apply_review_base(buf)
   local b = vim.b[buf]
-  if b.review_base_applied == (b.review_base or false) or (b.gitsigns_status_dict or {}).added == nil then
+  if (b.review_base_applied or false) == (b.review_base or false) or (b.gitsigns_status_dict or {}).added == nil then
     return
   end
   b.review_base_applied = b.review_base or false
@@ -97,29 +101,38 @@ local function apply_review_base(buf)
   end)
 end
 
-local review_group = vim.api.nvim_create_augroup('OctoReviewGitsigns', { clear = true })
+-- Sets the base of every buffer shown in the current tab to the tab's
+local function sync_review_base()
+  local base = tab_base[vim.api.nvim_get_current_tabpage()]
+  for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    vim.b[buf].review_base = base
+    apply_review_base(buf)
+  end
+end
+
+local review_group = vim.api.nvim_create_augroup('ReviewGitsigns', { clear = true })
 vim.api.nvim_create_autocmd('BufWinEnter', {
   group = review_group,
   callback = function(ev)
     local props = vim.b[ev.buf].octo_diff_props
-    if not props or props.split ~= 'RIGHT' or vim.api.nvim_buf_get_name(ev.buf):match('^octo://') then
-      return
+    if props and props.split == 'RIGHT' and not vim.api.nvim_buf_get_name(ev.buf):match('^octo://') then
+      local review = require('octo.reviews').get_current_review()
+      local base = review and review.pull_request.left.commit
+      if base then
+        tab_base[vim.api.nvim_get_current_tabpage()] = base
+      end
     end
-    local review = require('octo.reviews').get_current_review()
-    local base = review and review.pull_request.left.commit
-    if base then
-      vim.b[ev.buf].review_base = base
-      vim.b[ev.buf].review_tab = vim.api.nvim_get_current_tabpage()
-      apply_review_base(ev.buf)
-    end
+    sync_review_base()
   end,
 })
+vim.api.nvim_create_autocmd('TabEnter', { group = review_group, callback = sync_review_base })
 vim.api.nvim_create_autocmd('User', {
   group = review_group,
   pattern = 'GitSignsUpdate',
   callback = function(ev)
     local buf = ev.data and ev.data.buffer
-    if buf and vim.b[buf].review_tab then
+    if buf then
       apply_review_base(buf)
     end
   end,
@@ -127,22 +140,16 @@ vim.api.nvim_create_autocmd('User', {
 vim.api.nvim_create_autocmd('TabClosed', {
   group = review_group,
   callback = function()
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-      local tab = vim.b[buf].review_tab
-      if tab and not vim.api.nvim_tabpage_is_valid(tab) then
-        vim.b[buf].review_base = nil
-        vim.b[buf].review_tab = nil
-        if vim.api.nvim_buf_is_loaded(buf) then
-          apply_review_base(buf)
-        end
-        vim.b[buf].review_base_applied = nil
+    for tab in pairs(tab_base) do
+      if not vim.api.nvim_tabpage_is_valid(tab) then
+        tab_base[tab] = nil
       end
     end
+    -- buffers that are now hidden keep their base until they're shown again (BufWinEnter syncs them): gitsigns
+    -- defers a hidden buffer's update to its next BufEnter, and a change_base racing that update is lost
+    sync_review_base()
   end,
 })
-
--- set while :PRDiff has moved gitsigns' base to the PR's merge base
-local pr_base_set = false
 
 -- same file keys as an octo review: ]q / [q next / previous, [Q / ]Q first / last (<tab> / <s-tab> still work)
 local diffview_actions = require('diffview.actions')
@@ -163,14 +170,6 @@ require('diffview').setup({
   view = {
     default = { winbar_info = true },
     file_history = { winbar_info = true },
-  },
-  hooks = {
-    view_closed = function()
-      if pr_base_set then
-        pr_base_set = false
-        require('gitsigns').change_base(nil, true)
-      end
-    end,
   },
 })
 vim.opt.fillchars:append({ diff = '╱' })
@@ -222,8 +221,7 @@ end
 local prdiff_running = false
 
 -- Diffview of the current branch against its PR's base (or the default branch before there is a PR).
--- While it's open, gitsigns also diffs every buffer against the merge base, so ]c / [c and
--- :Gitsigns setqflist all walk the branch's changes.
+-- In its tab, gitsigns also diffs the real files against the merge base, so ]c / [c walk the branch's changes.
 vim.api.nvim_create_user_command('PRDiff', function()
   if prdiff_running then
     vim.notify('PRDiff: already running', vim.log.levels.WARN)
@@ -245,8 +243,8 @@ vim.api.nvim_create_user_command('PRDiff', function()
           prdiff_running = false
           vim.cmd('DiffviewOpen origin/' .. base .. '...HEAD --imply-local')
           if merge_base then
-            pr_base_set = true
-            require('gitsigns').change_base(merge_base, true)
+            tab_base[vim.api.nvim_get_current_tabpage()] = merge_base
+            sync_review_base()
           end
           prdiff_progress(
             (is_pr and 'diffing against origin/' or 'no PR for this branch; diffing against origin/') .. base,
