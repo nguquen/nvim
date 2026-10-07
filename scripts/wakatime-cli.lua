@@ -1,7 +1,8 @@
 -- Runs the real wakatime-cli ($NVIM_WAKATIME_CLI) for vim-wakatime, changing the heartbeats it sends:
 -- - a heartbeat made while a review was current (periods in $NVIM_WAKATIME_REVIEW_FILE, written by
 --   lua/plugins/wakatime.lua) gets the category "code reviewing", unless it already has one (debugging);
--- - an octo:// entity becomes a URL: the PR / issue / discussion page's, or for a review buffer the PR's.
+-- - an octo:// entity becomes a URL: the PR / issue / discussion page's, or for a review buffer the PR's;
+-- - a diffview:// entity (a file at a git revision) in a review of a known PR becomes the PR's URL.
 -- Everything else (and every non-heartbeat command) passes through unchanged.
 
 local args = { os.getenv('NVIM_WAKATIME_CLI') }
@@ -39,8 +40,15 @@ end
 
 local kinds = { pull = 'pull', issue = 'issues', discussion = 'discussions' }
 
--- URL and repo name for an octo:// entity, or nil
-local function octo_url(entity, period)
+-- URL and repo name for an octo:// or diffview:// entity, or nil
+local function entity_url(entity, period)
+  if entity:match('^diffview://') then
+    local pr = period and period[3]
+    if pr then
+      return pr, pr:match('/([^/]+)/pull/%d+$')
+    end
+    return
+  end
   local path = entity:match('^octo://(.+)$')
   if not path then
     return
@@ -67,7 +75,7 @@ local function change(hb)
     new.category = 'code reviewing'
     reviewing = true
   end
-  local url, repo = octo_url(hb.entity, period)
+  local url, repo = entity_url(hb.entity, period)
   if url then
     new.entity, new.entity_type, new.alternate_project = url, 'url', repo
   end

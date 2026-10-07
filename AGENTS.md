@@ -65,7 +65,10 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   review tab, `octo://…/pull/N` buffer, Diffview tab) as whole seconds to
   `stdpath('state')/wakatime/review-<pid>`; the wrapper gives heartbeats inside one the
   category "code reviewing" (not over an existing one, i.e. debugging), turns `octo://`
-  entities into the PR/issue URL (`--entity-type url`, repo as alternate project), and adds
+  entities into the PR/issue URL (`--entity-type url`, repo as alternate project), and
+  `diffview://` ones (a file at a git revision) into the PR's URL when the period has one
+  (`:PRDiff` gets it with the base from `gh pr view` and sets `vim.t.pr_url` on its
+  Diffview tab; other Diffview tabs count as reviewing without a URL), and adds
   `--sync-ai-disabled` to such sends, because the CLI otherwise relabels heartbeats near
   AI-agent activity as "ai coding". Heartbeat times are `localtime()` seconds, so periods
   are `[start, stop)` in seconds. The autocmds must be created before

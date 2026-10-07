@@ -58,7 +58,8 @@ local function pr_url(repo, number)
   return ('https://%s/%s/pull/%s'):format(host, rest or repo, number)
 end
 
--- The PR reviewed in the current tab or buffer: its URL, '' for a Diffview tab (no PR), nil when not reviewing
+-- The PR reviewed in the current tab or buffer: its URL ('' for a Diffview tab with no known PR), nil when not
+-- reviewing. :PRDiff sets its Diffview tab's vim.t.pr_url.
 local function current_review()
   local octo_review = package.loaded['octo.reviews'] and require('octo.reviews').get_current_review()
   if octo_review then
@@ -69,7 +70,7 @@ local function current_review()
     return pr_url(repo, number)
   end
   if package.loaded['diffview'] and require('diffview.lib').get_current_view() then
-    return ''
+    return vim.t.pr_url or ''
   end
 end
 

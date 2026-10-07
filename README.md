@@ -181,7 +181,8 @@ the PR's base (not `HEAD`, which is the PR itself), only in the review tab. Octo
 diff colours as Diffview and show the changed files on the left, like Diffview. Octo merges squash by default.
 
 WakaTime counts time in an Octo review, on an Octo PR page or in a Diffview tab as **Code Reviewing**,
-and Octo pages as the PR's GitHub page under the repo's project (wakatime-cli would otherwise drop them).
+and Octo pages and the base side of a `:PRDiff` as the PR's GitHub page under the repo's project
+(wakatime-cli would otherwise drop them).
 
 ## Database (vim-dadbod-ui)
 
