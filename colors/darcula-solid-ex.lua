@@ -34,6 +34,7 @@ set('Visual', { bg = '#214283' }) -- no fg, so syntax colors stay visible
 set('DiffAdd', { bg = '#294436' }) -- added lines
 set('DiffChange', { bg = '#2B3644' }) -- changed line (subtle)
 set('DiffText', { bg = '#3F5F82' }) -- changed characters (strong)
+set('DiffTextAdd', { bg = '#3C6B4C' }) -- text added inside a changed line
 set('DiffDelete', { bg = '#4A2C2C' }) -- removed lines (Diffview copies this)
 set('DiffviewDiffDeleteDim', { fg = special_grey }) -- ╱╱╱ filler lines
 

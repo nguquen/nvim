@@ -35,7 +35,7 @@ vim.keymap.set('n', '<leader>y', function()
 end, { silent = true })
 
 -- refactoring.nvim: pick extract/inline variable or function; in normal mode, follow with a motion
-vim.keymap.set({ 'n', 'x' }, '<leader>rs', function()
+vim.keymap.set({ 'n', 'x' }, '<leader>rf', function()
   require('refactoring').select_refactor()
 end, { desc = 'Select refactor' })
 
@@ -112,11 +112,24 @@ vim.keymap.set('n', '<f2>', dapui.close, {})
 -- lazygit
 -- map('n', '<leader>\\', ':LazyGit<cr>', {})
 
--- github
-vim.keymap.set('n', '<leader>op', '<cmd>Octo pr list<cr>', { desc = 'List PRs' })
-vim.keymap.set('n', '<leader>od', '<cmd>PRDiff<cr>', { desc = 'Diffview PR' })
-vim.keymap.set('n', '<leader>or', '<cmd>Octo review start<cr>', { desc = 'Start review' })
-vim.keymap.set('n', '<leader>oR', '<cmd>Octo review resume<cr>', { desc = 'Resume review' })
-vim.keymap.set('n', '<leader>os', '<cmd>Octo review submit<cr>', { desc = 'Submit review' })
-vim.keymap.set('n', '<leader>dc', '<cmd>DiffviewClose<cr>', { desc = 'Close Diffview' })
-vim.keymap.set('n', '<leader>dh', '<cmd>DiffviewFileHistory %<cr>', { desc = 'File history' })
+-- review: GitHub PRs (octo) and diffs (diffview)
+vim.keymap.set('n', '<leader>rp', '<cmd>Octo pr list<cr>', { desc = 'List PRs' })
+vim.keymap.set('n', '<leader>rd', '<cmd>PRDiff<cr>', { desc = 'Diffview PR' })
+vim.keymap.set('n', '<leader>rr', '<cmd>Octo review start<cr>', { desc = 'Start review' })
+vim.keymap.set('n', '<leader>rR', '<cmd>Octo review resume<cr>', { desc = 'Resume review' })
+vim.keymap.set('n', '<leader>rs', '<cmd>Octo review submit<cr>', { desc = 'Submit review' })
+vim.keymap.set('n', '<leader>rc', '<cmd>DiffviewClose<cr>', { desc = 'Close Diffview' })
+vim.keymap.set('n', '<leader>rh', '<cmd>DiffviewFileHistory %<cr>', { desc = 'File history' })
+
+-- ]c / [c: diff changes in diff mode, gitsigns hunks elsewhere
+local jump_hunk = function(key, direction)
+  return function()
+    if vim.wo.diff then
+      vim.cmd.normal({ vim.v.count1 .. key, bang = true })
+    else
+      require('gitsigns').nav_hunk(direction)
+    end
+  end
+end
+vim.keymap.set('n', ']c', jump_hunk(']c', 'next'), { desc = 'Next change / hunk' })
+vim.keymap.set('n', '[c', jump_hunk('[c', 'prev'), { desc = 'Previous change / hunk' })
