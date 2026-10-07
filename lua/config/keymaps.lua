@@ -22,6 +22,11 @@ map('n', '<leader>j', '<c-w><c-j>', { noremap = true, silent = true })
 map('n', '<leader>k', '<c-w><c-k>', { noremap = true, silent = true })
 map('n', '<leader>l', '<c-w><c-l>', { noremap = true, silent = true })
 
+-- macros: record with Q (Qa … Q) so a stray q (a missed ]q / [q) doesn't start recording; Q: opens the
+-- command-line window. Buffer-local q maps (plugins' "close") still win over this.
+map('n', 'q', '<nop>', { noremap = true })
+map('n', 'Q', 'q', { noremap = true })
+
 -- misc
 map('n', '<leader>ch', ':noh<cr>', { noremap = true, silent = true })
 map('n', '<leader>p', '"0p', { noremap = true, silent = true })
