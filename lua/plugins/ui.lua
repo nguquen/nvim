@@ -80,7 +80,14 @@ require('lualine').setup({
 })
 
 require('render-markdown').setup({
-  file_types = { 'markdown' },
+  file_types = { 'markdown', 'octo' },
   -- needs a latex parser plus utftex or latex2text; no math rendering
   latex = { enabled = false },
+  overrides = {
+    filetype = {
+      -- Octo's conceallevel 2, in both views: Octo conceals :heart: as ❤️, which 3 (rendered) would hide and the
+      -- global 0 (raw, e.g. insert mode) would show as text
+      octo = { win_options = { conceallevel = { default = 2, rendered = 2 } } },
+    },
+  },
 })

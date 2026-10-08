@@ -182,6 +182,8 @@ Octo reviews show the real file on the right (LSP works there) and offer to chec
 first; say yes, or the right side is a read-only copy. On the real file, the git signs compare against
 the PR's base (not `HEAD`, which is the PR itself), only in the review tab. Octo reviews use the same
 diff colours as Diffview and show the changed files on the left, like Diffview. Octo merges squash by default.
+Octo PR, issue and comment buffers render their markdown like `.md` files (headings, lists, tables, alerts,
+code blocks); insert mode, and the line under the cursor, show the raw text.
 
 WakaTime counts time in an Octo review, on an Octo PR page or in a Diffview tab as **Code Reviewing**,
 and Octo pages and the base side of a `:PRDiff` as the PR's GitHub page under the repo's project
