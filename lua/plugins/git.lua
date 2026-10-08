@@ -7,6 +7,14 @@ require('gitsigns').setup({
 vim.g.gitblame_enabled = 0
 vim.g.gitblame_delay = 250
 
+-- Runs cmd in the background; on_done gets its trimmed stdout, or nil if it failed or printed nothing
+local function run(cmd, on_done)
+  vim.system(cmd, { text = true }, function(r)
+    local out = vim.trim(r.stdout or '')
+    on_done(r.code == 0 and out ~= '' and out or nil)
+  end)
+end
+
 require('octo').setup({
   picker = 'telescope', -- "fzf-lua" | "snacks" | "default"
   enable_builtin = true, -- bare :Octo opens a command picker
@@ -82,6 +90,92 @@ OctoFilePanel.open = function(self)
     vim.api.nvim_set_option_value(k, v, { win = self.winid, scope = 'local' })
   end
   vim.cmd('wincmd =')
+end
+
+-- Octo checks a PR out with `gh pr checkout <n>`, as a local branch named after the PR's head branch. While another
+-- worktree has that branch (an agent's worktree, even one whose folder is gone) git refuses to check it out, and the
+-- review's right side falls back to the read-only octo:// copy. Then check the PR out as pr-<n> instead, tracking
+-- the PR branch (octo's in_pr_branch accepts any local name with that upstream); re-running it pulls new commits.
+
+-- on_done(branch) with the PR's head branch if another worktree has it checked out, else on_done(nil); on_done
+-- runs in a vim.system callback
+local function pr_branch_in_other_worktree(pr_number, repo, on_done)
+  local view = { 'gh', 'pr', 'view', tostring(pr_number), '--json', 'headRefName', '-q', '.headRefName' }
+  if repo then
+    vim.list_extend(view, { '--repo', repo })
+  end
+  run(view, function(head)
+    if not head then
+      return on_done(nil)
+    end
+    run({ 'git', 'branch', '--show-current' }, function(current)
+      run({ 'git', 'worktree', 'list', '--porcelain' }, function(worktrees)
+        local held = current ~= head
+          and ('\n' .. (worktrees or '') .. '\n'):find('\nbranch refs/heads/' .. vim.pesc(head) .. '\n')
+        on_done(held and head or nil)
+      end)
+    end)
+  end)
+end
+
+local octo_utils = require('octo.utils')
+local octo_gh = require('octo.gh')
+
+-- the local branch for the PR when another worktree has its head branch (held); tells the user
+local function pr_branch_name(pr_number, held)
+  local branch = 'pr-' .. pr_number
+  octo_utils.info(held .. ' is checked out in another worktree; checking the PR out as ' .. branch)
+  return branch
+end
+
+-- from a PR buffer or the PR picker
+local checkout_pr = octo_utils.checkout_pr
+---@diagnostic disable-next-line: duplicate-set-field
+octo_utils.checkout_pr = function(pr_number)
+  pr_branch_in_other_worktree(pr_number, nil, function(held)
+    vim.schedule(function()
+      if not held then
+        return checkout_pr(pr_number)
+      end
+      local branch = pr_branch_name(pr_number, held)
+      octo_gh.pr.checkout({
+        pr_number,
+        branch = branch,
+        opts = {
+          cb = function(_, stderr, status)
+            if status == 0 then
+              octo_utils.info('Switched to ' .. branch)
+            else
+              octo_utils.error(stderr)
+            end
+          end,
+        },
+      })
+    end)
+  end)
+end
+
+-- from the prompt when a review starts outside the PR branch
+local checkout_pr_sync = octo_utils.checkout_pr_sync
+---@diagnostic disable-next-line: duplicate-set-field
+octo_utils.checkout_pr_sync = function(opts)
+  local held
+  pr_branch_in_other_worktree(opts.pr_number, opts.repo, function(branch)
+    held = branch or false
+  end)
+  vim.wait(require('octo.config').values.timeout, function()
+    return held ~= nil
+  end)
+  if not held then
+    return checkout_pr_sync(opts)
+  end
+  octo_gh.pr.checkout({
+    opts.pr_number,
+    repo = opts.repo,
+    branch = pr_branch_name(opts.pr_number, held),
+    opts = { mode = 'sync' },
+  })
+  octo_utils.info('Switched to ' .. vim.trim(vim.fn.system({ 'git', 'branch', '--show-current' })))
 end
 
 -- In a review tab (an Octo review, or Diffview opened by :PRDiff), gitsigns diffs the tab's real files against
@@ -181,28 +275,46 @@ vim.opt.fillchars:append({ diff = '╱' })
 vim.opt.diffopt:remove({ 'linematch:40', 'inline:char' })
 vim.opt.diffopt:append({ 'algorithm:histogram', 'linematch:60', 'inline:word' })
 
--- Runs cmd in the background; on_done gets its trimmed stdout, or nil if it failed or printed nothing
-local function run(cmd, on_done)
-  vim.system(cmd, { text = true }, function(r)
-    local out = vim.trim(r.stdout or '')
-    on_done(r.code == 0 and out ~= '' and out or nil)
+-- on_found(branch, pr_url): the PR's base branch and URL, or with no PR the remote's default branch
+-- (origin/HEAD, else GitHub's) and nil, or nil
+-- on_pr(base, url) with the base branch and URL of branch's PR (branch nil: the current branch's), or on_pr()
+local function find_pr(branch, on_pr)
+  local cmd = { 'gh', 'pr', 'view', '--json', 'baseRefName,url', '-q', '.baseRefName + " " + .url' }
+  if branch then
+    table.insert(cmd, 4, branch)
+  end
+  run(cmd, function(pr)
+    on_pr((pr or ''):match('^(%S+) (%S+)$'))
   end)
 end
 
--- on_found(branch, pr_url): the PR's base branch and URL, or with no PR the remote's default branch
--- (origin/HEAD, else GitHub's) and nil, or nil
+-- on_found(branch) with origin/HEAD's branch, else GitHub's default branch, or nil
+local function find_default_branch(on_found)
+  run({ 'git', 'symbolic-ref', '--short', 'refs/remotes/origin/HEAD' }, function(head)
+    if head then
+      return on_found((head:gsub('^origin/', '')))
+    end
+    run({ 'gh', 'repo', 'view', '--json', 'defaultBranchRef', '-q', '.defaultBranchRef.name' }, on_found)
+  end)
+end
+
 local function find_base(on_found)
-  run({ 'gh', 'pr', 'view', '--json', 'baseRefName,url', '-q', '.baseRefName + " " + .url' }, function(pr)
-    local pr_base, pr_url = (pr or ''):match('^(%S+) (%S+)$')
+  find_pr(nil, function(pr_base, pr_url)
     if pr_base then
       return on_found(pr_base, pr_url)
     end
-    run({ 'git', 'symbolic-ref', '--short', 'refs/remotes/origin/HEAD' }, function(head)
-      if head then
-        return on_found((head:gsub('^origin/', '')))
+    -- a PR checked out under another name (pr-<n>, see the octo checkout above): gh finds a branch's PR by the
+    -- branch's name or where it pushes to, so look it up by the name of the branch it tracks
+    run({ 'git', 'rev-parse', '--abbrev-ref', 'HEAD', '@{u}' }, function(refs)
+      local branch, upstream = (refs or ''):match('^(%S+)\n[^/]+/(%S+)$')
+      if not upstream or upstream == branch then
+        return find_default_branch(on_found)
       end
-      run({ 'gh', 'repo', 'view', '--json', 'defaultBranchRef', '-q', '.defaultBranchRef.name' }, function(default)
-        on_found(default)
+      find_pr(upstream, function(up_base, up_url)
+        if up_base then
+          return on_found(up_base, up_url)
+        end
+        find_default_branch(on_found)
       end)
     end)
   end)
