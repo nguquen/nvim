@@ -180,7 +180,10 @@ later), else GitHub's default branch. While it looks up the base and fetches, th
 which step it is on.
 Octo reviews show the real file on the right (LSP works there) and offer to check out the PR branch
 first; say yes, or the right side is a read-only copy. On the real file, the git signs compare against
-the PR's base (not `HEAD`, which is the PR itself), only in the review tab. Octo reviews use the same
+the PR's base (not `HEAD`, which is the PR itself), only in the review tab. If another worktree has the
+PR branch checked out (an agent's, say), Octo checks the PR out as a branch `pr-<n>` that tracks it;
+check it out again (`<localleader>po` in the PR buffer) to pull new commits. `:PRDiff` on `pr-<n>`
+finds the PR too. Octo reviews use the same
 diff colours as Diffview and show the changed files on the left, like Diffview. Octo merges squash by default.
 Octo PR, issue and comment buffers render their markdown like `.md` files (headings, lists, tables, alerts,
 code blocks); insert mode, and the line under the cursor, show the raw text.
