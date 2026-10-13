@@ -71,27 +71,6 @@ OctoLayout.init_layout = function(self)
   end
 end
 
--- Octo review's changed-files panel on the left, full height, like Diffview's (octo puts it at the bottom and has
--- no option for it). Same as octo's FilePanel:open otherwise.
-local OctoFilePanel = require('octo.reviews.file-panel').FilePanel
----@diagnostic disable-next-line: duplicate-set-field
-OctoFilePanel.open = function(self)
-  if not self:buf_loaded() then
-    self:init_buffer()
-  end
-  if self:is_open() then
-    return
-  end
-  vim.cmd('topleft vsplit')
-  vim.cmd('vertical resize 40')
-  self.winid = vim.api.nvim_get_current_win()
-  vim.cmd('buffer ' .. self.bufid)
-  for k, v in pairs(OctoFilePanel.winopts) do
-    vim.api.nvim_set_option_value(k, v, { win = self.winid, scope = 'local' })
-  end
-  vim.cmd('wincmd =')
-end
-
 -- Octo checks a PR out with `gh pr checkout <n>`, as a local branch named after the PR's head branch. While another
 -- worktree has that branch (an agent's worktree, even one whose folder is gone) git refuses to check it out, and the
 -- review's right side falls back to the read-only octo:// copy. Then check the PR out as pr-<n> instead, tracking
@@ -260,6 +239,9 @@ local diffview_file_keys = {
 
 require('diffview').setup({
   enhanced_diff_hl = true,
+  file_panel = {
+    win_config = { position = 'bottom', height = 10 },
+  },
   keymaps = {
     view = diffview_file_keys,
     file_panel = diffview_file_keys,
