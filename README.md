@@ -184,7 +184,8 @@ the PR's base (not `HEAD`, which is the PR itself), only in the review tab. If a
 PR branch checked out (an agent's, say), Octo checks the PR out as a branch `pr-<n>` that tracks it;
 check it out again (`<localleader>po` in the PR buffer) to pull new commits. `:PRDiff` on `pr-<n>`
 finds the PR too. Octo reviews use the same
-diff colours as Diffview and show the changed files on the left, like Diffview. Octo merges squash by default.
+diff colours as Diffview. Both Octo reviews and Diffview list the changed files below the diff. Octo merges squash
+by default.
 Octo PR, issue and comment buffers render their markdown like `.md` files (headings, lists, tables, alerts,
 code blocks); insert mode, and the line under the cursor, show the raw text.
 
