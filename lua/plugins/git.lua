@@ -158,11 +158,12 @@ octo_utils.checkout_pr_sync = function(opts)
 end
 
 -- In a review tab (an Octo review, or Diffview opened by :PRDiff), gitsigns diffs the tab's real files against
--- the PR's merge base instead of HEAD, which is the PR head once it's checked out. Other tabs keep HEAD. The
--- base is per buffer, so a file shown in both kinds of tab follows the tab you're in.
+-- the PR's merge base instead of HEAD, which is the PR head once it's checked out; in an Octo review of one
+-- commit (:Octo review commit), the base is that commit's parent. Other tabs keep HEAD. The base is per buffer,
+-- so a file shown in both kinds of tab follows the tab you're in.
 -- Octo has no review events, so this uses octo internals: it marks review buffers with b:octo_diff_props.
 
--- tabpage -> merge base for the review tabs
+-- tabpage -> gitsigns base for the review tabs
 local tab_base = {}
 
 -- Gives buf the base of the tab it's shown in (nil = back to HEAD), once gitsigns has finished its first
@@ -195,7 +196,8 @@ vim.api.nvim_create_autocmd('BufWinEnter', {
     local props = vim.b[ev.buf].octo_diff_props
     if props and props.split == 'RIGHT' and not vim.api.nvim_buf_get_name(ev.buf):match('^octo://') then
       local review = require('octo.reviews').get_current_review()
-      local base = review and review.pull_request.left.commit
+      -- the review's left side: the merge base, or the parent of the commit under review
+      local base = review and review.layout and review.layout.left.commit
       if base then
         tab_base[vim.api.nvim_get_current_tabpage()] = base
       end

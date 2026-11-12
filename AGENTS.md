@@ -36,11 +36,12 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   When `gh pr view` finds no PR (it matches the local name or push target, so not a
   `pr-<n>` branch), it retries with the name of the upstream branch (remote stripped).
   Review tabs (the `:PRDiff` Diffview tab, and an Octo review tab whose right side is the
-  real file via `use_local_fs`) give gitsigns the PR's merge base instead of `HEAD`, only
-  in that tab: `tab_base[tabpage]` holds the base, and `TabEnter` / `BufWinEnter` set each
-  shown buffer's base (`b:review_base`) to its tab's, so a file open in a normal tab too
+  real file via `use_local_fs`) give gitsigns the PR's merge base instead of `HEAD` (in an
+  Octo review of one commit, `:Octo review commit`, that commit's parent), only in that
+  tab: `tab_base[tabpage]` holds the base, and `TabEnter` / `BufWinEnter` set each shown
+  buffer's base (`b:review_base`) to its tab's, so a file open in a normal tab too
   shows `HEAD` signs there. Octo has no review events, so this reads octo internals
-  (`b:octo_diff_props`, `require('octo.reviews').get_current_review().pull_request.left.commit`,
+  (`b:octo_diff_props`, `require('octo.reviews').get_current_review().layout.left.commit`,
   per tabpage); recheck after octo updates. The base is applied on gitsigns'
   `User GitSignsUpdate`, because a `change_base` while gitsigns is still attaching is lost;
   hidden buffers are left alone (a `change_base` racing gitsigns' deferred update of a
@@ -160,7 +161,7 @@ vim-wakatime updates it on its own).
 
 | Plugin | Checked at | What the config relies on |
 | --- | --- | --- |
-| octo.nvim | `af24116` (2026-08-28) | `lua/plugins/git.lua` replaces `require('octo').update_layout_for_current_file` (use_local_fs BufEnter loop) and `Layout.init_layout` (Diffview colours), and wraps `require('octo.utils').checkout_pr(pr_number)` / `.checkout_pr_sync({ repo, pr_number })` (every octo checkout goes through them) with `require('octo.gh').pr.checkout({ n, repo =, branch =, opts = { mode / cb(stdout, stderr, status) } })` and `config.values.timeout`; reads `b:octo_diff_props` and `require('octo.reviews').get_current_review().pull_request.left.commit` (gitsigns base). `lua/plugins/wakatime.lua` reads `get_current_review().pull_request.repo` / `.number`, `require('octo.config').values.github_hostname`, and buffer names `octo://<owner>/<repo>/pull/<n>`; the wrapper parses `octo://[<host>/]<owner>/<repo>/{pull,issue,discussion}/<n>` and `octo://…/review/…`. `lua/plugins/treesitter.lua` and `ui.lua` rely on `after/syntax/octo.vim` adding the emoji conceals (`matchadd`, `conceallevel` 2) |
+| octo.nvim | `af24116` (2026-08-28) | `lua/plugins/git.lua` replaces `require('octo').update_layout_for_current_file` (use_local_fs BufEnter loop) and `Layout.init_layout` (Diffview colours), and wraps `require('octo.utils').checkout_pr(pr_number)` / `.checkout_pr_sync({ repo, pr_number })` (every octo checkout goes through them) with `require('octo.gh').pr.checkout({ n, repo =, branch =, opts = { mode / cb(stdout, stderr, status) } })` and `config.values.timeout`; reads `b:octo_diff_props` and `require('octo.reviews').get_current_review().layout.left.commit` (gitsigns base; `focus_commit` sets the new layout before opening it). `lua/plugins/wakatime.lua` reads `get_current_review().pull_request.repo` / `.number`, `require('octo.config').values.github_hostname`, and buffer names `octo://<owner>/<repo>/pull/<n>`; the wrapper parses `octo://[<host>/]<owner>/<repo>/{pull,issue,discussion}/<n>` and `octo://…/review/…`. `lua/plugins/treesitter.lua` and `ui.lua` rely on `after/syntax/octo.vim` adding the emoji conceals (`matchadd`, `conceallevel` 2) |
 | vim-wakatime | `9f8a1d3` (2026-08-10) | `setup({ cli_path })` takes `cli_path` only on the first call; heartbeats come from a `BufEnter` autocmd created by `setup()`; it runs the CLI with `--entity` / `--time` / optional `--category`, plus `--extra-heartbeats` with a JSON list (`entity`, `timestamp`, `category`, …) on stdin. The wrapper changes only those calls and passes others (`--today`, `--version`, …) through |
 | diffview.nvim | `4516612` (2024-06-13) | `require('diffview.lib').get_current_view()` (review tab check) and buffer names `diffview://<repo>/.git/<rev>/<path>` for files at a git revision |
 | wakatime-cli | 2.26.14 | `--category "code reviewing"`, `--entity-type url`, `--alternate-project`, `--sync-ai-disabled` (the wrapper retries without it if the CLI rejects it) |
