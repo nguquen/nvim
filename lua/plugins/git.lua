@@ -139,12 +139,15 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter' }, {
   end,
 })
 
--- Octo sizes a thread's code snippet box by its widest diff line without the line-number columns, so rows with a
--- line longer than about the window width minus 10 run past the right border; it also counts a tab in the code as if
--- the line started at col 0, while Neovim draws it to the next tabstop from its screen column. Widen every row
--- (borders, and the padding before a row's closing │) to the widest row, measured the way it's drawn: chunk by chunk
--- from the column it starts at, with the octo buffer's tabstop. Each row is one overlay extmark: a border is one
--- chunk, a content row ends with its padding chunk and │.
+-- Octo draws a thread's code snippet box at col 0 and sizes it by its widest diff line without the line-number
+-- columns, so rows with a line longer than about the window width minus 10 run past the right border; it also counts
+-- a tab in the code as if the line started at col 0, while Neovim draws it to the next tabstop from its screen column.
+-- Indent the box to 2 * timeline_indent (under the thread comments' markers; the rows are overlays on empty lines, so
+-- only a leading chunk moves them), and widen every row (borders, and the padding before a row's closing │) to the
+-- widest row, measured the way it's drawn: chunk by chunk from the column it starts at, with the octo buffer's
+-- tabstop. Then take back what the indent pushed past the window, up to the padding octo added beyond the longest
+-- line, so a box octo fitted to the window still fits. Each row is one overlay extmark: a border is one chunk, a
+-- content row ends with its padding chunk and │.
 local octo_writers = require('octo.ui.writers')
 local write_thread_snippet = octo_writers.write_thread_snippet
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -155,30 +158,52 @@ octo_writers.write_thread_snippet = function(bufnr, ...)
   end
   local ns = octo_constants.OCTO_DIFFHUNK_VT_NS
   local rows = vim.api.nvim_buf_get_extmarks(bufnr, ns, { start_line - 1, 0 }, { end_line - 1, -1 }, { details = true })
+  local indent = 2 * octo_config.values.timeline_indent
+  -- row widths from the indent on (the indent included)
   local widths, widest = {}, 0
   vim.api.nvim_buf_call(bufnr, function()
     for i, row in ipairs(rows) do
-      local width = 0
+      local width = indent
       for _, chunk in ipairs(row[4].virt_text or {}) do
         width = width + vim.fn.strdisplaywidth(chunk[1], width)
       end
       widths[i], widest = width, math.max(widest, width)
     end
   end)
+  -- slack: the narrowest content row padding once every row is widened to the widest
+  local slack = math.huge
   for i, row in ipairs(rows) do
-    local missing = widest - widths[i]
+    local chunks = row[4].virt_text or {}
+    if #chunks > 1 then
+      slack = math.min(slack, #chunks[#chunks - 1][1] + widest - widths[i])
+    end
+  end
+  local win = vim.fn.bufwinid(bufnr)
+  win = win ~= -1 and win or vim.api.nvim_get_current_win()
+  local textoff = vim.fn.getwininfo(win)[1].textoff
+  if octo_config.values.ui.use_statuscolumn then
+    -- the octo buffer gets octo's status column: 2 wide, 3 once a line wraps (its wrapped rows add a column); the
+    -- window may not be drawn with it yet (octo renders before it shows the buffer or sets the column)
+    textoff = math.max(textoff, 3)
+  end
+  local text_width = vim.api.nvim_win_get_width(win) - textoff
+  local shrink = math.max(0, math.min(widest - text_width, slack == math.huge and 0 or slack))
+  for i, row in ipairs(rows) do
+    local change = widest - widths[i] - shrink
     local opts = row[4]
     local chunks = opts.virt_text
-    if missing > 0 and chunks then
+    if chunks then
       if #chunks == 1 then
         local border = chunks[1][1]
-        local last = vim.fn.strchars(border) - 1
-        chunks[1][1] = vim.fn.strcharpart(border, 0, last)
-          .. string.rep('─', missing)
-          .. vim.fn.strcharpart(border, last)
+        local dashes = vim.fn.strchars(border) - 2 + change
+        chunks[1][1] = vim.fn.strcharpart(border, 0, 1)
+          .. string.rep('─', dashes)
+          .. vim.fn.strcharpart(border, vim.fn.strchars(border) - 1)
       else
-        chunks[#chunks - 1][1] = chunks[#chunks - 1][1] .. string.rep(' ', missing)
+        local padding = chunks[#chunks - 1][1]
+        chunks[#chunks - 1][1] = string.rep(' ', #padding + change)
       end
+      table.insert(chunks, 1, { string.rep(' ', indent) })
       opts.ns_id = nil
       opts.id = row[1]
       vim.api.nvim_buf_set_extmark(bufnr, ns, row[2], row[3], opts)
