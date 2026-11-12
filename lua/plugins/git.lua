@@ -139,6 +139,50 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter' }, {
   end,
 })
 
+-- Octo sizes a thread's code snippet box by its widest diff line without the line-number columns, so rows with a
+-- line longer than about the window width minus 10 run past the right border. Widen every row (borders, and the
+-- padding before a row's closing │) to the widest row. Each row is one overlay extmark: a border is one chunk, a
+-- content row ends with its padding chunk and │.
+local octo_writers = require('octo.ui.writers')
+local write_thread_snippet = octo_writers.write_thread_snippet
+---@diagnostic disable-next-line: duplicate-set-field
+octo_writers.write_thread_snippet = function(bufnr, ...)
+  local start_line, end_line = write_thread_snippet(bufnr, ...)
+  if end_line <= start_line then
+    return start_line, end_line
+  end
+  local ns = octo_constants.OCTO_DIFFHUNK_VT_NS
+  local rows = vim.api.nvim_buf_get_extmarks(bufnr, ns, { start_line - 1, 0 }, { end_line - 1, -1 }, { details = true })
+  local widths, widest = {}, 0
+  for i, row in ipairs(rows) do
+    local width = 0
+    for _, chunk in ipairs(row[4].virt_text or {}) do
+      width = width + vim.fn.strdisplaywidth(chunk[1])
+    end
+    widths[i], widest = width, math.max(widest, width)
+  end
+  for i, row in ipairs(rows) do
+    local missing = widest - widths[i]
+    local opts = row[4]
+    local chunks = opts.virt_text
+    if missing > 0 and chunks then
+      if #chunks == 1 then
+        local border = chunks[1][1]
+        local last = vim.fn.strchars(border) - 1
+        chunks[1][1] = vim.fn.strcharpart(border, 0, last)
+          .. string.rep('─', missing)
+          .. vim.fn.strcharpart(border, last)
+      else
+        chunks[#chunks - 1][1] = chunks[#chunks - 1][1] .. string.rep(' ', missing)
+      end
+      opts.ns_id = nil
+      opts.id = row[1]
+      vim.api.nvim_buf_set_extmark(bufnr, ns, row[2], row[3], opts)
+    end
+  end
+  return start_line, end_line
+end
+
 -- Octo checks a PR out with `gh pr checkout <n>`, as a local branch named after the PR's head branch. While another
 -- worktree has that branch (an agent's worktree, even one whose folder is gone) git refuses to check it out, and the
 -- review's right side falls back to the read-only octo:// copy. Then check the PR out as pr-<n> instead, tracking
