@@ -188,7 +188,8 @@ finds the PR too. Octo reviews use the same
 diff colours as Diffview. Both Octo reviews and Diffview list the changed files below the diff. Octo merges squash
 by default.
 Octo PR, issue and comment buffers render their markdown like `.md` files (headings, lists, tables, alerts,
-code blocks); insert mode, and the line under the cursor, show the raw text.
+code blocks); insert mode, and the line under the cursor, show the raw text. Comment bodies are indented
+under their headers, so a thread's comments line up under it.
 
 WakaTime counts time in an Octo review, on an Octo PR page or in a Diffview tab as **Code Reviewing**,
 and Octo pages and the base side of a `:PRDiff` as the PR's GitHub page under the repo's project

@@ -58,6 +58,15 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   it even when that worktree's folder is gone), they run `gh pr checkout <n> --branch pr-<n>`
   instead, which tracks the PR branch, so octo's `in_pr_branch` passes. Don't use
   `--ignore-other-worktrees`: two checkouts of one branch go stale when the other commits.
+  It wraps octo's `OctoBuffer.render_signs` to indent each comment body under its header's
+  text with inline virtual text: reviews and comments by the marker's width (3 with the
+  default `timeline_marker`), thread comments by `2 * timeline_indent` more (7). The bodies
+  are the real comment text octo saves on `:w`, so real spaces would reach GitHub.
+  Inline padding only moves a line's first screen row, and `breakindentopt` is one value per
+  window, so `octo` windows get `breakindent`, `breakindentopt=shift:<thread indent>` and
+  `linebreak`, and wrapped rows of every line start at the thread comments' column.
+  render-markdown's table top / bottom borders (virtual lines, or overlays on empty lines)
+  and a closed `<details>` fold (octo's overlay, drawn at col 0 on the fold line) stay at col 0.
   Each override of an octo function carries `---@diagnostic disable-next-line: duplicate-set-field`.
 - `ftplugin/<filetype>.lua` — setup for one language, run when a buffer of that filetype
   opens (config dir comes first on the runtimepath, so these run before the plugins' own
@@ -161,7 +170,7 @@ vim-wakatime updates it on its own).
 
 | Plugin | Checked at | What the config relies on |
 | --- | --- | --- |
-| octo.nvim | `af24116` (2026-08-28) | `lua/plugins/git.lua` replaces `require('octo').update_layout_for_current_file` (use_local_fs BufEnter loop) and `Layout.init_layout` (Diffview colours), and wraps `require('octo.utils').checkout_pr(pr_number)` / `.checkout_pr_sync({ repo, pr_number })` (every octo checkout goes through them) with `require('octo.gh').pr.checkout({ n, repo =, branch =, opts = { mode / cb(stdout, stderr, status) } })` and `config.values.timeout`; reads `b:octo_diff_props` and `require('octo.reviews').get_current_review().layout.left.commit` (gitsigns base; `focus_commit` sets the new layout before opening it). `lua/plugins/wakatime.lua` reads `get_current_review().pull_request.repo` / `.number`, `require('octo.config').values.github_hostname`, and buffer names `octo://<owner>/<repo>/pull/<n>`; the wrapper parses `octo://[<host>/]<owner>/<repo>/{pull,issue,discussion}/<n>` and `octo://…/review/…`. `lua/plugins/treesitter.lua` and `ui.lua` rely on `after/syntax/octo.vim` adding the emoji conceals (`matchadd`, `conceallevel` 2) |
+| octo.nvim | `af24116` (2026-08-28) | `lua/plugins/git.lua` replaces `require('octo').update_layout_for_current_file` (use_local_fs BufEnter loop) and `Layout.init_layout` (Diffview colours), and wraps `require('octo.utils').checkout_pr(pr_number)` / `.checkout_pr_sync({ repo, pr_number })` (every octo checkout goes through them) with `require('octo.gh').pr.checkout({ n, repo =, branch =, opts = { mode / cb(stdout, stderr, status) } })` and `config.values.timeout`; reads `b:octo_diff_props` and `require('octo.reviews').get_current_review().layout.left.commit` (gitsigns base; `focus_commit` sets the new layout before opening it). It also wraps `require('octo.model.octo-buffer').OctoBuffer.render_signs` (called after every render and change; `commentsMetadata[].kind` / `.startLine` / `.endLine` set by `update_metadata`) and reads `config.values.timeline_indent` / `timeline_marker`, matching the header indents in `writers.write_comment` (indent 0 for reviews and comments, `2 * timeline_indent` for thread comments). `lua/plugins/wakatime.lua` reads `get_current_review().pull_request.repo` / `.number`, `require('octo.config').values.github_hostname`, and buffer names `octo://<owner>/<repo>/pull/<n>`; the wrapper parses `octo://[<host>/]<owner>/<repo>/{pull,issue,discussion}/<n>` and `octo://…/review/…`. `lua/plugins/treesitter.lua` and `ui.lua` rely on `after/syntax/octo.vim` adding the emoji conceals (`matchadd`, `conceallevel` 2) |
 | vim-wakatime | `9f8a1d3` (2026-08-10) | `setup({ cli_path })` takes `cli_path` only on the first call; heartbeats come from a `BufEnter` autocmd created by `setup()`; it runs the CLI with `--entity` / `--time` / optional `--category`, plus `--extra-heartbeats` with a JSON list (`entity`, `timestamp`, `category`, …) on stdin. The wrapper changes only those calls and passes others (`--today`, `--version`, …) through |
 | diffview.nvim | `4516612` (2024-06-13) | `require('diffview.lib').get_current_view()` (review tab check) and buffer names `diffview://<repo>/.git/<rev>/<path>` for files at a git revision |
 | wakatime-cli | 2.26.14 | `--category "code reviewing"`, `--entity-type url`, `--alternate-project`, `--sync-ai-disabled` (the wrapper retries without it if the CLI rejects it) |

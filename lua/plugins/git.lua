@@ -71,6 +71,74 @@ OctoLayout.init_layout = function(self)
   end
 end
 
+-- Octo draws the timeline headers as virtual text, indented by kind (reviews and comments at col 0, thread comments
+-- at 2 * timeline_indent), but writes every comment body at col 0. Indent each body under its header's text with
+-- inline virtual text: the bodies are the real comment text octo saves on :w, so real spaces would reach GitHub.
+-- Inline padding only moves a line's first screen row, and breakindentopt is one value per window, so the wrapped
+-- rows of every line in an octo window start at the thread comments' column.
+local octo_config = require('octo.config')
+local octo_indent_ns = vim.api.nvim_create_namespace('config.octo_indent')
+
+-- the body indent per comment kind (after the header's marker, and its indent for thread comments), and the
+-- thread comments' indent
+local function octo_indents()
+  local conf = octo_config.values
+  local marker = vim.fn.strdisplaywidth(conf.timeline_marker .. ' ')
+  local thread = 2 * conf.timeline_indent + marker
+  return {
+    PullRequestReview = marker,
+    IssueComment = marker,
+    DiscussionComment = marker,
+    PullRequestReviewComment = thread,
+    PullRequestComment = thread,
+  },
+    thread
+end
+
+-- octo calls render_signs after every render and change (TextChanged / TextChangedI, saving, adding or deleting a
+-- comment); it updates commentsMetadata[].startLine / .endLine, the comment's body lines
+local OctoBuffer = require('octo.model.octo-buffer').OctoBuffer
+local render_signs = OctoBuffer.render_signs
+---@diagnostic disable-next-line: duplicate-set-field
+OctoBuffer.render_signs = function(self)
+  render_signs(self)
+  if not self.ready or not vim.api.nvim_buf_is_valid(self.bufnr) then
+    return
+  end
+  vim.api.nvim_buf_clear_namespace(self.bufnr, octo_indent_ns, 0, -1)
+  local indents = octo_indents()
+  for _, comment in ipairs(self.commentsMetadata) do
+    local width = indents[comment.kind]
+    if width and comment.startLine and comment.endLine then
+      local padding = { { string.rep(' ', width) } }
+      for line = comment.startLine, comment.endLine do
+        -- right_gravity = false: text typed at col 0 lands after the padding
+        vim.api.nvim_buf_set_extmark(self.bufnr, octo_indent_ns, line, 0, {
+          virt_text = padding,
+          virt_text_pos = 'inline',
+          right_gravity = false,
+        })
+      end
+    end
+  end
+end
+
+vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter' }, {
+  group = vim.api.nvim_create_augroup('OctoCommentIndent', { clear = true }),
+  callback = function(ev)
+    if vim.bo[ev.buf].filetype ~= 'octo' then
+      return
+    end
+    local _, thread = octo_indents()
+    for _, win in ipairs(vim.fn.win_findbuf(ev.buf)) do
+      local wo = vim.wo[win][0]
+      wo.breakindent = true
+      wo.breakindentopt = 'shift:' .. thread
+      wo.linebreak = true
+    end
+  end,
+})
+
 -- Octo checks a PR out with `gh pr checkout <n>`, as a local branch named after the PR's head branch. While another
 -- worktree has that branch (an agent's worktree, even one whose folder is gone) git refuses to check it out, and the
 -- review's right side falls back to the read-only octo:// copy. Then check the PR out as pr-<n> instead, tracking
