@@ -143,9 +143,9 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter' }, {
 -- columns, so rows with a line longer than about the window width minus 10 run past the right border; it also counts
 -- a tab in the code as if the line started at col 0, while Neovim draws it to the next tabstop from its screen column.
 -- Indent the box to 2 * timeline_indent (under the thread comments' markers; the rows are overlays on empty lines, so
--- only a leading chunk moves them), and widen every row (borders, and the padding before a row's closing │) to the
--- widest row, measured the way it's drawn: chunk by chunk from the column it starts at, with the octo buffer's
--- tabstop. Then take back what the indent pushed past the window, up to the padding octo added beyond the longest
+-- only a leading chunk moves them), turn each tab into the spaces it takes at its column (with the octo buffer's
+-- tabstop), so the drawing doesn't depend on the tabstop at draw time, and widen every row (borders, and the padding
+-- before a row's closing │) to the widest row. Then take back what the indent pushed past the window, up to the padding octo added beyond the longest
 -- line, so a box octo fitted to the window still fits. Each row is one overlay extmark: a border is one chunk, a
 -- content row ends with its padding chunk and │.
 local octo_writers = require('octo.ui.writers')
@@ -159,17 +159,23 @@ octo_writers.write_thread_snippet = function(bufnr, ...)
   local ns = octo_constants.OCTO_DIFFHUNK_VT_NS
   local rows = vim.api.nvim_buf_get_extmarks(bufnr, ns, { start_line - 1, 0 }, { end_line - 1, -1 }, { details = true })
   local indent = 2 * octo_config.values.timeline_indent
-  -- row widths from the indent on (the indent included)
+  local tabstop = vim.bo[bufnr].tabstop
+  -- row widths from the indent on (the indent included), with the tabs expanded
   local widths, widest = {}, 0
-  vim.api.nvim_buf_call(bufnr, function()
-    for i, row in ipairs(rows) do
-      local width = indent
-      for _, chunk in ipairs(row[4].virt_text or {}) do
-        width = width + vim.fn.strdisplaywidth(chunk[1], width)
-      end
-      widths[i], widest = width, math.max(widest, width)
+  for i, row in ipairs(rows) do
+    local width = indent
+    for _, chunk in ipairs(row[4].virt_text or {}) do
+      local text = chunk[1]
+      local expanded = text:gsub('([^\t]*)\t', function(before)
+        local col = width + vim.fn.strdisplaywidth(before)
+        width = col + tabstop - col % tabstop
+        return before .. string.rep(' ', tabstop - col % tabstop)
+      end)
+      width = width + vim.fn.strdisplaywidth(text:match('[^\t]*$'))
+      chunk[1] = expanded
     end
-  end)
+    widths[i], widest = width, math.max(widest, width)
+  end
   -- slack: the narrowest content row padding once every row is widened to the widest
   local slack = math.huge
   for i, row in ipairs(rows) do
