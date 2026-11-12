@@ -143,11 +143,11 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter' }, {
 -- so rows with a line longer than about the window width minus 10 run past the right border; it also counts a tab in
 -- the code as if the line started at col 0, while Neovim draws it to the next tabstop from its screen column. Indent
 -- the box to 2 * timeline_indent (under the thread comments' markers; the rows are overlays on empty lines, so only a
--- leading chunk moves them), turn each tab into the spaces it takes at its column (with the octo buffer's tabstop), so
--- the drawing doesn't depend on the tabstop at draw time, and widen every row (borders, and the padding before a row's
--- closing │) to the widest row. Then take back what the indent pushed past the window, up to the padding octo added
--- beyond the longest line, so a box octo fitted to the window still fits. Each row is one overlay extmark: a border is
--- one chunk, a content row ends with its padding chunk and │.
+-- leading chunk moves them), turn each tab into the spaces it takes at its column (with the global tabstop; the
+-- markdown ftplugin sets the octo buffer's to 4), so the drawing doesn't depend on the tabstop at draw time, and widen
+-- every row (borders, and the padding before a row's closing │) to the widest row. Then take back what the indent
+-- pushed past the window, up to the padding octo added beyond the longest line, so a box octo fitted to the window
+-- still fits. Each row is one overlay extmark: a border is one chunk, a content row ends with its padding chunk and │.
 local octo_writers = require('octo.ui.writers')
 local write_thread_snippet = octo_writers.write_thread_snippet
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -159,7 +159,7 @@ octo_writers.write_thread_snippet = function(bufnr, ...)
   local ns = octo_constants.OCTO_DIFFHUNK_VT_NS
   local rows = vim.api.nvim_buf_get_extmarks(bufnr, ns, { start_line - 1, 0 }, { end_line - 1, -1 }, { details = true })
   local indent = 2 * octo_config.values.timeline_indent
-  local tabstop = vim.bo[bufnr].tabstop
+  local tabstop = vim.go.tabstop
   -- row widths from the indent on (the indent included), with the tabs expanded
   local widths, widest = {}, 0
   for i, row in ipairs(rows) do

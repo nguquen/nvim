@@ -72,11 +72,13 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   are overlays on empty lines) and widen every row to the widest: octo sizes the box without
   the line-number columns, and counts tabs as if each line started at col 0, so long diff lines
   and lines with tabs ran past the right border. Each tab in a row is replaced by the spaces it
-  takes at its column (from the indent on, with the octo buffer's `tabstop` when the snippet is
-  written), so the box doesn't depend on the `tabstop` it's later drawn with. Then the box is
-  fitted to the window's text width (counting octo's status column as 3, its width once a line
-  wraps; the window may not be drawn with it yet), taking back at most the padding octo added
-  beyond the longest line, so a box of code lines longer than the window stays cut at the edge.
+  takes at its column (from the indent on, with the global `tabstop`, `vim.go.tabstop`: the
+  markdown ftplugin, which octo's `after/syntax/octo.vim` sources, sets the octo buffer's to 4,
+  so it changes between renders), so the box doesn't depend on the `tabstop` it's later drawn
+  with. Then the box is fitted to the window's text width (counting octo's status column as 3,
+  its width once a line wraps; the window may not be drawn with it yet), taking back at most
+  the padding octo added beyond the longest line, so a box of code lines longer than the
+  window stays cut at the edge.
   Each override of an octo function carries `---@diagnostic disable-next-line: duplicate-set-field`.
 - `ftplugin/<filetype>.lua` — setup for one language, run when a buffer of that filetype
   opens (config dir comes first on the runtimepath, so these run before the plugins' own
