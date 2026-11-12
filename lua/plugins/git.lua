@@ -139,15 +139,15 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter' }, {
   end,
 })
 
--- Octo draws a thread's code snippet box at col 0 and sizes it by its widest diff line without the line-number
--- columns, so rows with a line longer than about the window width minus 10 run past the right border; it also counts
--- a tab in the code as if the line started at col 0, while Neovim draws it to the next tabstop from its screen column.
--- Indent the box to 2 * timeline_indent (under the thread comments' markers; the rows are overlays on empty lines, so
--- only a leading chunk moves them), turn each tab into the spaces it takes at its column (with the octo buffer's
--- tabstop), so the drawing doesn't depend on the tabstop at draw time, and widen every row (borders, and the padding
--- before a row's closing │) to the widest row. Then take back what the indent pushed past the window, up to the padding octo added beyond the longest
--- line, so a box octo fitted to the window still fits. Each row is one overlay extmark: a border is one chunk, a
--- content row ends with its padding chunk and │.
+-- Octo draws a thread's code snippet box at col 0 and sizes it by its widest diff line without the line-number columns,
+-- so rows with a line longer than about the window width minus 10 run past the right border; it also counts a tab in
+-- the code as if the line started at col 0, while Neovim draws it to the next tabstop from its screen column. Indent
+-- the box to 2 * timeline_indent (under the thread comments' markers; the rows are overlays on empty lines, so only a
+-- leading chunk moves them), turn each tab into the spaces it takes at its column (with the octo buffer's tabstop), so
+-- the drawing doesn't depend on the tabstop at draw time, and widen every row (borders, and the padding before a row's
+-- closing │) to the widest row. Then take back what the indent pushed past the window, up to the padding octo added
+-- beyond the longest line, so a box octo fitted to the window still fits. Each row is one overlay extmark: a border is
+-- one chunk, a content row ends with its padding chunk and │.
 local octo_writers = require('octo.ui.writers')
 local write_thread_snippet = octo_writers.write_thread_snippet
 ---@diagnostic disable-next-line: duplicate-set-field
