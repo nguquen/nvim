@@ -68,8 +68,10 @@ Personal Neovim config (Lua), meant to be cloned to `~/.config/nvim`. Targets Ne
   render-markdown's table top / bottom borders (virtual lines, or overlays on empty lines)
   and a closed `<details>` fold (octo's overlay, drawn at col 0 on the fold line) stay at col 0.
   It wraps octo's `writers.write_thread_snippet` to widen every row of a thread's code snippet
-  box to the widest: octo sizes the box without the line-number columns, so long diff lines
-  ran past the right border.
+  box to the widest: octo sizes the box without the line-number columns, and counts tabs as if
+  each line started at col 0, so long diff lines and lines with tabs ran past the right border.
+  Rows are measured as Neovim draws them, chunk by chunk from the column each starts at
+  (`strdisplaywidth(text, col)`), with the octo buffer's `tabstop` (`nvim_buf_call`).
   Each override of an octo function carries `---@diagnostic disable-next-line: duplicate-set-field`.
 - `ftplugin/<filetype>.lua` — setup for one language, run when a buffer of that filetype
   opens (config dir comes first on the runtimepath, so these run before the plugins' own

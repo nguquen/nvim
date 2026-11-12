@@ -140,9 +140,11 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufWinEnter' }, {
 })
 
 -- Octo sizes a thread's code snippet box by its widest diff line without the line-number columns, so rows with a
--- line longer than about the window width minus 10 run past the right border. Widen every row (borders, and the
--- padding before a row's closing │) to the widest row. Each row is one overlay extmark: a border is one chunk, a
--- content row ends with its padding chunk and │.
+-- line longer than about the window width minus 10 run past the right border; it also counts a tab in the code as if
+-- the line started at col 0, while Neovim draws it to the next tabstop from its screen column. Widen every row
+-- (borders, and the padding before a row's closing │) to the widest row, measured the way it's drawn: chunk by chunk
+-- from the column it starts at, with the octo buffer's tabstop. Each row is one overlay extmark: a border is one
+-- chunk, a content row ends with its padding chunk and │.
 local octo_writers = require('octo.ui.writers')
 local write_thread_snippet = octo_writers.write_thread_snippet
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -154,13 +156,15 @@ octo_writers.write_thread_snippet = function(bufnr, ...)
   local ns = octo_constants.OCTO_DIFFHUNK_VT_NS
   local rows = vim.api.nvim_buf_get_extmarks(bufnr, ns, { start_line - 1, 0 }, { end_line - 1, -1 }, { details = true })
   local widths, widest = {}, 0
-  for i, row in ipairs(rows) do
-    local width = 0
-    for _, chunk in ipairs(row[4].virt_text or {}) do
-      width = width + vim.fn.strdisplaywidth(chunk[1])
+  vim.api.nvim_buf_call(bufnr, function()
+    for i, row in ipairs(rows) do
+      local width = 0
+      for _, chunk in ipairs(row[4].virt_text or {}) do
+        width = width + vim.fn.strdisplaywidth(chunk[1], width)
+      end
+      widths[i], widest = width, math.max(widest, width)
     end
-    widths[i], widest = width, math.max(widest, width)
-  end
+  end)
   for i, row in ipairs(rows) do
     local missing = widest - widths[i]
     local opts = row[4]
